@@ -10,10 +10,10 @@ local theme = {}
 
 theme.font          = "CommitMono 13"
 
-theme.bg_normal     = "#292929"
-theme.bg_focus      = "#484848"
-theme.bg_urgent     = "#ff0000"
-theme.bg_minimize   = "#444444"
+theme.bg_normal     = "#29292999"
+theme.bg_focus      = "#48484899"
+theme.bg_urgent     = "#ff000099"
+theme.bg_minimize   = "#44444499"
 theme.bg_systray    = theme.bg_normal
 
 theme.fg_normal     = "#bbbbbb"

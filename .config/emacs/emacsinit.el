@@ -30,13 +30,13 @@
 			  (set-face-attribute 'flymake-error nil :underline `(:color ,error-underline :style dashes))
 			  (set-face-attribute 'flymake-warning nil :underline `(:color ,warning-underline :style dashes)))))
 
-(defvar elpaca-installer-version 0.7)
+(defvar elpaca-installer-version 0.8)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
 (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-                              :ref nil
-                              :files (:defaults (:exclude "extensions"))
+                              :ref nil :depth 1
+                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
                               :build (:not elpaca--activate-package)))
 (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
        (build (expand-file-name "elpaca/" elpaca-builds-directory))
@@ -47,16 +47,18 @@
     (make-directory repo t)
     (when (< emacs-major-version 28) (require 'subr-x))
     (condition-case-unless-debug err
-        (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-                 ((zerop (call-process "git" nil buffer t "clone"
-                                       (plist-get order :repo) repo)))
-                 ((zerop (call-process "git" nil buffer t "checkout"
-                                       (or (plist-get order :ref) "--"))))
-                 (emacs (concat invocation-directory invocation-name))
-                 ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-                                       "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-                 ((require 'elpaca))
-                 ((elpaca-generate-autoloads "elpaca" repo)))
+        (if-let* ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                  ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
+                                                  ,@(when-let* ((depth (plist-get order :depth)))
+                                                      (list (format "--depth=%d" depth) "--no-single-branch"))
+                                                  ,(plist-get order :repo) ,repo))))
+                  ((zerop (call-process "git" nil buffer t "checkout"
+                                        (or (plist-get order :ref) "--"))))
+                  (emacs (concat invocation-directory invocation-name))
+                  ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                        "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                  ((require 'elpaca))
+                  ((elpaca-generate-autoloads "elpaca" repo)))
             (progn (message "%s" (buffer-string)) (kill-buffer buffer))
           (error "%s" (with-current-buffer buffer (buffer-string))))
       ((error) (warn "%s" err) (delete-directory repo 'recursive))))
@@ -66,7 +68,6 @@
     (load "./elpaca-autoloads")))
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
-
 
 ;; Install use-package support
 (elpaca elpaca-use-package
@@ -115,8 +116,8 @@
 
 ;; (set-face-attribute 'default nil :family "0xProto Nerd Font" :weight 'medium :height 110)
 ;; (set-face-attribute 'fixed-pitch nil :family "0xProto Nerd Font" :weight 'medium :height 110)
-(set-face-attribute 'default nil :family "CommitMono" :weight 'medium :height 110)
-(set-face-attribute 'fixed-pitch nil :family "CommitMono" :weight 'medium :height 110)
+(set-face-attribute 'default nil :family "CommitMono Nerd Font" :height 120)
+(set-face-attribute 'fixed-pitch nil :family "CommitMono Nerd Font" :height 120)
 (set-face-attribute 'variable-pitch nil :family "Inter" :height 170)
 
 (defun mk/transparency (value)
@@ -124,7 +125,7 @@
   (interactive "nTransparency Value 0 - 100 opaque: ")
   (set-frame-parameter (selected-frame) 'alpha-background value))
 
-(mk/transparency 93)
+(mk/transparency 80)
 
 ;; (add-hook 'server-after-make-frame-hook (lambda () (mk/transparency 97)))
 
@@ -276,6 +277,96 @@
   :config
   (evil-commentary-mode))
 
+;; (use-package meow
+;;   :config
+;;   (defun meow-setup ()
+;; 	(setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+;; 	(meow-motion-overwrite-define-key
+;; 	 '("j" . meow-next)
+;; 	 '("k" . meow-prev)
+;; 	 '("<escape>" . ignore))
+;; 	(meow-leader-define-key
+;; 	 ;; SPC j/k will run the original command in MOTION state.
+;; 	 '("j" . "H-j")
+;; 	 '("k" . "H-k")
+;; 	 ;; Use SPC (0-9) for digit arguments.
+;; 	 '("1" . meow-digit-argument)
+;; 	 '("2" . meow-digit-argument)
+;; 	 '("3" . meow-digit-argument)
+;; 	 '("4" . meow-digit-argument)
+;; 	 '("5" . meow-digit-argument)
+;; 	 '("6" . meow-digit-argument)
+;; 	 '("7" . meow-digit-argument)
+;; 	 '("8" . meow-digit-argument)
+;; 	 '("9" . meow-digit-argument)
+;; 	 '("0" . meow-digit-argument)
+;; 	 '("/" . meow-keypad-describe-key)
+;; 	 '("?" . meow-cheatsheet))
+;; 	(meow-normal-define-key
+;; 	 '("0" . meow-expand-0)
+;; 	 '("9" . meow-expand-9)
+;; 	 '("8" . meow-expand-8)
+;; 	 '("7" . meow-expand-7)
+;; 	 '("6" . meow-expand-6)
+;; 	 '("5" . meow-expand-5)
+;; 	 '("4" . meow-expand-4)
+;; 	 '("3" . meow-expand-3)
+;; 	 '("2" . meow-expand-2)
+;; 	 '("1" . meow-expand-1)
+;; 	 '("-" . negative-argument)
+;; 	 '(";" . meow-reverse)
+;; 	 '("," . meow-inner-of-thing)
+;; 	 '("." . meow-bounds-of-thing)
+;; 	 '("[" . meow-beginning-of-thing)
+;; 	 '("]" . meow-end-of-thing)
+;; 	 '("a" . meow-append)
+;; 	 '("A" . meow-open-below)
+;; 	 '("b" . meow-back-word)
+;; 	 '("B" . meow-back-symbol)
+;; 	 '("c" . meow-change)
+;; 	 '("d" . meow-delete)
+;; 	 '("D" . meow-backward-delete)
+;; 	 '("e" . meow-next-word)
+;; 	 '("E" . meow-next-symbol)
+;; 	 '("f" . meow-find)
+;; 	 '("g" . meow-cancel-selection)
+;; 	 '("G" . meow-grab)
+;; 	 '("h" . meow-left)
+;; 	 '("H" . meow-left-expand)
+;; 	 '("i" . meow-insert)
+;; 	 '("I" . meow-open-above)
+;; 	 '("j" . meow-next)
+;; 	 '("J" . meow-next-expand)
+;; 	 '("k" . meow-prev)
+;; 	 '("K" . meow-prev-expand)
+;; 	 '("l" . meow-right)
+;; 	 '("L" . meow-right-expand)
+;; 	 '("m" . meow-join)
+;; 	 '("n" . meow-search)
+;; 	 '("o" . meow-block)
+;; 	 '("O" . meow-to-block)
+;; 	 '("p" . meow-yank)
+;; 	 '("q" . meow-quit)
+;; 	 '("Q" . meow-goto-line)
+;; 	 '("r" . meow-replace)
+;; 	 '("R" . meow-swap-grab)
+;; 	 '("s" . meow-kill)
+;; 	 '("t" . meow-till)
+;; 	 '("u" . meow-undo)
+;; 	 '("U" . meow-undo-in-selection)
+;; 	 '("v" . meow-visit)
+;; 	 '("w" . meow-mark-word)
+;; 	 '("W" . meow-mark-symbol)
+;; 	 '("x" . meow-line)
+;; 	 '("X" . meow-goto-line)
+;; 	 '("y" . meow-save)
+;; 	 '("Y" . meow-sync-grab)
+;; 	 '("z" . meow-pop-selection)
+;; 	 '("'" . repeat)
+;; 	 '("<escape>" . ignore)))
+;;   (meow-setup)
+;;   (meow-global-mode 1))
+
 (use-package vertico
   :init
   (vertico-mode)
@@ -378,6 +469,7 @@
 ;; 	(add-hook 'window-setup-hook #'(lambda () (persp-mode 1))))
 ;;   )
 
+(use-package transient)
 (use-package magit :commands (magit magit-status))
 
 (use-package treemacs
@@ -478,7 +570,7 @@
   (setq TeX-parse-self t)
   (setq-default TeX-master nil))
 
-(use-package bison-mode)
+(use-package kotlin-mode)
 
 ;; (use-package company
 ;;   :config
@@ -537,7 +629,7 @@
   (kind-icon-blend-background nil)
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
-  (plist-put kind-icon-default-style :height 0.7))
+  (plist-put kind-icon-default-style :height 0.9))
 
 (use-package cape
   ;; Bind dedicated completion commands
@@ -575,9 +667,9 @@
 
 ;; (use-package flycheck)
 
-(use-package treesit-auto
-  :config
-  (global-treesit-auto-mode))
+;; (use-package treesit-auto
+;;   :config
+;;   (global-treesit-auto-mode))
 
 ;; (use-package tree-sitter
 ;;   :config
@@ -589,9 +681,9 @@
 ;;   (set-face-attribute 'tree-sitter-hl-face:property 'nil :slant 'normal)
 ;;   (set-face-attribute 'tree-sitter-hl-face:function.call 'nil :inherit '(default)))
 
-;; (use-package treesit-auto
-;;   :config
-;;   (global-treesit-auto-mode))
+(use-package treesit-auto
+  :config
+  (global-treesit-auto-mode))
 
 (use-package projectile
   :config
@@ -809,7 +901,7 @@
 
 (use-package general
   :config
-  (general-evil-setup)
+  ;; (general-evil-setup)
 
   (general-define-key
    :states '(normal visual)

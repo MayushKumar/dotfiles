@@ -2,41 +2,25 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("sxhkdrc"
- (filename . "~/.config/awesome/sxhkdrc")
- (front-context-string . "super + 0\n	  	po")
- (rear-context-string)
- (position . 1)
- (last-modified 25750 61268 500376 985000))
-(".zshrc"
- (filename . "~/.config/zsh/.zshrc")
- (front-context-string . "# Lines configur")
- (rear-context-string)
- (position . 1)
- (last-modified 25687 45886 828743 662000))
-("picom.conf"
- (filename . "~/.config/picom/picom.conf")
- (front-context-string . "################")
- (rear-context-string)
+(("sxhkdrc" (filename . "~/.config/awesome/sxhkdrc")
+  (front-context-string . "super + 0\n	  	po") (rear-context-string)
+  (position . 1) (last-modified 25750 61268 500376 985000))
+(".zshrc" (filename . "~/.config/zsh/.zshrc")
+ (front-context-string . "# Lines configur") (rear-context-string)
+ (position . 1) (last-modified 25687 45886 828743 662000))
+("picom.conf" (filename . "~/.config/picom/picom.conf")
+ (front-context-string . "################") (rear-context-string)
  (position . 1))
-("lf-config"
- (filename . "~/.config/lf/lfrc")
- (front-context-string . "# interpreter fo")
- (rear-context-string)
+("lf-config" (filename . "~/.config/lf/lfrc")
+ (front-context-string . "# interpreter fo") (rear-context-string)
  (position . 1))
-("awesome-config"
- (filename . "~/.config/awesome/rc.lua")
- (front-context-string . "-- If LuaRocks i")
- (rear-context-string)
+("awesome-config" (filename . "~/.config/awesome/rc.lua")
+ (front-context-string . "-- If LuaRocks i") (rear-context-string)
  (position . 1))
-("alacritty.yml"
- (filename . "~/.config/alacritty/alacritty.yml")
- (front-context-string . "# Configuration ")
- (rear-context-string)
- (position . 1))
-("emacs.org"
- (filename . "~/.config/emacs/emacs.org")
- (front-context-string . "#+title:  Emacs ")
- (rear-context-string)
+("alacritty.toml" (filename . "~/.config/alacritty/alacritty.toml")
+ (front-context-string . "# Configuration ") (rear-context-string)
+ (position . 1) (last-modified 26421 4264 833316 32000))
+("emacs.org" (filename . "~/.config/emacs/emacs.org")
+ (front-context-string . "#+title:  Emacs ") (rear-context-string)
  (position . 1))
 )

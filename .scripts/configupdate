@@ -21,7 +21,7 @@ $config add \
 	   ~/.config/stig/ \
 	   ~/.config/zathura/ \
 	   ~/.config/zsh/{.zshrc,.zprofile} \
-	   ~/.config/yazi/{yazi,theme,keymap}.toml \
+	   ~/.config/yazi/ \
 	   ~/.scripts/
 
 $config add -u .

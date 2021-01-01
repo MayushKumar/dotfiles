@@ -10,7 +10,8 @@
  '(base16-theme-distinct-fringe-background nil)
  '(c-ts-mode-indent-style 'bsd)
  '(connection-local-criteria-alist
-   '(((:application tramp :protocol "kubernetes")
+   '(((:application vc-git) vc-git-connection-default-profile)
+	 ((:application tramp :protocol "kubernetes")
 	  tramp-kubernetes-connection-local-default-profile)
 	 ((:application tramp :protocol "flatpak")
 	  tramp-container-connection-local-default-flatpak-profile
@@ -19,7 +20,8 @@
 	  tramp-connection-local-default-system-profile
 	  tramp-connection-local-default-shell-profile)))
  '(connection-local-profile-alist
-   '((tramp-flatpak-connection-local-default-profile
+   '((vc-git-connection-default-profile (vc-git--program-version))
+	 (tramp-flatpak-connection-local-default-profile
 	  (tramp-remote-path "/app/bin" tramp-default-remote-path "/bin"
 						 "/usr/bin" "/sbin" "/usr/sbin"
 						 "/usr/local/bin" "/usr/local/sbin"
@@ -115,11 +117,11 @@
 	  (shell-file-name . "/bin/sh") (shell-command-switch . "-c"))
 	 (tramp-connection-local-default-system-profile
 	  (path-separator . ":") (null-device . "/dev/null"))))
- '(custom-enabled-themes '(doom-vibrant))
+ '(custom-enabled-themes '(doom-monokai-machine))
  '(eglot-events-buffer-config '(:size 0 :format full))
  '(eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider :inlayHintProvider))
  '(inhibit-startup-screen t)
- '(safe-local-variable-directories '("/home/mayush/dev/Noor/sandbox/")))
+ '(safe-local-variable-directories '("/tmp/Noor/sandbox/" "/home/mayush/dev/Noor/sandbox/")))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
