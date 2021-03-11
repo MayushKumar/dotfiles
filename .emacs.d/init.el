@@ -16,7 +16,7 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 (use-package doom-themes :no-require t
-  :config (setq doom-gruvbox-dark-variant "hard")
+  ;; :config (setq doom-gruvbox-dark-variant "hard")
   )
 
 (use-package magit)
@@ -64,6 +64,15 @@
         ("C-x t C-t" . treemacs-find-file))
   )
 
+(use-package helpful
+  :config
+  ;; (global-set-key (kbd "C-h f") #'helpful-callable)
+  ;; (global-set-key (kbd "C-h v") #'helpful-variable)
+  (global-set-key (kbd "C-h k") #'helpful-key)
+  (setq counsel-describe-function-function #'helpful-callable)
+  (setq counsel-describe-variable-function #'helpful-variable)
+  )
+
 ;; ivy
 (use-package counsel)
 (use-package swiper)
@@ -78,6 +87,9 @@
   (global-set-key (kbd "C-c C-r") 'ivy-resume)
   (global-set-key (kbd "M-x") 'counsel-M-x)
   (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  (global-set-key (kbd "C-h f") 'counsel-describe-function)
+  (global-set-key (kbd "C-h v") 'counsel-describe-variable)
+  (global-set-key (kbd "C-h o") 'counsel-describe-symbol)
   (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
   )
 (use-package ivy-rich
@@ -90,6 +102,7 @@
   (evil-mode 1)
   :init
   (setq evil-want-keybinding nil)
+  (setq evil-want-C-u-scroll t)
   (setq evil-undo-function 'undo-redo)
   )
 
@@ -118,7 +131,6 @@
   (global-flycheck-mode)
   )
 
-;; which-key
 ;; lsp-mode
 (use-package lsp-mode
   :hook
@@ -162,6 +174,8 @@
   :config
   (projectile-mode +1)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  :custom
+  (projectile-enable-caching t)
   )
 (use-package counsel-projectile
   :config
@@ -188,9 +202,11 @@
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.cpp\\'" . c++-mode))
 (electric-pair-mode)
+(setq scroll-margin 10)
+(setq scroll-conservatively 101)
 
-(set-face-attribute 'default nil :family "Jet Brains Mono Slashed" :height 100)
-(set-face-attribute 'variable-pitch nil :family "Roboto" :height 105)
+(set-face-attribute 'default nil :family "Jet Brains Mono Slashed" :height 90)
+(set-face-attribute 'variable-pitch nil :family "Roboto" :height 90)
 (add-hook 'prog-mode-hook (lambda() (toggle-truncate-lines)))
 ;; Pruning away some stuff
 (tool-bar-mode -1)
@@ -208,12 +224,12 @@
  '(ansi-color-faces-vector
    [default bold shadow italic underline success warning error])
  '(ansi-color-names-vector
-   ["#1d2021" "#fb4934" "#b8bb26" "#fabd2f" "#83a598" "#cc241d" "#8ec07c" "#ebdbb2"])
+   ["#2a2426" "#fb4934" "#b8bb26" "#fabd2f" "#83a598" "#cc241d" "#8ec07c" "#ebdbb2"])
  '(awesome-tray-mode-line-active-color "#2fafff")
  '(awesome-tray-mode-line-inactive-color "#323232")
- '(custom-enabled-themes '(doom-miramare))
+ '(custom-enabled-themes '(doom-gruvbox))
  '(custom-safe-themes
-   '("d5a878172795c45441efcd84b20a14f553e7e96366a163f742b95d65a3f55d71" "5036346b7b232c57f76e8fb72a9c0558174f87760113546d3a9838130f1cdb74" "d6603a129c32b716b3d3541fc0b6bfe83d0e07f1954ee64517aa62c9405a3441" default))
+   '("6b80b5b0762a814c62ce858e9d72745a05dd5fc66f821a1c5023b4f2a76bc910" "c086fe46209696a2d01752c0216ed72fd6faeabaaaa40db9fc1518abebaf700d" "d5a878172795c45441efcd84b20a14f553e7e96366a163f742b95d65a3f55d71" "5036346b7b232c57f76e8fb72a9c0558174f87760113546d3a9838130f1cdb74" "d6603a129c32b716b3d3541fc0b6bfe83d0e07f1954ee64517aa62c9405a3441" default))
  '(dap-lldb-debug-program '("/usr/bin/lldb-vscode"))
  '(fci-rule-color "#7c6f64")
  '(flycheck-error ((t (:underline "#fb4933"))))
@@ -253,7 +269,7 @@
  '(lsp-ui-doc-show-with-cursor nil nil nil "Customized with use-package lsp-ui")
  '(objed-cursor-color "#fb4934")
  '(package-selected-packages
-   '(2048-game cmake-mode doom-modeline counsel-projectile projectile dap-mode which-key lsp-ivy lsp-ui lsp-mode flycheck company evil-nerd-commenter evil-collection ivy-rich counsel treemacs-evil treemacs multiple-cursors rainbow-delimiters drag-stuff lua-mode glsl-mode magit doom-themes use-package))
+   '(helpful 2048-game cmake-mode doom-modeline counsel-projectile projectile dap-mode which-key lsp-ivy lsp-ui lsp-mode flycheck company evil-nerd-commenter evil-collection ivy-rich counsel treemacs-evil treemacs multiple-cursors rainbow-delimiters drag-stuff lua-mode glsl-mode magit doom-themes use-package))
  '(pdf-view-midnight-colors (cons "#ebdbb2" "#1d2021"))
  '(rustic-ansi-faces
    ["#1d2021" "#fb4934" "#b8bb26" "#fabd2f" "#83a598" "#cc241d" "#8ec07c" "#ebdbb2"])

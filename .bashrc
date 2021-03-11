@@ -149,4 +149,4 @@ ex ()
 }
 
 set -o vi
-alias config='/usr/bin/git --git-dir=/home/mayushkumar/.cfg/ --work-tree=/home/mayushkumar'
+alias config='/usr/bin/git --git-dir=/home/mayush/.cfg/ --work-tree=/home/mayush'
