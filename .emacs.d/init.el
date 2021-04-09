@@ -15,6 +15,7 @@
 (package-initialize)
 (require 'use-package)
 (setq use-package-always-ensure t)
+
 (use-package doom-themes :no-require t
   ;; :config (setq doom-gruvbox-dark-variant "hard")
   )
@@ -111,11 +112,11 @@
   :config
   (evil-collection-init))
 
-(use-package evil-nerd-commenter
+(use-package evil-commentary
   :config
-  ;; (evilnc-default-hotkeys)
-  (global-set-key (kbd "M-;") 'evilnc-comment-or-uncomment-lines)
+  (evil-commentary-mode)
   )
+
 ;; company mode
 (use-package company
   :after lsp-mode
@@ -229,12 +230,9 @@
  '(awesome-tray-mode-line-inactive-color "#323232")
  '(custom-enabled-themes '(doom-gruvbox))
  '(custom-safe-themes
-   '("6b80b5b0762a814c62ce858e9d72745a05dd5fc66f821a1c5023b4f2a76bc910" "c086fe46209696a2d01752c0216ed72fd6faeabaaaa40db9fc1518abebaf700d" "d5a878172795c45441efcd84b20a14f553e7e96366a163f742b95d65a3f55d71" "5036346b7b232c57f76e8fb72a9c0558174f87760113546d3a9838130f1cdb74" "d6603a129c32b716b3d3541fc0b6bfe83d0e07f1954ee64517aa62c9405a3441" default))
+   '("dc4f9ecd3b83846f4ca356cbb14cca211d2e23beee9fc2b4cadff83ea347c27e" "0caad7549e17e2a0e32301ba7aba91b570a2b4154f57e23cef73d1c18a7251c5" "18e1bb35a0cabdd523dd555bb3905a128fb488decfdcf0a969bbc530f3d0ba1a" "75b8719c741c6d7afa290e0bb394d809f0cc62045b93e1d66cd646907f8e6d43" "6b80b5b0762a814c62ce858e9d72745a05dd5fc66f821a1c5023b4f2a76bc910" "c086fe46209696a2d01752c0216ed72fd6faeabaaaa40db9fc1518abebaf700d" "d5a878172795c45441efcd84b20a14f553e7e96366a163f742b95d65a3f55d71" "5036346b7b232c57f76e8fb72a9c0558174f87760113546d3a9838130f1cdb74" "d6603a129c32b716b3d3541fc0b6bfe83d0e07f1954ee64517aa62c9405a3441" default))
  '(dap-lldb-debug-program '("/usr/bin/lldb-vscode"))
  '(fci-rule-color "#7c6f64")
- '(flycheck-error ((t (:underline "#fb4933"))))
- '(flycheck-info ((t (:underline "#83a598"))))
- '(flycheck-warning ((t (:underline "#fabd2f"))))
  '(flymake-error-bitmap '(flymake-double-exclamation-mark modus-theme-fringe-red))
  '(flymake-note-bitmap '(exclamation-mark modus-theme-fringe-cyan))
  '(flymake-warning-bitmap '(exclamation-mark modus-theme-fringe-yellow))
@@ -269,7 +267,7 @@
  '(lsp-ui-doc-show-with-cursor nil nil nil "Customized with use-package lsp-ui")
  '(objed-cursor-color "#fb4934")
  '(package-selected-packages
-   '(helpful 2048-game cmake-mode doom-modeline counsel-projectile projectile dap-mode which-key lsp-ivy lsp-ui lsp-mode flycheck company evil-nerd-commenter evil-collection ivy-rich counsel treemacs-evil treemacs multiple-cursors rainbow-delimiters drag-stuff lua-mode glsl-mode magit doom-themes use-package))
+   '(doom-themes rainbow-mode evil-commentary helpful 2048-game cmake-mode doom-modeline counsel-projectile projectile dap-mode which-key lsp-ivy lsp-ui lsp-mode flycheck company evil-collection ivy-rich counsel treemacs-evil treemacs multiple-cursors rainbow-delimiters drag-stuff lua-mode glsl-mode magit use-package))
  '(pdf-view-midnight-colors (cons "#ebdbb2" "#1d2021"))
  '(rustic-ansi-faces
    ["#1d2021" "#fb4934" "#b8bb26" "#fabd2f" "#83a598" "#cc241d" "#8ec07c" "#ebdbb2"])
@@ -305,6 +303,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(flycheck-error ((t (:background "#3c3836" :underline "#fb4934"))))
- '(flycheck-info ((t (:background "#3c3836" :underline "#8ec07c"))))
- '(flycheck-warning ((t (:background "#3c3836" :underline "#fabd2f")))))
+ '(flycheck-error ((t (:underline "#fb4934"))))
+ '(flycheck-info ((t (:underline "#8ec07c"))))
+ '(flycheck-warning ((t (:underline "#fabd2f")))))
