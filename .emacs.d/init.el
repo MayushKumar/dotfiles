@@ -105,6 +105,8 @@
   (setq evil-want-keybinding nil)
   (setq evil-want-C-u-scroll t)
   (setq evil-undo-function 'undo-redo)
+  (setq evil-default-cursor 'box)
+  (setq evil-insert-state-cursor 'box)
   )
 
 (use-package evil-collection
@@ -194,7 +196,7 @@
 
 (global-display-line-numbers-mode t)
 (setq-default display-line-numbers-type 'relative)
-(global-hl-line-mode t)
+;;(global-hl-line-mode t)
 
 ;; Code related settings
 (setq-default tab-width 4)
@@ -216,6 +218,13 @@
 (setq visible-bell -1)
 ;; (setq inhibit-startup-message t)
 ;; (setq initial-scratch-message nil)
+
+(defun my/resize-margins ()
+  (let ((margin-size (/ (- (window-width) 150) 2)))
+    (set-window-margins nil (max 0 margin-size) (max 0 margin-size))))
+
+(add-hook 'window-state-change-hook (lambda ()
+										   (when (derived-mode-p 'prog-mode) (my/resize-margins))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

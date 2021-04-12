@@ -5,7 +5,7 @@ set guioptions ""
 
 set recolor true
 set recolor-darkcolor "#ebdbb2"
-set recolor-lightcolor "#222222"
+set recolor-lightcolor "#252525"
 
 set page-padding 5
 
