@@ -1,12 +1,16 @@
 unmap q
 
-set default-bg "#222222"
 set guioptions ""
 
 set recolor true
-set recolor-darkcolor "#ebdbb2"
-set recolor-lightcolor "#252525"
 
 set page-padding 5
 
-set selection-clipboard clipboard
+#set selection-clipboard clipboard
+
+set default-bg                  "#202020"
+set default-fg                  "#ddc7a1"
+
+set recolor-lightcolor          "#202020"
+set recolor-darkcolor           "#ddc7a1"
+

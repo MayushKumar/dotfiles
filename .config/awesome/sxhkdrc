@@ -1,0 +1,32 @@
+#
+# wm independent hotkeys
+#
+super + w
+      brave
+super + e
+      emacsclient -c
+super + z
+	  zathura
+
+super + p
+	  dmenu_run
+
+XF86Audio{RaiseVolume,LowerVolume,Mute}
+      pulseaudio-ctl {up 3,down 3,mute}
+
+Print
+      escrotum -s
+
+super + Print
+	  escrotum
+
+super + F12
+	  systemctl suspend
+
+# lookup words
+super + ctrl + d
+	  ~/.scripts/word-lookup.sh
+
+# make sxhkd reload its configuration files:
+super + Escape
+	  pkill -USR1 -x sxhkd
