@@ -18,18 +18,18 @@
 
 [colors]
 ;background = ${xrdb:color0:#222}
-background = #292828
-background-alt = #3c3836
+background = #dd32302f
+background-alt = #32302f
 ;foreground = ${xrdb:color7:#222}
-foreground = #d4be98
-foreground-alt = #555
+foreground = #eee4df
+foreground-alt = #a2a0a5
 primary = #ffb52a
 secondary = #e60053
 alert = #bd2c40
 
-[bar/bar]
+[bar/bar1]
 width = 100%
-;height = 15
+height = 20
 ;offset-x = 1%
 ;offset-y = 1%
 ;radius = .0
@@ -38,35 +38,33 @@ fixed-center = false
 background = ${colors.background}
 foreground = ${colors.foreground}
 
-line-size = 3
-line-color = #f00
+line-size = 0
 
-border-size = 0
-border-color = #00000000
+border-size = 0 
 
 padding-left = 0
-padding-right = 2
+padding-right = 1
 
-module-margin-left = 1
-module-margin-right = 2
+module-margin-left = 0
+module-margin-right = 0
 
 ;font-0 = fixed:pixelsize=10;1
-font-0 = JetBrains Mono Slashed:pixelsize=9;1
-font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
-font-2 = siji:pixelsize=10;1
+font-0 = Tamsyn:pixelsize=14;0
+;font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
+;font-2 = siji:pixelsize=10;1
 
 modules-left = bspwm
-modules-center = mpd
-modules-right = date powermenu
+;modules-center = date
+modules-right = time
 
 tray-position = right
 tray-padding = 2
 ;tray-background = #0063ff
 
-;wm-restack = bspwm
+wm-restack = bspwm
 ;wm-restack = i3
 
-;override-redirect = true
+override-redirect = false
 
 ;scroll-up = bspwm-desknext
 ;scroll-down = bspwm-deskprev
@@ -150,20 +148,29 @@ ramp-signal-3 = 
 ramp-signal-4 = 
 ramp-signal-foreground = ${colors.foreground-alt}
 
-[module/date]
+[module/time]
 type = internal/date
 interval = 5
 
-date =
-date-alt = " %Y-%m-%d"
+date = "%b %d"
 
 time = %H:%M
-time-alt = %H:%M:%S
 
 ;format-prefix = 
 ;format-prefix-foreground = ${colors.foreground-alt}
 
-label = %date% %time%
+label = %time%
+
+[module/date]
+type = internal/date
+interval = 60
+
+date = "%b %d"
+
+;format-prefix = 
+;format-prefix-foreground = ${colors.foreground-alt}
+
+label = %date%
 
 [module/pulseaudio]
 type = internal/pulseaudio
@@ -200,6 +207,6 @@ screenchange-reload = true
 
 [global/wm]
 margin-top = 0
-margin-bottom = 5
+margin-bottom = 0
 
 ; vim:ft=dosini

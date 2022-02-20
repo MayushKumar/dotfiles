@@ -3,17 +3,39 @@
 #+STARTUP: content
 
 * Setup
+** System
 #+begin_src emacs-lisp
   (setq gc-cons-threshold 100000000)
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
-  (require 'package)
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-  (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
-  (package-initialize)
+  ;; (require 'package)
+  ;; (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  ;; (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
+  ;; (package-initialize)
 
-  (require 'use-package)
-  (setq use-package-always-ensure t)
+  ;; (require 'use-package)
+  ;; (setq use-package-always-ensure t)
+
+  (setq backup-directory-alist '(("." . "~/.cache/emacs_backup")))
+#+end_src
+
+** straight.el
+#+begin_src emacs-lisp
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (bootstrap-version 5))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
+
+  (setq straight-use-package-by-default t)
+  (straight-use-package 'use-package)
 #+end_src
 
 * UI
@@ -22,7 +44,7 @@
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
-  (setq visible-bell -1)
+  (setq ring-bell-function 'ignore)
 
   (global-display-line-numbers-mode t)
   (setq-default display-line-numbers-type 'relative)
@@ -32,20 +54,28 @@
 
   (setq-default tab-width 4)
 
-  (setq scroll-margin 10)
+  (setq scroll-margin 6)
   (setq scroll-conservatively 101)
 
   (setq-default truncate-lines t)
+  (show-paren-mode 0)
   (blink-cursor-mode 0)
 
-  (set-face-attribute 'default nil :family "Ttyp0" :height 90)
-  (set-face-attribute 'fixed-pitch nil :family "Ttyp0" :height 90)
-  (set-face-attribute 'variable-pitch nil :family "Cardo" :height 130)
+  ;; (set-face-attribute 'default nil :family "Ttyp0" :height 90)
+  ;; (set-face-attribute 'fixed-pitch nil :family "Ttyp0" :height 90)
+  (set-face-attribute 'default nil :family "Iosevka Slab" :height 100)
+  (set-face-attribute 'fixed-pitch nil :family "Iosevka Slab" :height 100)
+  (set-face-attribute 'variable-pitch nil :family "Roboto" :height 120)
+
+  ;; Temporary
+  (set-face-attribute 'mode-line-active nil :inherit 'mode-line)
 
   (defun mk/transparency (value)
     "Sets the transparency of the frame window. 0=transparent/100=opaque"
-    (interactive "nTransparency Value 0 - 100 opaque:")
+    (interactive "nTransparency Value 0 - 100 opaque: ")
     (set-frame-parameter (selected-frame) 'alpha value))
+
+  ;; (add-hook 'server-after-make-frame-hook (lambda () (mk/transparency 97)))
 
   (defun mk/set-line-spacing (value)
     "Sets the line spacing"
@@ -54,11 +84,21 @@
     )
 #+end_src
 
+** All The Icons
+#+begin_src emacs-lisp
+  (use-package all-the-icons)
+
+  (use-package all-the-icons-dired
+    :config
+    (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+    )
+#+end_src
+
 ** Dashboard
 #+begin_src emacs-lisp
   (use-package dashboard
     :config
-    (setq dashboard-startup-banner 'official)
+    (setq dashboard-startup-banner "~/.config/emacs/banner.txt")
     (setq dashboard-set-heading-icons t)
     (setq dashboard-set-file-icons t)
     (setq dashboard-items '((recents  . 5)
@@ -75,30 +115,41 @@
 
 ** Modeline
 #+begin_src emacs-lisp
- (use-package telephone-line
-   :config
-   (telephone-line-mode 1)
-   )
+  (use-package telephone-line
+    :config
+    (setq telephone-line-primary-left-separator 'telephone-line-flat)
+    (setq telephone-line-primary-right-separator 'telephone-line-flat)
+    (setq telephone-line-secondary-left-separator 'telephone-line-flat)
+    (setq telephone-line-secondary-right-separator 'telephone-line-flat)
+    (telephone-line-mode 1)
+    )
 #+end_src
 
 ** Themes
 #+begin_src emacs-lisp
- (setq custom-safe-themes t)
+  (setq custom-safe-themes t)
 
- (use-package doom-themes :no-require t)
- (use-package kaolin-themes :no-require t)
- (use-package base16-theme :no-require t
-   :custom
-   (base16-distinct-fringe-background nil)
-   :config
-   ;; (defvar my/base16-colors base16-onedark-colors)
-   ;; (setq evil-emacs-state-cursor   `(,(plist-get my/base16-colors :base0D) box)
-   ;; 		evil-insert-state-cursor  `(,(plist-get my/base16-colors :base0D) box)
-   ;; 		evil-motion-state-cursor  `(,(plist-get my/base16-colors :base0E) box)
-   ;; 		evil-normal-state-cursor  `(,(plist-get my/base16-colors :base0B) box)
-   ;; 		evil-replace-state-cursor `(,(plist-get my/base16-colors :base08) box)
-   ;; 		evil-visual-state-cursor  `(,(plist-get my/base16-colors :base09) box))
-   )
+  (use-package doom-themes :no-require t
+    :config
+    (setq doom-themes-enable-bold nil)
+    (setq doom-themes-enable-italic nil)
+    )
+
+  (use-package kaolin-themes :no-require t)
+
+  (use-package base16-theme :no-require t
+    :custom
+    (base16-distinct-fringe-background nil)
+    :config
+    ;; (defvar my/base16-colors base16-onedark-colors)
+    ;; (setq evil-emacs-state-cursor   `(,(plist-get my/base16-colors :base0D) box)
+    ;; 		evil-insert-state-cursor  `(,(plist-get my/base16-colors :base0D) box)
+    ;; 		evil-motion-state-cursor  `(,(plist-get my/base16-colors :base0E) box)
+    ;; 		evil-normal-state-cursor  `(,(plist-get my/base16-colors :base0B) box)
+    ;; 		evil-replace-state-cursor `(,(plist-get my/base16-colors :base08) box)
+    ;; 		evil-visual-state-cursor  `(,(plist-get my/base16-colors :base09) box))
+    )
+  (use-package zeno-theme :no-require t)
 #+end_src
 
 * Evil
@@ -115,144 +166,19 @@
     (setq evil-want-minibuffer t)
     :config
     (evil-mode 1)
+    (evil-global-set-key 'normal (kbd "U") 'evil-redo)
     )
-
+  
   (use-package evil-collection
     :after evil
     :config
     (setq evil-collection-company-use-tng nil)
     (evil-collection-init))
-
+  
   (use-package evil-commentary
     :config
     (evil-commentary-mode)
     )
-#+end_src
-
-* Programming
-** Languages
-*** C++
-#+begin_src emacs-lisp
-  (setq-default c-basic-offset 4)
-  (setq-default c-default-style "k&r")
-  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
-  (add-to-list 'auto-mode-alist '("\\.cpp\\'" . c++-mode))
-#+end_src
-
-*** Lua
-#+begin_src emacs-lisp
-  (use-package lua-mode)
-#+end_src
-
-*** GLSL
-#+begin_src emacs-lisp
-  (use-package glsl-mode)
-#+end_src
-
-*** Emacs Lisp
-#+begin_src emacs-lisp
-  (use-package rainbow-delimiters
-    :config
-    (add-hook 'emacs-lisp-mode-hook (lambda () (rainbow-delimiters-mode)))
-    )
-#+end_src
-
-** Company
-#+begin_src emacs-lisp
- (use-package company
-   :config
-   (setq company-idle-delay 0)
-   (setq company-minimum-prefix-length 1)
-   (add-hook 'after-init-hook 'global-company-mode)
-   )
- (use-package company-box
-   :hook (company-mode . company-box-mode))
-#+end_src
-
-** Flycheck
-#+begin_src emacs-lisp
- (use-package flycheck
-   :init
-   (global-flycheck-mode)
-   )
-#+end_src
-
-** Tree-sitter
-#+begin_src emacs-lisp
- (use-package tree-sitter)
- (use-package tree-sitter-langs)
- (require 'tree-sitter)
- (require 'tree-sitter-langs)
- (global-tree-sitter-mode)
- (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
-#+end_src
-
-** Projectile
-#+begin_src emacs-lisp
- (use-package projectile
-   :config
-   (projectile-mode +1)
-   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-   :custom
-   (projectile-enable-caching t)
-   (projectile-track-known-projects-automatically nil)
-   )
-#+end_src
-
-** Yasnippets
-#+begin_src emacs-lisp
- (use-package yasnippet
-   :config
-   (yas-global-mode)
-   )
-#+end_src
-
-** LSP
-#+begin_src emacs-lisp
- (use-package lsp-mode
-   :hook
-   (c++-mode . lsp-deferred)
-   (lsp-mode . lsp-enable-which-key-integration)
-   :init
-   (setq lsp-keymap-prefix "C-c l")
-   :config
-   (lsp-enable-which-key-integration)
-   (setq lsp-headerline-breadcrumb-enable nil)
-   (setq lsp-enable-symbol-highlighting nil)
-   (setq lsp-enable-links nil)
-   (setq lsp-modeline-code-actions-enable nil)
- 
-   :commands
-   (lsp lsp-deferred)
-   )
- 
- (use-package lsp-treemacs)
- 
- (use-package lsp-ui
-   :hook (lsp-mode . lsp-ui-mode)
-   :custom
-   (lsp-ui-doc-position 'bottom)
-   (lsp-ui-doc-show-with-cursor nil)
-   (lsp-ui-doc-show-with-mouse nil)
-   (lsp-ui-sideline-enable nil)
-   )
-#+end_src
-
-*** clangd
-#+begin_src emacs-lisp
-  (setq lsp-clients-clangd-args '("--header-insertion=never" "--completion-style=detailed"))
-#+end_src
-
-** DAP
-#+begin_src emacs-lisp
- (use-package dap-mode
-   :config
-   (setq dap-auto-configure-features '(sessions locals controls tooltip))
-   (add-hook 'dap-stopped-hook
-			 (lambda (arg) (call-interactively #'dap-hydra)))
-   (require 'dap-cpptools)
-   (require 'dap-codelldb)
-   )
 #+end_src
 
 * Utility
@@ -262,8 +188,7 @@
   (use-package vertico
     :init
     (vertico-mode)
-    (setq vertico-cycle t)
-    (setq vertico-count 20)
+    (setq vertico-count 15)
     (setq evil-complete-next-minibuffer-func 'vertico-next)
     (setq evil-complete-previous-minibuffer-func 'vertico-previous)
     )
@@ -403,51 +328,11 @@
   )
 #+end_src
 
-** general.el
+** vterm
 #+begin_src emacs-lisp
-  (use-package general
+  (use-package vterm
     :config
-    (general-evil-setup)
-
-    (general-define-key
-     :states '(normal visual)
-     :prefix "SPC"
-
-     "p p" 'projectile-switch-project
-     "p f" 'projectile-find-file
-     "p s" 'projectile-save-project-buffers
-     "p a" 'projectile-find-other-file
-     "p b" 'projectile-save-project-buffers
-     )
-
-    (general-define-key
-      :states '(normal visual)
-      :keymaps 'override
-      :prefix "SPC"
-
-      "x" 'execute-extended-command
-
-      "f f" 'find-file
-      "f s" 'save-buffer
-
-      "b" 'consult-buffer
-
-      "k k" 'kill-current-buffer
-      "k K" 'kill-buffer
-
-      "s" 'consult-line
-
-      "w" 'ace-window
-      "o" 'other-window
-      "0" 'delete-window
-      )
-
-    (general-define-key
-     :states '(normal visual)
-     :keymaps 'override
-
-     "g s" 'evil-avy-goto-line
-     )
+    (add-hook 'vterm-mode-hook (lambda () (display-line-numbers-mode 0)))
     )
 #+end_src
 
@@ -483,27 +368,27 @@
 
 ** Treemacs
 #+begin_src emacs-lisp
- (use-package treemacs
-   :config
-   (treemacs-resize-icons 18)
-   (treemacs-follow-mode t)
-   (treemacs-filewatch-mode t)
-   (treemacs-fringe-indicator-mode t)
-   (treemacs-git-mode 'deferred)
-   (setq doom-themes-treemacs-theme "doom-atom")
-   (doom-themes-treemacs-config)
-   (setq-default treemacs--width-is-locked nil)
-   )
- 
- (use-package treemacs-evil
-   :after treemacs evil
-   :bind
-   (:map global-map
-		 ("C-x t t"   . treemacs)
-		 ("C-x t C-t" . treemacs-find-file))
-   )
- 
- (add-hook 'treemacs-mode-hook (lambda() (display-line-numbers-mode 0)))
+  (use-package treemacs
+    :config
+    (treemacs-resize-icons 18)
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)
+    (treemacs-fringe-indicator-mode t)
+    (treemacs-git-mode 'deferred)
+    (setq doom-themes-treemacs-theme "doom-atom")
+    (doom-themes-treemacs-config)
+    (setq treemacs-width-is-initially-locked nil)
+    )
+
+  (use-package treemacs-evil
+    :after treemacs evil
+    :bind
+    (:map global-map
+          ("C-x t t"   . treemacs)
+          ("C-x t C-t" . treemacs-find-file))
+    )
+
+  (add-hook 'treemacs-mode-hook (lambda() (display-line-numbers-mode 0)))
 #+end_src
 
 ** ripgrep
@@ -523,11 +408,16 @@
    )
 #+end_src
 
-** Whichkey
+** Which key
 #+begin_src emacs-lisp
  (use-package which-key
 	 :config
 	 (which-key-mode))
+#+end_src
+
+** Rainbow mode
+#+begin_src emacs-lisp
+  (use-package rainbow-mode)
 #+end_src
 
 ** Restart Emacs
@@ -545,10 +435,147 @@
     )
 
   (global-set-key (kbd "<f12>") 'mk/restart-emacs-daemon)
+  (global-set-key (kbd "<f11>") 'save-buffers-kill-emacs)
+#+end_src
+
+* Programming
+** Languages
+*** C++
+#+begin_src emacs-lisp
+  (setq-default c-basic-offset 4)
+  (setq-default c-default-style "k&r")
+  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+  (add-to-list 'auto-mode-alist '("\\.cpp\\'" . c++-mode))
+#+end_src
+
+*** Lua
+#+begin_src emacs-lisp
+  (use-package lua-mode)
+#+end_src
+
+*** CMake
+#+begin_src emacs-lisp
+  (use-package cmake-font-lock)
+#+end_src
+
+*** GLSL
+#+begin_src emacs-lisp
+  (use-package glsl-mode)
+#+end_src
+
+*** Emacs Lisp
+#+begin_src emacs-lisp
+  (use-package rainbow-delimiters
+    :config
+    (add-hook 'emacs-lisp-mode-hook (lambda () (rainbow-delimiters-mode)))
+    )
+#+end_src
+
+** Company
+#+begin_src emacs-lisp
+  (use-package company
+    :config
+    (setq company-idle-delay 0)
+    (setq company-minimum-prefix-length 1)
+    (add-hook 'after-init-hook 'global-company-mode)
+    )
+  ;; (use-package company-box
+  ;;   :hook (company-mode . company-box-mode))
+#+end_src
+
+** Flycheck
+#+begin_src emacs-lisp
+  (use-package flycheck
+    :init
+    (global-flycheck-mode)
+    )
+#+end_src
+
+** Tree-sitter
+#+begin_src emacs-lisp
+  (use-package tree-sitter)
+  (use-package tree-sitter-langs)
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+  (set-face-attribute 'tree-sitter-hl-face:property 'nil :slant 'normal)
+#+end_src
+
+** Projectile
+#+begin_src emacs-lisp
+  (use-package projectile
+    :config
+    (projectile-mode +1)
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+    :custom
+    (projectile-enable-caching t)
+    (projectile-track-known-projects-automatically nil)
+    )
+#+end_src
+
+** Yasnippets
+#+begin_src emacs-lisp
+ (use-package yasnippet
+   :config
+   (yas-global-mode)
+   )
+#+end_src
+
+** LSP
+#+begin_src emacs-lisp
+  (use-package lsp-mode
+    :hook
+    (c++-mode . lsp-deferred)
+    (lsp-mode . lsp-enable-which-key-integration)
+    :init
+    (setq lsp-keymap-prefix "C-c l")
+    :config
+    (lsp-enable-which-key-integration)
+    (setq lsp-headerline-breadcrumb-enable nil)
+    (setq lsp-enable-symbol-highlighting nil)
+    (setq lsp-enable-links nil)
+    (setq lsp-modeline-code-actions-enable nil)
+
+    (setq lsp-log-io nil)
+    (setq lsp-enable-folding nil)
+    (setq lsp-enable-imenu nil)
+
+    :commands
+    (lsp lsp-deferred)
+    )
+
+  (use-package lsp-treemacs)
+
+  (use-package lsp-ui
+    :hook (lsp-mode . lsp-ui-mode)
+    :custom
+    (lsp-ui-doc-position 'bottom)
+    (lsp-ui-doc-show-with-cursor nil)
+    (lsp-ui-doc-show-with-mouse nil)
+    (lsp-ui-sideline-enable nil)
+    )
+#+end_src
+
+*** clangd
+#+begin_src emacs-lisp
+  (setq lsp-clients-clangd-args '("--header-insertion=never" "--completion-style=detailed"))
+#+end_src
+
+** DAP
+#+begin_src emacs-lisp
+  (use-package dap-mode
+    :config
+    (setq dap-auto-configure-features '(sessions locals controls tooltip))
+    (add-hook 'dap-stopped-hook
+              (lambda (arg) (call-interactively #'dap-hydra)))
+    (require 'dap-cpptools)
+    (require 'dap-codelldb)
+    )
 #+end_src
 
 * Org
 #+begin_src emacs-lisp
+  (use-package visual-fill-column)
+
   (use-package org
     :config
     (require 'org-tempo)
@@ -571,19 +598,97 @@
                 (company-mode 0)
 
                 (set-face-attribute 'org-block nil :inherit 'fixed-pitch)
-                (setq-local evil-normal-state-cursor 'bar)
-                (setq-local evil-insert-state-cursor 'bar)
+                (set-face-attribute 'org-hide nil :inherit 'fixed-pitch)
+                (set-face-attribute 'org-block-begin-line nil :inherit 'fixed-pitch)
+                (set-face-attribute 'org-meta-line nil :inherit 'fixed-pitch)
+                (setq-local evil-normal-state-cursor '(bar . 1))
+                (setq-local evil-insert-state-cursor '(bar . 1))
+                (setq-local )
                 )
               )
-    (set-face-attribute 'org-hide nil :inherit 'fixed-pitch)
-    (set-face-attribute 'org-block-begin-line nil :inherit 'fixed-pitch)
-    (set-face-attribute 'org-meta-line nil :inherit 'fixed-pitch)
+    )
+
+  (use-package org-roam
+    :init
+    (setq org-roam-v2-ack t)
     )
 
   (use-package org-bullets
     :config
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-    (setq org-bullets-bullet-list '(" "))
+    (setq org-bullets-bullet-list '("•"))
+    )
+#+end_src
+
+* general.el
+#+begin_src emacs-lisp
+  (use-package general
+    :config
+    (general-evil-setup)
+
+    (general-define-key
+     :states '(normal visual)
+     :prefix "SPC"
+
+     "p p" 'projectile-switch-project
+     "p f" 'projectile-find-file
+     "p s" 'projectile-save-project-buffers
+     "p a" 'projectile-find-other-file
+     "p b" 'projectile-save-project-buffers
+     )
+
+    (general-define-key
+      :states '(normal visual)
+      :keymaps 'override
+      :prefix "SPC"
+
+      "x" 'execute-extended-command
+
+      "f f" 'find-file
+      "f s" 'save-buffer
+
+      "b b" 'consult-buffer
+      "b n" 'next-buffer
+      "b p" 'previous-buffer
+  
+      "k k" 'kill-current-buffer
+      "k K" 'kill-buffer
+
+      "s" 'consult-line
+
+      "w" 'ace-window
+      "o" 'other-window
+      "0" 'delete-window
+      )
+
+    (general-define-key
+     :states '(normal visual)
+     :keymaps 'override
+
+     "g s" 'evil-avy-goto-line
+     )
+
+    (general-define-key
+     :prefix ","
+     :states '(normal visual)
+     :keymaps 'dap-mode-map
+
+     "d d" 'dap-debug
+     "d b" 'dap-breakpoint-toggle
+     "d h" 'dap-hydra
+     )
+
+    (general-define-key
+     :prefix ","
+     :states '(normal visual)
+     :keymaps 'lsp-mode-map
+
+     "l d"   'lsp-find-declaration
+     "l g"   'lsp-find-definition
+     "l i"   'lsp-find-implementation
+     "l q q" 'lsp-shutdown-workspace
+     )
+
     )
 #+end_src
 

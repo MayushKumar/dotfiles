@@ -1,19 +1,20 @@
 (setq custom-safe-themes t)
 (setq base16-distinct-fringe-background nil)
 
+(load-file "~/.config/emacs/emacsinit.el")
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-enabled-themes '(kaolin-bubblegum))
- '(inhibit-startup-screen t)
- '(package-selected-packages
-   '(color-theme-sanityinc-tomorrow gruvbox-theme vterm general kaolin-themes org-bullets persp-mode lsp-treemacs lsp-mode tree-sitter company evil tramp sudo-edit eglot consult-lsp yaml-mode pdf-tools rainbow-mode solarized-theme yasnippet winum which-key visual-fill-column vertico use-package treemacs-evil tree-sitter-langs telephone-line shrink-path ripgrep rainbow-delimiters projectile org orderless marginalia magit lua-mode lsp-ui helpful glsl-mode flycheck evil-commentary evil-collection doom-themes dashboard dap-mode corfu consult company-box cmake-mode base16-theme all-the-icons)))
+ '(custom-enabled-themes '(doom-miramare))
+ '(dap-codelldb-download-url
+   "https://github.com/vadimcn/vscode-lldb/releases/download/v1.6.3/codelldb-x86_64-linux.vsix")
+ '(inhibit-startup-screen t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-(load-file "~/.config/emacs/emacsinit.el")

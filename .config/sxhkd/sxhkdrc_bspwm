@@ -5,12 +5,15 @@ super + w
         brave
 super + e
         emacs
+super + z
+	zathura
 
 XF86Audio{RaiseVolume,LowerVolume,Mute}
         pulseaudio-ctl {up 3,down 3,mute}
 
 Print
         escrotum -s
+
 super + Print
         escrotum
 
@@ -18,7 +21,11 @@ super + Return
 	alacritty
 
 super + p
-	rofi -show run
+	dmenu_run
+
+# lookup words
+super + ctrl + d
+	~/.scripts/word-lookup.sh
 
 # make sxhkd reload its configuration files:
 super + Escape
