@@ -61,8 +61,13 @@
   (show-paren-mode 0)
   (blink-cursor-mode 0)
 
-  ;; (set-face-attribute 'default nil :family "Ttyp0" :height 90)
-  ;; (set-face-attribute 'fixed-pitch nil :family "Ttyp0" :height 90)
+  (setq frame-resize-pixelwise t)
+
+  (setq dired-kill-when-opening-new-dired-buffer t)
+  (setq dired-listing-switches "-alh")
+
+  ;; (set-face-attribute 'default nil :family "Ttyp0" :height 100)
+  ;; (set-face-attribute 'fixed-pitch nil :family "Ttyp0" :height 100)
   (set-face-attribute 'default nil :family "Iosevka Slab" :height 100)
   (set-face-attribute 'fixed-pitch nil :family "Iosevka Slab" :height 100)
   (set-face-attribute 'variable-pitch nil :family "Roboto" :height 120)
@@ -149,7 +154,6 @@
     ;; 		evil-replace-state-cursor `(,(plist-get my/base16-colors :base08) box)
     ;; 		evil-visual-state-cursor  `(,(plist-get my/base16-colors :base09) box))
     )
-  (use-package zeno-theme :no-require t)
 #+end_src
 
 * Evil
@@ -186,8 +190,23 @@
 *** Vertico
 #+begin_src emacs-lisp
   (use-package vertico
+    :straight (vertico :files (:defaults "extensions/*")
+                       :includes (vertico-indexed
+                                  vertico-flat
+                                  vertico-grid
+                                  vertico-mouse
+                                  vertico-quick
+                                  vertico-buffer
+                                  vertico-repeat
+                                  vertico-reverse
+                                  vertico-directory
+                                  vertico-multiform
+                                  vertico-unobtrusive)
+                       )
     :init
     (vertico-mode)
+    (vertico-reverse-mode)
+    (setq vertico-resize t)
     (setq vertico-count 15)
     (setq evil-complete-next-minibuffer-func 'vertico-next)
     (setq evil-complete-previous-minibuffer-func 'vertico-previous)
@@ -495,7 +514,7 @@
 #+begin_src emacs-lisp
   (use-package tree-sitter)
   (use-package tree-sitter-langs)
-  (global-tree-sitter-mode)
+  ;; (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
   (set-face-attribute 'tree-sitter-hl-face:property 'nil :slant 'normal)
 #+end_src
@@ -686,7 +705,7 @@
      "l d"   'lsp-find-declaration
      "l g"   'lsp-find-definition
      "l i"   'lsp-find-implementation
-     "l q q" 'lsp-shutdown-workspace
+     "l q q" 'lsp-workspace-shutdown
      )
 
     )

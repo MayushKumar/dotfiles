@@ -6,11 +6,16 @@ set recolor true
 
 set page-padding 5
 
-#set selection-clipboard clipboard
+set selection-clipboard clipboard
 
 set default-bg                  "#202020"
 set default-fg                  "#ddc7a1"
 
-set recolor-lightcolor          "#202020"
-set recolor-darkcolor           "#ddc7a1"
+#set recolor-lightcolor          "#202020"
+#set recolor-darkcolor           "#ddc7a1"
 
+
+set recolor-lightcolor          "#0f0f0f"
+set recolor-darkcolor           "#cccccc"
+
+set default-bg                   "#0f0f0f"

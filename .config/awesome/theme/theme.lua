@@ -10,22 +10,24 @@ local theme = {}
 
 theme.font          = "Terminus 9"
 
-theme.bg_normal     = "#192d45bb"
-theme.bg_focus      = "#4f747dbb"
+theme.bg_normal     = "#292929"
+theme.bg_focus      = "#484848"
 theme.bg_urgent     = "#ff0000"
 theme.bg_minimize   = "#444444"
 theme.bg_systray    = theme.bg_normal
 
-theme.fg_normal     = "#ffffff"
-theme.fg_focus      = "#ffffff"
-theme.fg_urgent     = "#ffffff"
-theme.fg_minimize   = "#ffffff"
+theme.fg_normal     = "#dddddd"
+theme.fg_focus      = "#dddddd"
+theme.fg_urgent     = "#dddddd"
+theme.fg_minimize   = "#dddddd"
 
 theme.useless_gap   = dpi(0)
 theme.border_width  = dpi(1)
 theme.border_normal = "#535d6c"
 theme.border_focus  = "#ffffff"
 theme.border_marked = "#91231c"
+
+-- theme.tasklist_bg_focus = "#192d4bb"
 
 -- There are other variable sets
 -- overriding the default one when
@@ -94,7 +96,7 @@ theme.titlebar_maximized_button_focus_inactive  = "~/.config/awesome/theme/title
 theme.titlebar_maximized_button_normal_active = "~/.config/awesome/theme/titlebar/maximized_normal_active.png"
 theme.titlebar_maximized_button_focus_active  = "~/.config/awesome/theme/titlebar/maximized_focus_active.png"
 
-theme.wallpaper = "~/.config/awesome/theme/background.png"
+-- theme.wallpaper = "~/.config/awesome/theme/background.png"
 
 -- You can use your own layout icons like this:
 theme.layout_fairh = "~/.config/awesome/theme/layouts/fairhw.png"
