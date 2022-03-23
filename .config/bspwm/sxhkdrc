@@ -2,20 +2,20 @@
 # wm independent hotkeys
 #
 super + w
-        brave
+        waterfox-g4
 super + e
-        emacs
+        emacsclient -c
 super + z
-	zathura
+	  	zathura
 
 XF86Audio{RaiseVolume,LowerVolume,Mute}
-        pulseaudio-ctl {up 3,down 3,mute}
+		pamixer {-i 2,-d 2,-t}
 
 Print
-        escrotum -s
+      escrotum -s ~/Pictures/screenshots/%Y_%m_%d_%H-%M-%S.png
 
 super + Print
-        escrotum
+	  escrotum ~/Pictures/screenshots/%Y_%m_%d_%H-%M-%S.png
 
 super + Return
 	alacritty
@@ -23,12 +23,15 @@ super + Return
 super + p
 	dmenu_run
 
+super + F12
+	  systemctl suspend
+
 # lookup words
 super + ctrl + d
 	~/.scripts/word-lookup.sh
 
 # make sxhkd reload its configuration files:
-super + Escape
+super + F1
 	pkill -USR1 -x sxhkd
 
 #
@@ -36,12 +39,14 @@ super + Escape
 #
 
 # quit/restart bspwm
-super + alt + {q,r}
+super + shift + {q,r}
 	bspc {quit,wm -r}
 
 # close and kill
-super + {_,shift + }c
-	bspc node -{c,k}
+# super + {_,shift + }c
+# 	bspc node -{c,k}
+super + c
+	  bspc node -c
 
 # alternate between the tiled and monocle layout
 super + m

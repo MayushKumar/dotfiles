@@ -19,3 +19,5 @@ set recolor-lightcolor          "#0f0f0f"
 set recolor-darkcolor           "#cccccc"
 
 set default-bg                   "#0f0f0f"
+
+set font 						 "Terminus 9"

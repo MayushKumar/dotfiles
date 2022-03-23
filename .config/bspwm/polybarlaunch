@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Terminate already running bar instances
+killall -q polybar
+# If all your bars have ipc enabled, you can also use 
+# polybar-msg cmd quit
+
+# Launch bar1
+polybar -c ~/.config/bspwm/polybarconf -r bar1 & disown
+
+echo "Bars launched..."

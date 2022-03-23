@@ -16,10 +16,10 @@ XF86Audio{RaiseVolume,LowerVolume,Mute}
        pamixer {-i 2,-d 2,-t}
 
 Print
-      escrotum -s
+      escrotum -s ~/Pictures/screenshots/%Y_%m_%d_%H-%M-%S.png
 
 super + Print
-	  escrotum
+	  escrotum ~/Pictures/screenshots/%Y_%m_%d_%H-%M-%S.png
 
 super + F12
 	  systemctl suspend

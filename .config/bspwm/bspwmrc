@@ -1,12 +1,11 @@
 #! /bin/sh
 
-pgrep -x sxhkd > /dev/null || sxhkd -c ~/.config/sxhkd/sxhkdrc_bspwm &
+pgrep -x sxhkd > /dev/null || sxhkd -c ~/.config/bspwm/sxhkdrc &
 dunst &
-nm-applet &
-nitrogen --restore
+~/.fehbg
 picom --experimental-backends &
 unclutter &
-~/.config/polybar/launch.sh
+~/.config/bspwm/polybarlaunch 
 
 bspc monitor -d I II III IV V VI VII VIII IX
 
@@ -24,6 +23,5 @@ bspc rule -a Zathura state=tiled
 bspc rule -a Emacs state=tiled
 bspc rule -a Qalculate-gtk state=floating
 bspc rule -a fontforge state=floating
-bspc rule -a Nitrogen state=floating
 
 xsetroot -cursor_name left_ptr

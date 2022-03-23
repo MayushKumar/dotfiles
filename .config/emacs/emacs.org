@@ -17,6 +17,7 @@
   ;; (setq use-package-always-ensure t)
 
   (setq backup-directory-alist '(("." . "~/.cache/emacs_backup")))
+  (setq native-comp-async-report-warnings-errors nil)
 #+end_src
 
 ** straight.el
@@ -68,12 +69,12 @@
 
   ;; (set-face-attribute 'default nil :family "Ttyp0" :height 100)
   ;; (set-face-attribute 'fixed-pitch nil :family "Ttyp0" :height 100)
-  (set-face-attribute 'default nil :family "Iosevka Slab" :height 100)
-  (set-face-attribute 'fixed-pitch nil :family "Iosevka Slab" :height 100)
+  (set-face-attribute 'default nil :family "Iosevka" :height 100)
+  (set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 100)
   (set-face-attribute 'variable-pitch nil :family "Roboto" :height 120)
 
   ;; Temporary
-  (set-face-attribute 'mode-line-active nil :inherit 'mode-line)
+  ;; (set-face-attribute 'mode-line-active nil :inherit 'mode-line)
 
   (defun mk/transparency (value)
     "Sets the transparency of the frame window. 0=transparent/100=opaque"
@@ -120,13 +121,42 @@
 
 ** Modeline
 #+begin_src emacs-lisp
-  (use-package telephone-line
+  ;; (use-package telephone-line
+  ;;   :config
+  ;;   (setq telephone-line-primary-left-separator 'telephone-line-flat)
+  ;;   (setq telephone-line-primary-right-separator 'telephone-line-flat)
+  ;;   (setq telephone-line-secondary-left-separator 'telephone-line-flat)
+  ;;   (setq telephone-line-secondary-right-separator 'telephone-line-flat)
+  ;;   (telephone-line-mode 1)
+  ;;   )
+
+  (setq-default mode-line-format
+    '("%e" mode-line-front-space (:eval                                
+      (moody-ribbon evil-mode-line-tag 0 'up))
+     (:propertize
+      ("" mode-line-mule-info mode-line-client mode-line-modified mode-line-remote)
+      display
+      (min-width
+       (5.0)))
+     mode-line-frame-identification mode-line-buffer-identification "   " mode-line-position
+     (vc-mode vc-mode)
+     "  " mode-line-modes mode-line-misc-info mode-line-end-spaces)
+   )
+
+  (column-number-mode)
+
+  (use-package moody
     :config
-    (setq telephone-line-primary-left-separator 'telephone-line-flat)
-    (setq telephone-line-primary-right-separator 'telephone-line-flat)
-    (setq telephone-line-secondary-left-separator 'telephone-line-flat)
-    (setq telephone-line-secondary-right-separator 'telephone-line-flat)
-    (telephone-line-mode 1)
+    (setq x-underline-at-descent-line t)
+    (moody-replace-mode-line-buffer-identification)
+    (moody-replace-vc-mode)
+    (moody-replace-eldoc-minibuffer-message-function)
+    (setq moody-mode-line-height 20)
+    )
+
+  (use-package minions
+    :config
+    (minions-mode)
     )
 #+end_src
 
@@ -154,6 +184,7 @@
     ;; 		evil-replace-state-cursor `(,(plist-get my/base16-colors :base08) box)
     ;; 		evil-visual-state-cursor  `(,(plist-get my/base16-colors :base09) box))
     )
+
 #+end_src
 
 * Evil
@@ -171,14 +202,23 @@
     :config
     (evil-mode 1)
     (evil-global-set-key 'normal (kbd "U") 'evil-redo)
+
+    (setq evil-mode-line-format nil)
+    (setq evil-normal-state-tag   (propertize " ● " 'face '((:foreground "SeaGreen")))
+          evil-emacs-state-tag    (propertize " ● " 'face '((:foreground "SkyBlue2"      )))
+          evil-insert-state-tag   (propertize " ● " 'face '((:foreground "chartreuse3"   )))
+          evil-replace-state-tag  (propertize " ● " 'face '((:foreground "chocolate"     )))
+          evil-motion-state-tag   (propertize " ● " 'face '((:foreground "plum3"         )))
+          evil-visual-state-tag   (propertize " ● " 'face '((:foreground "gray"          )))
+          evil-operator-state-tag (propertize " ● " 'face '((:foreground "sandy brown"   ))))
     )
-  
+
   (use-package evil-collection
     :after evil
     :config
     (setq evil-collection-company-use-tng nil)
     (evil-collection-init))
-  
+
   (use-package evil-commentary
     :config
     (evil-commentary-mode)
@@ -205,8 +245,6 @@
                        )
     :init
     (vertico-mode)
-    (vertico-reverse-mode)
-    (setq vertico-resize t)
     (setq vertico-count 15)
     (setq evil-complete-next-minibuffer-func 'vertico-next)
     (setq evil-complete-previous-minibuffer-func 'vertico-previous)
@@ -237,56 +275,62 @@
 
 *** Consult
 #+begin_src emacs-lisp
+  ;; Example configuration for Consult
   (use-package consult
     ;; Replace bindings. Lazily loaded due by `use-package'.
-    :bind (;; C-c bindings (mode-specific-map)
-           ("C-c h" . consult-history)
+    ;;:bind (;; C-c bindings (mode-specific-map)
+           ;; ("C-c h" . consult-history)
            ;; ("C-c m" . consult-mode-command)
-           ("C-c b" . consult-bookmark)
            ;; ("C-c k" . consult-kmacro)
            ;; C-x bindings (ctl-x-map)
-           ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-           ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
-           ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-           ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+           ;; ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
+           ;; ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+           ;; ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+           ;; ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+           ;; ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
+           ;; ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
            ;; Custom M-# bindings for fast register access
-           ("M-#" . consult-register-load)
-           ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
-           ("C-M-#" . consult-register)
+           ;; ("M-#" . consult-register-load)
+           ;; ("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+           ;; ("C-M-#" . consult-register)
            ;; Other custom bindings
-           ("M-y" . consult-yank-pop)                ;; orig. yank-pop
-           ("<help> a" . consult-apropos)            ;; orig. apropos-command
+           ;; ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+           ;; ("<help> a" . consult-apropos)            ;; orig. apropos-command
            ;; M-g bindings (goto-map)
-           ("M-g e" . consult-compile-error)
-           ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
-           ("M-g g" . consult-goto-line)             ;; orig. goto-line
-           ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-           ("M-g o" . consult-outline)
-           ("M-g m" . consult-mark)
-           ("M-g k" . consult-global-mark)
-           ("M-g i" . consult-imenu)
-           ("M-g I" . consult-project-imenu)
+           ;; ("M-g e" . consult-compile-error)
+           ;; ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
+           ;; ("M-g g" . consult-goto-line)             ;; orig. goto-line
+           ;; ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+           ;; ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+           ;; ("M-g m" . consult-mark)
+           ;; ("M-g k" . consult-global-mark)
+           ;; ("M-g i" . consult-imenu)
+           ;; ("M-g I" . consult-imenu-multi)
            ;; M-s bindings (search-map)
-           ("M-s f" . consult-find)
-           ("M-s L" . consult-locate)
-           ("M-s g" . consult-grep)
-           ("M-s G" . consult-git-grep)
-           ("M-s r" . consult-ripgrep)
-           ("C-s"   . consult-line)
-           ("M-s m" . consult-multi-occur)
-           ("M-s k" . consult-keep-lines)
-           ("M-s u" . consult-focus-lines)
+           ;; ("M-s d" . consult-find)
+           ;; ("M-s D" . consult-locate)
+           ;; ("M-s g" . consult-grep)
+           ;; ("M-s G" . consult-git-grep)
+           ;; ("M-s r" . consult-ripgrep)
+           ;; ("M-s l" . consult-line)
+           ;; ("M-s L" . consult-line-multi)
+           ;; ("M-s m" . consult-multi-occur)
+           ;; ("M-s k" . consult-keep-lines)
+           ;; ("M-s u" . consult-focus-lines)
            ;; Isearch integration
-           ("M-s e" . consult-isearch)
-           :map isearch-mode-map
-           ("M-e" . consult-isearch)                 ;; orig. isearch-edit-string
-           ("M-s e" . consult-isearch)               ;; orig. isearch-edit-string
-           ("M-s l" . consult-line))                 ;; required by consult-line to detect isearch
+           ;; ("M-s e" . consult-isearch-history)
+           ;; :map isearch-mode-map
+           ;; ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
+           ;; ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
+           ;; ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
+           ;; ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
+           ;; Minibuffer history
+           ;; :map minibuffer-local-map
+           ;; ("M-s" . consult-history)                 ;; orig. next-matching-history-element
+           ;; ("M-r" . consult-history))                ;; orig. previous-matching-history-element
 
-    ;; Enable automatic preview at point in the *Completions* buffer.
-    ;; This is relevant when you use the default completion UI,
-    ;; and not necessary for Selectrum, Vertico etc.
-
+    ;; Enable automatic preview at point in the *Completions* buffer. This is
+    ;; relevant when you use the default completion UI.
     ;; :hook (completion-list-mode . consult-preview-at-point-mode)
 
     ;; The :init configuration is always executed (Not lazy)
@@ -295,12 +339,15 @@
     ;; Optionally configure the register formatting. This improves the register
     ;; preview for `consult-register', `consult-register-load',
     ;; `consult-register-store' and the Emacs built-ins.
-    (setq register-preview-delay 0
+    (setq register-preview-delay 0.5
           register-preview-function #'consult-register-format)
 
     ;; Optionally tweak the register preview window.
     ;; This adds thin lines, sorting and hides the mode line of the window.
     (advice-add #'register-preview :override #'consult-register-window)
+
+    ;; Optionally replace `completing-read-multiple' with an enhanced version.
+    (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
 
     ;; Use Consult to select xref locations with preview
     (setq xref-show-xrefs-function #'consult-xref
@@ -318,8 +365,12 @@
     ;; For some commands and buffer sources it is useful to configure the
     ;; :preview-key on a per-command basis using the `consult-customize' macro.
     (consult-customize
-     consult-ripgrep consult-git-grep consult-grep consult-bookmark consult-recent-file
-     consult--source-file consult--source-project-file consult--source-bookmark
+     consult-theme
+     :preview-key '(:debounce 0.2 any)
+     consult-ripgrep consult-git-grep consult-grep
+     consult-bookmark consult-recent-file consult-xref
+     consult--source-bookmark consult--source-recent-file
+     consult--source-project-recent-file
      :preview-key (kbd "M-."))
 
     ;; Optionally configure the narrowing key.
@@ -330,20 +381,18 @@
     ;; You may want to use `embark-prefix-help-command' or which-key instead.
     ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
 
-    ;; Optionally configure a function which returns the project root directory.
+    ;; By default `consult-project-function' uses `project-root' from project.el.
+    ;; Optionally configure a different project root function.
     ;; There are multiple reasonable alternatives to chose from.
-    ;;;; 1. project.el (project-roots)
-    (setq consult-project-root-function
-          (lambda ()
-            (when-let (project (project-current))
-              (car (project-roots project)))))
+    ;;;; 1. project.el (the default)
+    ;; (setq consult-project-function #'consult--default-project--function)
     ;;;; 2. projectile.el (projectile-project-root)
-    ;; (autoload 'projectile-project-root "projectile")
-    ;; (setq consult-project-root-function #'projectile-project-root)
+    (autoload 'projectile-project-root "projectile")
+    (setq consult-project-function (lambda (_) (projectile-project-root)))
     ;;;; 3. vc.el (vc-root-dir)
-    ;; (setq consult-project-root-function #'vc-root-dir)
+    ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
     ;;;; 4. locate-dominating-file
-    ;; (setq consult-project-root-function (lambda () (locate-dominating-file "." ".git")))
+    ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
   )
 #+end_src
 
@@ -389,23 +438,26 @@
 #+begin_src emacs-lisp
   (use-package treemacs
     :config
-    (treemacs-resize-icons 18)
+    (treemacs-resize-icons 16)
     (treemacs-follow-mode t)
     (treemacs-filewatch-mode t)
     (treemacs-fringe-indicator-mode t)
-    (treemacs-git-mode 'deferred)
-    (setq doom-themes-treemacs-theme "doom-atom")
-    (doom-themes-treemacs-config)
+    ;; (treemacs-git-mode 'deferred)
+    ;; (setq doom-themes-treemacs-theme "doom-atom")
+    ;; (doom-themes-treemacs-config)
     (setq treemacs-width-is-initially-locked nil)
     )
 
   (use-package treemacs-evil
-    :after treemacs evil
+    :after (treemacs evil)
     :bind
     (:map global-map
           ("C-x t t"   . treemacs)
           ("C-x t C-t" . treemacs-find-file))
     )
+
+  (load "~/.config/emacs/treemacs-theme.el")
+  (treemacs-load-theme 'mk/treemacs-theme)
 
   (add-hook 'treemacs-mode-hook (lambda() (display-line-numbers-mode 0)))
 #+end_src
@@ -504,10 +556,10 @@
 
 ** Flycheck
 #+begin_src emacs-lisp
-  (use-package flycheck
-    :init
-    (global-flycheck-mode)
-    )
+  ;; (use-package flycheck
+  ;;   :init
+  ;;   (global-flycheck-mode)
+  ;;   )
 #+end_src
 
 ** Tree-sitter
@@ -545,18 +597,21 @@
     :hook
     (c++-mode . lsp-deferred)
     (lsp-mode . lsp-enable-which-key-integration)
+
     :init
     (setq lsp-keymap-prefix "C-c l")
+
     :config
     (lsp-enable-which-key-integration)
+
     (setq lsp-headerline-breadcrumb-enable nil)
     (setq lsp-enable-symbol-highlighting nil)
     (setq lsp-enable-links nil)
     (setq lsp-modeline-code-actions-enable nil)
-
     (setq lsp-log-io nil)
     (setq lsp-enable-folding nil)
     (setq lsp-enable-imenu nil)
+    (setq lsp-eldoc-enable-hover nil)
 
     :commands
     (lsp lsp-deferred)
@@ -639,8 +694,19 @@
     )
 #+end_src
 
-* general.el
+* Keybindings
 #+begin_src emacs-lisp
+  ;; (defhydra hydra-window ()
+  ;;   "window"
+  ;;   ("w" ace-window)
+  ;;   ("h" windmove-left) 
+  ;;   ("j" windmove-down) 
+  ;;   ("k" windmove-up) 
+  ;;   ("l" windmove-right) 
+  ;;   ("]" enlarge-window-horizontally)
+  ;;   ("[" enlarge-window)
+  ;;   )
+
   (use-package general
     :config
     (general-evil-setup)
@@ -666,18 +732,27 @@
       "f f" 'find-file
       "f s" 'save-buffer
 
-      "b b" 'consult-buffer
-      "b n" 'next-buffer
-      "b p" 'previous-buffer
-  
+      "c b" 'consult-bookmark
+
+      "b" 'consult-buffer
+
       "k k" 'kill-current-buffer
       "k K" 'kill-buffer
 
       "s" 'consult-line
 
+      ;; "w" 'hydra-window/body
       "w" 'ace-window
       "o" 'other-window
       "0" 'delete-window
+
+      "h v" 'helpful-variable
+      "h f" 'helpful-function
+      "h k" 'helpful-key
+      "h o" 'helpful-symbol
+      "h p" 'helpful-at-point
+
+      "t t" 'treemacs
       )
 
     (general-define-key
@@ -705,7 +780,33 @@
      "l d"   'lsp-find-declaration
      "l g"   'lsp-find-definition
      "l i"   'lsp-find-implementation
+     "l r"   'lsp-rename
      "l q q" 'lsp-workspace-shutdown
+     )
+
+    (general-define-key
+     :prefix ","
+     :states '(normal visual)
+     :keymaps 'org-mode-map
+
+     "t" 'org-babel-tangle
+     )
+
+    (general-define-key
+     :prefix ","
+     :states '(normal)
+     :keymaps 'emacs-lisp-mode
+
+     "e e" 'eval-last-sexp
+     "e b" 'eval-buffer
+     )
+
+    (general-define-key
+     :prefix ","
+     :states '(visual)
+     :keymaps 'emacs-lisp-mode
+
+     "e" 'eval-region
      )
 
     )

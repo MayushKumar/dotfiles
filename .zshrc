@@ -29,30 +29,17 @@ vterm_printf(){
     fi
 }
 
-export EDITOR=nvim
-export PATH=$PATH:/home/mayush/.local/bin
-
-export LESS_TERMCAP_mb=$'\e[1;32m'
-export LESS_TERMCAP_md=$'\e[1;32m'
-export LESS_TERMCAP_me=$'\e[0m'
-export LESS_TERMCAP_se=$'\e[0m'
-export LESS_TERMCAP_so=$'\e[01;33m'
-export LESS_TERMCAP_ue=$'\e[0m'
-export LESS_TERMCAP_us=$'\e[1;4;31m'
-
 alias ls='exa'
 alias la='exa -al'
 alias em='emacsclient'
 
-# PROMPT="%n > "
 prompt pure
 
 alias config='/usr/bin/git --git-dir=/home/mayush/.cfg/ --work-tree=/home/mayush'
 alias ch='cd /run/media/Storage/Personal/Dev/C++/Charcoal\ Engine/'
+alias nr='cd /run/media/Storage/Personal/Dev/C++/Noor/'
 
 bindkey "^?" backward-delete-char
-
-source ~/.config/lf/icons_definition.sh 
 
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
 source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh

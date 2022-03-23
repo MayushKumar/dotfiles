@@ -1,0 +1,25 @@
+;;;; Emacs Bookmark Format Version 1;;;; -*- coding: utf-8-emacs; mode: lisp-data -*-
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("lf-config"
+ (filename . "~/.config/lf/lfrc")
+ (front-context-string . "# interpreter fo")
+ (rear-context-string)
+ (position . 1))
+("awesome-config"
+ (filename . "~/.config/awesome/rc.lua")
+ (front-context-string . "-- If LuaRocks i")
+ (rear-context-string)
+ (position . 1))
+("alacritty.yml"
+ (filename . "~/.config/alacritty/alacritty.yml")
+ (front-context-string . "# Configuration ")
+ (rear-context-string)
+ (position . 1))
+("emacs.org"
+ (filename . "~/.config/emacs/emacs.org")
+ (front-context-string . "#+title:  Emacs ")
+ (rear-context-string)
+ (position . 1))
+)

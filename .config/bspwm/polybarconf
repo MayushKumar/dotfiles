@@ -18,11 +18,11 @@
 
 [colors]
 ;background = ${xrdb:color0:#222}
-background = #dd32302f
-background-alt = #32302f
+background = #292929
+background-alt = #484848
 ;foreground = ${xrdb:color7:#222}
-foreground = #eee4df
-foreground-alt = #a2a0a5
+foreground = #dddddd
+foreground-alt = #dddddd
 primary = #ffb52a
 secondary = #e60053
 alert = #bd2c40
@@ -49,7 +49,7 @@ module-margin-left = 0
 module-margin-right = 0
 
 ;font-0 = fixed:pixelsize=10;1
-font-0 = Tamsyn:pixelsize=14;0
+font-0 = "Terminus:pixelsize=9;1"
 ;font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
 ;font-2 = siji:pixelsize=10;1
 
@@ -62,15 +62,11 @@ tray-padding = 2
 ;tray-background = #0063ff
 
 wm-restack = bspwm
-;wm-restack = i3
 
 override-redirect = false
 
 ;scroll-up = bspwm-desknext
 ;scroll-down = bspwm-deskprev
-
-;scroll-up = i3wm-wsnext
-;scroll-down = i3wm-wsprev
 
 cursor-click = pointer
 cursor-scroll = ns-resize
