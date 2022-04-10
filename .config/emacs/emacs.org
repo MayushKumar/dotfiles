@@ -16,7 +16,7 @@
   ;; (require 'use-package)
   ;; (setq use-package-always-ensure t)
 
-  (setq backup-directory-alist '(("." . "~/.cache/emacs_backup")))
+  (setq backup-directory-alist '(("." . "~/.cache/emacs-backup")))
   (setq native-comp-async-report-warnings-errors nil)
 #+end_src
 
@@ -49,13 +49,13 @@
 
   (global-display-line-numbers-mode t)
   (setq-default display-line-numbers-type 'relative)
-  (setq-default display-line-numbers-width 3)
+  (setq-default display-line-numbers-width-start t)
 
   (add-hook 'prog-mode-hook 'electric-pair-local-mode)
 
   (setq-default tab-width 4)
 
-  (setq scroll-margin 6)
+  (setq scroll-margin 4)
   (setq scroll-conservatively 101)
 
   (setq-default truncate-lines t)
@@ -69,9 +69,9 @@
 
   ;; (set-face-attribute 'default nil :family "Ttyp0" :height 100)
   ;; (set-face-attribute 'fixed-pitch nil :family "Ttyp0" :height 100)
-  (set-face-attribute 'default nil :family "Iosevka" :height 100)
-  (set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 100)
-  (set-face-attribute 'variable-pitch nil :family "Roboto" :height 120)
+  (set-face-attribute 'default nil :family "Iosevka" :height 105)
+  (set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 105)
+  (set-face-attribute 'variable-pitch nil :family "Roboto" :height 130)
 
   ;; Temporary
   ;; (set-face-attribute 'mode-line-active nil :inherit 'mode-line)
@@ -172,19 +172,15 @@
 
   (use-package kaolin-themes :no-require t)
 
+  (use-package uwu-theme :no-require t
+    :config
+    (setq uwu-distinct-line-numbers nil)
+  )
+
   (use-package base16-theme :no-require t
     :custom
     (base16-distinct-fringe-background nil)
-    :config
-    ;; (defvar my/base16-colors base16-onedark-colors)
-    ;; (setq evil-emacs-state-cursor   `(,(plist-get my/base16-colors :base0D) box)
-    ;; 		evil-insert-state-cursor  `(,(plist-get my/base16-colors :base0D) box)
-    ;; 		evil-motion-state-cursor  `(,(plist-get my/base16-colors :base0E) box)
-    ;; 		evil-normal-state-cursor  `(,(plist-get my/base16-colors :base0B) box)
-    ;; 		evil-replace-state-cursor `(,(plist-get my/base16-colors :base08) box)
-    ;; 		evil-visual-state-cursor  `(,(plist-get my/base16-colors :base09) box))
     )
-
 #+end_src
 
 * Evil
@@ -199,18 +195,25 @@
     (setq evil-visual-state-cursor 'hollow)
     (setq evil-respect-visual-line-mode t)
     (setq evil-want-minibuffer t)
+    (setq evil-mode-line-format nil)
+    (setq evil-normal-state-tag   (propertize " ● " 'face '((:foreground "MediumTurquoise")))
+          evil-emacs-state-tag    (propertize " ● " 'face '((:foreground "BlueViolet")))
+          evil-insert-state-tag   (propertize " ● " 'face '((:foreground "Orchid")))
+          evil-replace-state-tag  (propertize " ● " 'face '((:foreground "Red3")))
+          evil-motion-state-tag   (propertize " ● " 'face '((:foreground "OrangeRed3")))
+          evil-visual-state-tag   (propertize " ● " 'face '((:foreground "Gold2")))
+          evil-operator-state-tag (propertize " ● " 'face '((:foreground "RoyalBlue"))))
     :config
     (evil-mode 1)
     (evil-global-set-key 'normal (kbd "U") 'evil-redo)
 
-    (setq evil-mode-line-format nil)
-    (setq evil-normal-state-tag   (propertize " ● " 'face '((:foreground "SeaGreen")))
-          evil-emacs-state-tag    (propertize " ● " 'face '((:foreground "SkyBlue2"      )))
-          evil-insert-state-tag   (propertize " ● " 'face '((:foreground "chartreuse3"   )))
-          evil-replace-state-tag  (propertize " ● " 'face '((:foreground "chocolate"     )))
-          evil-motion-state-tag   (propertize " ● " 'face '((:foreground "plum3"         )))
-          evil-visual-state-tag   (propertize " ● " 'face '((:foreground "gray"          )))
-          evil-operator-state-tag (propertize " ● " 'face '((:foreground "sandy brown"   ))))
+    ;; (setq evil-normal-state-tag   (propertize " ● " 'face 'all-the-icons-cyan)
+    ;;       evil-emacs-state-tag    (propertize " ● " 'face 'all-the-icons-purple-alt)
+    ;;       evil-insert-state-tag   (propertize " ● " 'face 'all-the-icons-lpurple)
+    ;;       evil-replace-state-tag  (propertize " ● " 'face 'all-the-icons-lred)
+    ;;       evil-motion-state-tag   (propertize " ● " 'face 'all-the-icons-dred)
+    ;;       evil-visual-state-tag   (propertize " ● " 'face 'all-the-icons-yellow)
+    ;;       evil-operator-state-tag (propertize " ● " 'face 'all-the-icons-blue))
     )
 
   (use-package evil-collection
@@ -218,6 +221,12 @@
     :config
     (setq evil-collection-company-use-tng nil)
     (evil-collection-init))
+
+  (use-package evil-snipe
+    :config
+    (evil-snipe-mode)
+    (evil-snipe-override-mode)
+    )
 
   (use-package evil-commentary
     :config
@@ -663,8 +672,8 @@
 
     (add-hook 'org-mode-hook
               (lambda ()
-                (visual-line-mode)
                 (variable-pitch-mode)
+                (visual-line-mode)
                 (setq visual-fill-column-center-text t)
                 (setq fill-column 140)
                 (display-line-numbers-mode 0)
@@ -677,7 +686,6 @@
                 (set-face-attribute 'org-meta-line nil :inherit 'fixed-pitch)
                 (setq-local evil-normal-state-cursor '(bar . 1))
                 (setq-local evil-insert-state-cursor '(bar . 1))
-                (setq-local )
                 )
               )
     )
@@ -795,7 +803,7 @@
     (general-define-key
      :prefix ","
      :states '(normal)
-     :keymaps 'emacs-lisp-mode
+     :keymaps '(lisp-mode-map lisp-interaction-mode-map emacs-lisp-mode-map)
 
      "e e" 'eval-last-sexp
      "e b" 'eval-buffer
@@ -804,7 +812,7 @@
     (general-define-key
      :prefix ","
      :states '(visual)
-     :keymaps 'emacs-lisp-mode
+     :keymaps '(lisp-mode-map lisp-interaction-mode-map emacs-lisp-mode-map)
 
      "e" 'eval-region
      )

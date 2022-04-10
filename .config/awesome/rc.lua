@@ -182,7 +182,7 @@ awful.screen.connect_for_each_screen(function(s)
     }
 
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s, border_width = 0 })
+    s.mywibox = awful.wibar({ position = "top", screen = s, border_width = 0, height = 18 })
 
     -- Add widgets to the wibox
     s.mywibox:setup {
@@ -260,8 +260,6 @@ globalkeys = gears.table.join(
         {description = "go back", group = "client"}),
 
     -- Standard program
-    awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
-              {description = "open a terminal", group = "launcher"}),
     awful.key({ modkey, "Control" }, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit,
@@ -324,7 +322,7 @@ clientkeys = gears.table.join(
         {description = "toggle fullscreen", group = "client"}),
     awful.key({ modkey,           }, "c",      function (c) c:kill()                         end,
               {description = "close", group = "client"}),
-    awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ,
+    awful.key({ modkey,           }, "g",  awful.client.floating.toggle                     ,
               {description = "toggle floating", group = "client"}),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
               {description = "move to master", group = "client"}),
@@ -554,6 +552,6 @@ client.connect_signal("unfocus", function(c)
 end)
 -- }}}
 
-beautiful.useless_gap = 2
+beautiful.useless_gap = 4
 
 awful.spawn("bash -c \"~/.config/awesome/startup.sh\"")

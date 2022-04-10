@@ -6,4 +6,5 @@ dunst &
 ~/.fehbg 
 picom --experimental-backends &
 unclutter &
+pgrep -f "emacs --daemon" || emacs --daemon &
 #~/.config/polybar/launch.sh

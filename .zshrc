@@ -29,17 +29,22 @@ vterm_printf(){
     fi
 }
 
+setopt auto_cd
+
 alias ls='exa'
 alias la='exa -al'
 alias em='emacsclient'
 
-prompt pure
-
 alias config='/usr/bin/git --git-dir=/home/mayush/.cfg/ --work-tree=/home/mayush'
 alias ch='cd /run/media/Storage/Personal/Dev/C++/Charcoal\ Engine/'
 alias nr='cd /run/media/Storage/Personal/Dev/C++/Noor/'
+alias dw='cd /run/media/Storage/Personal/Downloads/'
+alias dc='cd /run/media/Storage/Personal/Documents/'
 
-bindkey "^?" backward-delete-char
+prompt pure
 
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
 source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+
+bindkey "^?" backward-delete-char
+bindkey "^[[Z" autosuggest-accept

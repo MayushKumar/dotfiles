@@ -1,28 +1,29 @@
-#
-# wm independent hotkeys
-#
+super + Return
+	  	alacritty
+
 super + w
-      waterfox-g4
+		waterfox-g4
 
 super + e
-      emacsclient -c
+		emacsclient -c
+
 super + z
-	  zathura
+		zathura
 
 super + p
-	  dmenu_run -x 0 -y 0 -z 1680
+		dmenu_run -x 0 -y 0 -z 1680
 
 XF86Audio{RaiseVolume,LowerVolume,Mute}
-       pamixer {-i 2,-d 2,-t}
+		pamixer {-i 2,-d 2,-t}
 
 Print
-      escrotum -s ~/Pictures/screenshots/%Y_%m_%d_%H-%M-%S.png
+		escrotum -s ~/Pictures/screenshots/%Y_%m_%d_%H:%M:%S.png
 
 super + Print
-	  escrotum ~/Pictures/screenshots/%Y_%m_%d_%H-%M-%S.png
+		escrotum ~/Pictures/screenshots/%Y_%m_%d_%H:%M:%S.png
 
 super + F12
-	  systemctl suspend
+		systemctl suspend
 
 # lookup words
 super + ctrl + d
