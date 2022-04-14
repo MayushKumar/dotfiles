@@ -223,7 +223,13 @@ globalkeys = gears.table.join(
               {description = "view next", group = "tag"}),
     awful.key({ modkey,           }, "Escape", awful.tag.history.restore,
               {description = "go back", group = "tag"}),
-
+	awful.key({modkey,            }, "b",
+	   function ()
+		  s = awful.screen.focused()
+		  s.mywibox.visible = not s.mywibox.visible
+	   end,
+	   {description = "toggle visibility of bar"}
+	),
     awful.key({ modkey,           }, "j",
         function ()
             awful.client.focus.byidx( 1)

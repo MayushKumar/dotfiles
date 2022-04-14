@@ -2,7 +2,12 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("picom.conf"
+((".zshrc"
+ (filename . "~/.zshrc")
+ (front-context-string . "# Lines configur")
+ (rear-context-string)
+ (position . 1))
+("picom.conf"
  (filename . "~/.config/picom/picom.conf")
  (front-context-string . "################")
  (rear-context-string)

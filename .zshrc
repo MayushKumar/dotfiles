@@ -33,7 +33,7 @@ setopt auto_cd
 
 alias ls='exa'
 alias la='exa -al'
-alias em='emacsclient'
+alias ec='emacsclient -r -a ""'
 
 alias config='/usr/bin/git --git-dir=/home/mayush/.cfg/ --work-tree=/home/mayush'
 alias ch='cd /run/media/Storage/Personal/Dev/C++/Charcoal\ Engine/'
