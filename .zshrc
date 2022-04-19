@@ -1,5 +1,5 @@
 # Lines configured by zsh-newuser-install
-HISTFILE=~/.histfile
+HISTFILE=~/.cache/zsh/histfile
 HISTSIZE=1000
 SAVEHIST=1000
 unsetopt beep
@@ -40,6 +40,7 @@ alias ch='cd /run/media/Storage/Personal/Dev/C++/Charcoal\ Engine/'
 alias nr='cd /run/media/Storage/Personal/Dev/C++/Noor/'
 alias dw='cd /run/media/Storage/Personal/Downloads/'
 alias dc='cd /run/media/Storage/Personal/Documents/'
+alias dv='cd /run/media/Storage/Personal/Dev/'
 
 prompt pure
 

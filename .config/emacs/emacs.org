@@ -103,7 +103,7 @@
 #+begin_src emacs-lisp
   (use-package dashboard
     :config
-    (setq dashboard-startup-banner "~/.config/emacs/banner.txt")
+    (setq dashboard-startup-banner "~/.config/emacs/banner.png")
     (setq dashboard-set-heading-icons t)
     (setq dashboard-set-file-icons t)
     (setq dashboard-items '((recents  . 5)
@@ -597,17 +597,6 @@
 
 * Keybindings
 #+begin_src emacs-lisp
-  ;; (defhydra hydra-window ()
-  ;;   "window"
-  ;;   ("w" ace-window)
-  ;;   ("h" windmove-left) 
-  ;;   ("j" windmove-down) 
-  ;;   ("k" windmove-up) 
-  ;;   ("l" windmove-right) 
-  ;;   ("]" enlarge-window-horizontally)
-  ;;   ("[" enlarge-window)
-  ;;   )
-
   (use-package general
     :config
     (general-evil-setup)
@@ -620,40 +609,41 @@
      "p f" 'projectile-find-file
      "p s" 'projectile-save-project-buffers
      "p a" 'projectile-find-other-file
-     "p b" 'projectile-save-project-buffers)
+     "p b" 'projectile-save-project-buffers
+     "p k" 'projectile-kill-buffers)
 
     (general-define-key
-      :states '(normal visual)
-      :keymaps 'override
-      :prefix "SPC"
+     :states '(normal visual)
+     :keymaps 'override
+     :prefix "SPC"
 
-      "x" 'execute-extended-command
+     "x" 'execute-extended-command
 
-      "f f" 'find-file
-      "f s" 'save-buffer
+     "f f" 'find-file
+     "f s" 'save-buffer
 
-      "c b" 'consult-bookmark
+     "c b" 'consult-bookmark
 
-      "b" 'consult-buffer
+     "b" 'consult-buffer
 
-      "k k" 'kill-current-buffer
-      "k K" 'kill-buffer
+     "k k" 'kill-current-buffer
+     "k K" 'kill-buffer
 
-      "s" 'consult-line
-      "S r" 'rg
+     "s" 'consult-line
+     "S r" 'rg
 
-      ;; "w" 'hydra-window/body
-      "w" 'ace-window
-      "o" 'other-window
-      "0" 'delete-window
+     ;; "w" 'hydra-window/body
+     "w" 'ace-window
+     "o" 'other-window
+     "0" 'delete-window
 
-      "h v" 'helpful-variable
-      "h f" 'helpful-function
-      "h k" 'helpful-key
-      "h o" 'helpful-symbol
-      "h p" 'helpful-at-point
+     "h v" 'helpful-variable
+     "h f" 'helpful-function
+     "h k" 'helpful-key
+     "h o" 'helpful-symbol
+     "h p" 'helpful-at-point
 
-      "t t" 'treemacs)
+     "t t" 'treemacs)
 
     (general-define-key
      :states '(normal visual)
@@ -679,6 +669,7 @@
      "l g"   'lsp-find-definition
      "l i"   'lsp-find-implementation
      "l r"   'lsp-find-references
+     "l s"   'lsp-ui-find-workspace-symbol
      "l q q" 'lsp-workspace-shutdown)
 
     (general-define-key

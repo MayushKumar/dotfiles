@@ -22,9 +22,9 @@ theme.fg_urgent     = "#dddddd"
 theme.fg_minimize   = "#dddddd"
 
 theme.useless_gap   = dpi(0)
-theme.border_width  = dpi(1)
+theme.border_width  = dpi(2)
 theme.border_normal = "#555555"
-theme.border_focus  = "#ffffff"
+theme.border_focus  = "#fbfbfb"
 theme.border_marked = "#91231c"
 
 -- theme.tasklist_bg_focus = "#192d4bb"
