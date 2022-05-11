@@ -14,10 +14,14 @@ set default-fg                  "#ddc7a1"
 #set recolor-lightcolor          "#202020"
 #set recolor-darkcolor           "#ddc7a1"
 
-
 set recolor-lightcolor          "#0f0f0f"
 set recolor-darkcolor           "#cccccc"
 
 set default-bg                   "#0f0f0f"
 
-set font 						 "Terminus 9"
+#set recolor-lightcolor           "#2b3339"
+#set recolor-darkcolor            "#d3c6aa"
+
+#set default-bg                   "#2b3339"
+
+set font 						 "TamsynExt 10.5"

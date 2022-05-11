@@ -49,9 +49,10 @@
 
   (global-display-line-numbers-mode t)
   (setq-default display-line-numbers-type 'relative)
-  (setq-default display-line-numbers-width-start t)
+  (setq-default display-line-numbers-width 3)
 
   (add-hook 'prog-mode-hook 'electric-pair-local-mode)
+  (add-hook 'Man-mode-hook (lambda() (display-line-numbers-mode 0)))
 
   (setq-default tab-width 4)
 
@@ -68,10 +69,8 @@
   (setq dired-kill-when-opening-new-dired-buffer t)
   (setq dired-listing-switches "-alh")
 
-  ;; (set-face-attribute 'default nil :family "Ttyp0" :height 100)
-  ;; (set-face-attribute 'fixed-pitch nil :family "Ttyp0" :height 100)
-  (set-face-attribute 'default nil :family "Iosevka" :height 105)
-  (set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 105)
+  (set-face-attribute 'default nil :family "TamsynExt" :height 100)
+  (set-face-attribute 'fixed-pitch nil :family "TamsynExt" :height 100)
   (set-face-attribute 'variable-pitch nil :family "Roboto" :height 130)
 
   ;; Temporary
@@ -137,10 +136,10 @@
       (min-width
        (5.0)))
      mode-line-frame-identification mode-line-buffer-identification "   " mode-line-position
-     (vc-mode vc-mode)
      "  " mode-line-modes mode-line-misc-info mode-line-end-spaces))
 
   (column-number-mode)
+  (setq-default mode-line-percent-position nil)
 
   (use-package moody
     :config
@@ -158,6 +157,10 @@
 ** Themes
 #+begin_src emacs-lisp
   (setq custom-safe-themes t)
+
+  (add-to-list 'load-path "~/.config/emacs/themes/")
+  (load "gruvbox-material-hard-theme")
+  (load "everforest-dark-hard-theme")
 
   (use-package doom-themes :no-require t
     :config
@@ -182,6 +185,8 @@
     (setq evil-want-keybinding nil
           evil-want-C-u-scroll t
           evil-want-Y-yank-to-eol t
+          ;; evil-move-beyond-eol t
+          evil-move-cursor-back nil
           evil-undo-system 'undo-redo
           evil-insert-state-cursor 'box
           evil-visual-state-cursor 'hollow
@@ -189,13 +194,13 @@
           evil-want-minibuffer t
           evil-mode-line-format nil
 
-          evil-normal-state-tag   (propertize " ● " 'face '((:foreground "MediumTurquoise")))
-          evil-emacs-state-tag    (propertize " ● " 'face '((:foreground "BlueViolet")))
-          evil-insert-state-tag   (propertize " ● " 'face '((:foreground "Orchid")))
-          evil-replace-state-tag  (propertize " ● " 'face '((:foreground "Red3")))
-          evil-motion-state-tag   (propertize " ● " 'face '((:foreground "OrangeRed3")))
-          evil-visual-state-tag   (propertize " ● " 'face '((:foreground "Gold2")))
-          evil-operator-state-tag (propertize " ● " 'face '((:foreground "RoyalBlue"))))
+          evil-normal-state-tag   (propertize " ⏺ " 'face '((:foreground "MediumTurquoise")))
+          evil-emacs-state-tag    (propertize " ⏺ " 'face '((:foreground "BlueViolet")))
+          evil-insert-state-tag   (propertize " ⏺ " 'face '((:foreground "Orchid")))
+          evil-replace-state-tag  (propertize " ⏺ " 'face '((:foreground "Red3")))
+          evil-motion-state-tag   (propertize " ⏺ " 'face '((:foreground "OrangeRed3")))
+          evil-visual-state-tag   (propertize " ⏺ " 'face '((:foreground "Gold2")))
+          evil-operator-state-tag (propertize " ⏺ " 'face '((:foreground "RoyalBlue"))))
     :config
     (evil-mode 1)
     (evil-global-set-key 'normal (kbd "U") 'evil-redo))
@@ -231,15 +236,15 @@
 *** Orderless
 #+begin_src emacs-lisp
   (use-package orderless
-	:init
-	(setq completion-styles '(orderless)
-		  completion-category-defaults nil
-		  completion-category-overrides '((file (styles . (partial-completion)))))
-	:config
-	(set-face-attribute 'orderless-match-face-0 nil :weight 'normal)
-	(set-face-attribute 'orderless-match-face-1 nil :weight 'normal)
-	(set-face-attribute 'orderless-match-face-2 nil :weight 'normal)
-	(set-face-attribute 'orderless-match-face-3 nil :weight 'normal))
+    :config
+    (setq completion-styles '(orderless basic)
+          completion-category-overrides '((file (styles basic partial-completion))))
+
+    (set-face-attribute 'orderless-match-face-0 nil :weight 'normal)
+    (set-face-attribute 'orderless-match-face-1 nil :weight 'normal)
+    (set-face-attribute 'orderless-match-face-2 nil :weight 'normal)
+    (set-face-attribute 'orderless-match-face-3 nil :weight 'normal))
+
 #+end_src
 
 *** Marginalia
@@ -370,7 +375,7 @@
           ("C-x t t"   . treemacs)
           ("C-x t C-t" . treemacs-find-file)))
 
-  (load "~/.config/emacs/treemacs-theme.el")
+  (load "treemacs-theme.el")
   (treemacs-load-theme 'mk/treemacs-theme)
 
   (add-hook 'treemacs-mode-hook (lambda() (display-line-numbers-mode 0)))
@@ -403,6 +408,12 @@
 ** Rainbow mode
 #+begin_src emacs-lisp
   (use-package rainbow-mode)
+#+end_src
+
+** Ediff
+#+begin_src emacs-lisp
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain
+        ediff-split-window-function 'split-window-horizontally)
 #+end_src
 
 ** Restart Emacs
@@ -457,6 +468,11 @@
     (add-hook 'emacs-lisp-mode-hook (lambda () (rainbow-delimiters-mode))))
 #+end_src
 
+*** YAML
+#+begin_src emacs-lisp
+  (use-package yaml-mode)
+#+end_src
+
 ** Company
 #+begin_src emacs-lisp
   (use-package company
@@ -478,9 +494,10 @@
 #+begin_src emacs-lisp
   (use-package tree-sitter)
   (use-package tree-sitter-langs)
-  ;; (global-tree-sitter-mode)
+  (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
   (set-face-attribute 'tree-sitter-hl-face:property 'nil :slant 'normal)
+  (set-face-attribute 'tree-sitter-hl-face:function.call 'nil :inherit '(default))
 #+end_src
 
 ** Projectile
@@ -556,12 +573,13 @@
 * Org
 #+begin_src emacs-lisp
   (use-package visual-fill-column)
+  (use-package mixed-pitch)
 
   (use-package org
     :config
     (require 'org-tempo)
     (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-    (setq org-hide-emphasis-markers t)
+    ;; (setq org-hide-emphasis-markers t)
     (setq org-startup-indented t)
     (setq org-pretty-entities t)
     (add-to-list 'org-latex-packages-alist
@@ -571,6 +589,7 @@
     (add-hook 'org-mode-hook
               (lambda ()
                 (variable-pitch-mode)
+                ;; (mixed-pitch-mode)
                 (visual-line-mode)
                 (setq visual-fill-column-center-text t)
                 (setq fill-column 140)
@@ -642,6 +661,7 @@
      "h k" 'helpful-key
      "h o" 'helpful-symbol
      "h p" 'helpful-at-point
+     "h F" 'describe-face
 
      "t t" 'treemacs)
 

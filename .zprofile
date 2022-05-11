@@ -1,4 +1,4 @@
-export EDITOR=nvim
+export EDITOR=hx
 export PATH=$PATH:~/.scripts:~/.local/bin
 
 export LESS_TERMCAP_mb=$'\e[1;32m'

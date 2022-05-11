@@ -46,10 +46,10 @@ window:
   # Blank space added around the window in pixels. This padding is scaled
   # by DPI and the specified value is always added at both opposing sides.
   padding:
-    x: 20 #12
-    y: 10 #9
+    x: 0 #20 #12
+    y: 0 #10 #9
 
-  opacity: 0.9
+  opacity: 1.0
 
   # Spread additional padding evenly around the terminal content.
   #dynamic_padding: false
@@ -113,21 +113,21 @@ font:
     #   - (macOS) Menlo
     #   - (Linux/BSD) monospace
     #   - (Windows) Consolas
-    family: Iosevka Term
+    family: TamsynExt
 
     # The `style` can be specified to pick a specific face.
     #style: Regular
 
   # Bold font face
-  #bold:
+  bold:
     # Font family
     #
     # If the bold family is not specified, it will fall back to the
     # value specified for the normal font.
-    #family: monospace
+    # family: monospace
 
     # The `style` can be specified to pick a specific face.
-    #style: Bold
+    style: Regular
 
   # Italic font face
   #italic:
@@ -341,7 +341,7 @@ font:
 #
 # Window opacity as a floating point number from `0.0` to `1.0`.
 # The value `0.0` is completely transparent and `1.0` is opaque.
-#background_opacity: 0.90
+# background_opacity: 0.90
 
 #selection:
   # This string contains all characters that are used as separators for
@@ -814,278 +814,8 @@ key_bindings:
   #print_events: false 
   
 # Color Schemes
+import:
+  # - ~/.config/alacritty/themes/catpuccin.yml
+  - ~/.config/alacritty/themes/everforest.yml
+  # - ~/.config/alacritty/themes/peppermint.yml
 
-# Colors (Horizon Dark)
-# colors:
-#   # Primary colors
-#   primary:
-#     background: '0x1c1e26'
-#     foreground: '0xe0e0e0'
-# 
-#   # Normal colors
-#   normal:
-#     black: '0x16161c'
-#     red: '0xe95678'
-#     green: '0x29d398'
-#     yellow: '0xfab795'
-#     blue: '0x26bbd9'
-#     magenta: '0xee64ac'
-#     cyan: '0x59e1e3'
-#     white: '0xd5d8da'
-# 
-#   # Bright colors
-#   bright:
-#     black: '0x5b5858'
-#     red: '0xec6a88'
-#     green: '0x3fdaa4'
-#     yellow: '0xfbc3a7'
-#     blue: '0x3fc4de'
-#     magenta: '0xf075b5'
-#     cyan: '0x6be4e6'
-#     white: '0xd5d8da'
-
-# Colors (Tender)
-#colors:
-#  # Default colors
-#  primary:
-#    background: '0x282828'
-#    foreground: '0xeeeeee'
-#
-#  # Normal colors
-#  normal:
-#    black:   '0x282828'
-#    red:     '0xf43753'
-#    green:   '0xc9d05c'
-#    yellow:  '0xffc24b'
-#    blue:    '0xb3deef'
-#    magenta: '0xd3b987'
-#    cyan:    '0x73cef4'
-#    white:   '0xeeeeee'
-#
-#  # Bright colors
-#  bright:
-#    black:   '0x4c4c4c'
-#    red:     '0xf43753'
-#    green:   '0xc9d05c'
-#    yellow:  '0xffc24b'
-#    blue:    '0xb3deef'
-#    magenta: '0xd3b987'
-#    cyan:    '0x73cef4'
-#    white:   '0xfeffff'
-
-# The definition of color schemes.
-#schemes:
-# Colors (Gruvbox Material Dark Medium)
-#colors:
-#  primary:
-#    background: '0x292828'
-#    foreground: '0xd4be98'
-#
-#  normal:
-#    black:   '0x665c54'
-#    red:     '0xea6962'
-#    green:   '0xa9b665'
-#    yellow:  '0xd8a657'
-#    blue:    '0x7daea3'
-#    magenta: '0xd3869b'
-#    cyan:    '0x89b482'
-#    white:   '0xdfbf8e'
-#
-#  bright:
-#    black:   '0x665c54'
-#    red:     '0xea6962'
-#    green:   '0xa9b665'
-#    yellow:  '0xd8a657'
-#    blue:    '0x7daea3'
-#    magenta: '0xd3869b'
-#    cyan:    '0x89b482'
-#    white:   '0xdfbf8e' 
-
-#  # Colors (Tomorrow Night Bright)
-#  tomorrow_night_bright: &tomorrow_night_bright
-#    colors:
-#      # Default colors
-#      primary:
-#        background: '0x000000'
-#        foreground: '0xeaeaea'
-#    
-#      # Normal colors
-#      normal:
-#        black:   '0x000000'
-#        red:     '0xd54e53'
-#        green:   '0xb9ca4a'
-#        yellow:  '0xe6c547'
-#        blue:    '0x7aa6da'
-#        magenta: '0xc397d8'
-#        cyan:    '0x70c0ba'
-#        white:   '0x424242'
-#    
-#      # Bright colors
-#      bright:
-#        black:   '0x666666'
-#        red:     '0xff3334'
-#        green:   '0x9ec400'
-#        yellow:  '0xe7c547'
-#        blue:    '0x7aa6da'
-#        magenta: '0xb77ee0'
-#        cyan:    '0x54ced6'
-#        white:   '0x2a2a2a'
-# Apply the color scheme.
-#colors: *tomorrow_night_bright
-
-## Colors (Tomorrow Night)
-#colors:
-#  # Default colors
-#  primary:
-#    background: '0x1d1f21'
-#    foreground: '0xc5c8c6'
-#
-#  # Colors the cursor will use if `custom_cursor_colors` is true
-#  cursor:
-#    text: '0x1d1f21'
-#    cursor: '0xffffff'
-#
-#  # Normal colors
-#  normal:
-#    black:   '0x1d1f21'
-#    red:     '0xcc6666'
-#    green:   '0xb5bd68'
-#    yellow:  '0xe6c547'
-#    blue:    '0x81a2be'
-#    magenta: '0xb294bb'
-#    cyan:    '0x70c0ba'
-#    white:   '0x373b41'
-#
-#  # Bright colors
-#  bright:
-#    black:   '0x666666'
-#    red:     '0xff3334'
-#    green:   '0x9ec400'
-#    yellow:  '0xf0c674'
-#    blue:    '0x81a2be'
-#    magenta: '0xb77ee0'
-#    cyan:    '0x54ced6'
-#    white:   '0x282a2e'
-
-## Colors (One Dark)
-#colors:
-#  # Default colors
-#  primary:
-#    background: '0x1e2127'
-#    foreground: '0xabb2bf'
-#
-#  # Normal colors
-#  normal:
-#    black:   '0x1e2127'
-#    red:     '0xe06c75'
-#    green:   '0x98c379'
-#    yellow:  '0xd19a66'
-#    blue:    '0x61afef'
-#    magenta: '0xc678dd'
-#    cyan:    '0x56b6c2'
-#    white:   '0xabb2bf'
-#
-#  # Bright colors
-#  bright:
-#    black:   '0x5c6370'
-#    red:     '0xe06c75'
-#    green:   '0x98c379'
-#    yellow:  '0xd19a66'
-#    blue:    '0x61afef'
-#    magenta: '0xc678dd'
-#    cyan:    '0x56b6c2'
-#    white:   '0xffffff'
-
-## Campbell (Windows 10 default)
-#colors:
-#  # Default colors
-#  primary:
-#    background: '0x0c0c0c'
-#    foreground: '0xcccccc'
-#
-#  # Normal colors
-#  normal:
-#    black:      '0x0c0c0c'
-#    red:        '0xc50f1f'
-#    green:      '0x13a10e'
-#    yellow:     '0xc19c00'
-#    blue:       '0x0037da'
-#    magenta:    '0x881798'
-#    cyan:       '0x3a96dd'
-#    white:      '0xcccccc'
-#
-#  # Bright colors
-#  bright:
-#    black:      '0x767676'
-#    red:        '0xe74856'
-#    green:      '0x16c60c'
-#    yellow:     '0xf9f1a5'
-#    blue:       '0x3b78ff'
-#    magenta:    '0xb4009e'
-#    cyan:       '0x61d6d6'
-#    white:      '0xf2f2f2'
-
-
-## Colors (Hyper)
-#colors:
-#  # Default colors
-#  primary:
-#    background: '0x000000'
-#    foreground: '0xffffff'
-#  cursor:
-#    text: '0xF81CE5'
-#    cursor: '0xffffff'
-#
-#  # Normal colors
-#  normal:
-#    black:   '0x000000'
-#    red:     '0xfe0100'
-#    green:   '0x33ff00'
-#    yellow:  '0xfeff00'
-#    blue:    '0x0066ff'
-#    magenta: '0xcc00ff'
-#    cyan:    '0x00ffff'
-#    white:   '0xd0d0d0'
-#
-#  # Bright colors
-#  bright:
-#    black:   '0x808080'
-#    red:     '0xfe0100'
-#    green:   '0x33ff00'
-#    yellow:  '0xfeff00'
-#    blue:    '0x0066ff'
-#    magenta: '0xcc00ff'
-#    cyan:    '0x00ffff'
-#    white:   '0xFFFFFF'
-
-# Colors Peppermint
-colors:
-  # Default colors
-  primary:
-    background: '0x000000'
-    foreground: '0xc7c7c7'
-  cursor:
-    text: '0xF81CE5'
-    cursor: '0xbbbbbb'
-
-  # Normal colors
-  normal:
-    black:   '0x353535'
-    red:     '0xe64569'
-    green:   '0x89d287'
-    yellow:  '0xdab752'
-    blue:    '0x439ecf'
-    magenta: '0xd961dc'
-    cyan:    '0x64aaaf'
-    white:   '0xb3b3b3'
-
-  # Bright colors
-  bright:
-    black:   '0x535353'
-    red:     '0xe4859a'
-    green:   '0xa2cca1'
-    yellow:  '0xe1e387'
-    blue:    '0x6fbbe2'
-    magenta: '0xe586e7'
-    cyan:    '0x96dcda'
-    white:   '0xdedede'
