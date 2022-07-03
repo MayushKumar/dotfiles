@@ -49,7 +49,7 @@ window:
     x: 0 #20 #12
     y: 0 #10 #9
 
-  opacity: 1.0
+  opacity: 0.9
 
   # Spread additional padding evenly around the terminal content.
   #dynamic_padding: false
@@ -815,7 +815,12 @@ key_bindings:
   
 # Color Schemes
 import:
-  # - ~/.config/alacritty/themes/catpuccin.yml
-  - ~/.config/alacritty/themes/everforest.yml
+  - ~/.config/alacritty/themes/catpuccin.yml
+  # - ~/.config/alacritty/themes/everforest.yml
   # - ~/.config/alacritty/themes/peppermint.yml
+  # - ~/.config/alacritty/themes/gooey.yml
+  # - ~/.config/alacritty/themes/royal.yml
+  # - ~/.config/alacritty/themes/farside.yml
+  # - ~/.config/alacritty/themes/cai.yml
+  # - ~/.config/alacritty/themes/pastelwhite.yml
 

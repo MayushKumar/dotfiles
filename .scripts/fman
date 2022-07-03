@@ -1,0 +1,3 @@
+#!/bin/sh
+
+man -k . | fzf | cut -d " " -f1 | xargs man

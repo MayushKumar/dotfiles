@@ -32,7 +32,7 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
  unset f
 fi
 
-xset r rate 550 100
+xset r rate 550 130
 
 # Here awesome is kept as default
 session=${1:-awesome}

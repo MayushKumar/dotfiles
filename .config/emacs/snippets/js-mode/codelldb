@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: CodeLLDB Debug Template 
+# key: <cdlldb
+# --
+
+{
+	"type": "lldb",
+	"request": "launch",
+	"name": "$1",
+	"program": "\${workspaceFolder}/$2",
+	"args": [],
+	"cwd": "\${workspaceFolder}$3"
+}$0

@@ -2,7 +2,7 @@ super + Return
 	  	alacritty
 
 super + w
-		waterfox-g4
+		librewolf
 
 super + e
 		emacsclient -c
@@ -21,6 +21,9 @@ Print
 
 super + Print
 		escrotum ~/Pictures/screenshots/%Y_%m_%d_%H:%M:%S.png
+
+super + F2
+	  	~/.scripts/addtorrent
 
 super + F12
 		systemctl suspend

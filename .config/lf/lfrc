@@ -1,3 +1,6 @@
+set ratios 1:2:3
+set cleaner ~/.config/lf/cleaner
+set previewer ~/.config/lf/preview
 # interpreter for shell commands
 set shell sh
 
@@ -102,7 +105,7 @@ cmd zip ${{
 
 set icons
 set hidden false
-set drawbox
+#set drawbox
 
 map D delete
 map E extract

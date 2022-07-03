@@ -5,7 +5,6 @@
 * Setup
 ** System
 #+begin_src emacs-lisp
-  (setq gc-cons-threshold 100000000)
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
   ;; (require 'package)
@@ -47,7 +46,11 @@
   (scroll-bar-mode -1)
   (setq ring-bell-function 'ignore)
 
-  (global-display-line-numbers-mode t)
+  (set-default-coding-systems 'utf-8)
+  (prefer-coding-system       'utf-8)
+  (set-terminal-coding-system 'utf-8)
+
+  (global-display-line-numbers-mode)
   (setq-default display-line-numbers-type 'relative)
   (setq-default display-line-numbers-width 3)
 
@@ -64,6 +67,7 @@
   (blink-cursor-mode 0)
 
   (setq frame-resize-pixelwise t)
+  (setq mouse-wheel-progressive-speed nil)
   (pixel-scroll-precision-mode t)
 
   (setq dired-kill-when-opening-new-dired-buffer t)
@@ -72,9 +76,6 @@
   (set-face-attribute 'default nil :family "TamsynExt" :height 100)
   (set-face-attribute 'fixed-pitch nil :family "TamsynExt" :height 100)
   (set-face-attribute 'variable-pitch nil :family "Roboto" :height 130)
-
-  ;; Temporary
-  ;; (set-face-attribute 'mode-line-active nil :inherit 'mode-line)
 
   (defun mk/transparency (value)
     "Sets the transparency of the frame window. 0=transparent/100=opaque"
@@ -269,9 +270,6 @@
     ;; This adds thin lines, sorting and hides the mode line of the window.
     (advice-add #'register-preview :override #'consult-register-window)
 
-    ;; Optionally replace `completing-read-multiple' with an enhanced version.
-    (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
-
     ;; Use Consult to select xref locations with preview
     (setq xref-show-xrefs-function #'consult-xref
           xref-show-definitions-function #'consult-xref)
@@ -439,6 +437,7 @@
   (setq-default c-default-style "k&r")
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
   (add-to-list 'auto-mode-alist '("\\.cpp\\'" . c++-mode))
+  (add-to-list 'auto-mode-alist '("\\.inl\\'" . c++-mode))
 #+end_src
 
 *** Lua
@@ -492,12 +491,15 @@
 
 ** Tree-sitter
 #+begin_src emacs-lisp
-  (use-package tree-sitter)
-  (use-package tree-sitter-langs)
-  (global-tree-sitter-mode)
-  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
-  (set-face-attribute 'tree-sitter-hl-face:property 'nil :slant 'normal)
-  (set-face-attribute 'tree-sitter-hl-face:function.call 'nil :inherit '(default))
+  (use-package tree-sitter
+    :config
+    (global-tree-sitter-mode))
+
+  (use-package tree-sitter-langs
+    :config
+    (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+    (set-face-attribute 'tree-sitter-hl-face:property 'nil :slant 'normal)
+    (set-face-attribute 'tree-sitter-hl-face:function.call 'nil :inherit '(default)))
 #+end_src
 
 ** Projectile
@@ -563,7 +565,7 @@
 #+begin_src emacs-lisp
   (use-package dap-mode
     :config
-    (setq dap-auto-configure-features '(sessions locals controls tooltip))
+    (setq dap-auto-configure-features '(locals controls tooltip))
     (add-hook 'dap-stopped-hook
               (lambda (arg) (call-interactively #'dap-hydra)))
     (require 'dap-cpptools)
@@ -628,7 +630,8 @@
      "p f" 'projectile-find-file
      "p s" 'projectile-save-project-buffers
      "p a" 'projectile-find-other-file
-     "p b" 'projectile-save-project-buffers
+     "p e" 'projectile-find-other-file-other-window
+     "p i" 'projectile-invalidate-cache
      "p k" 'projectile-kill-buffers)
 
     (general-define-key
@@ -636,25 +639,24 @@
      :keymaps 'override
      :prefix "SPC"
 
-     "x" 'execute-extended-command
+     "x"   'execute-extended-command
 
      "f f" 'find-file
      "f s" 'save-buffer
 
      "c b" 'consult-bookmark
 
-     "b" 'consult-buffer
+     "b"   'consult-buffer
 
      "k k" 'kill-current-buffer
      "k K" 'kill-buffer
 
-     "s" 'consult-line
+     "s"   'consult-line
      "S r" 'rg
 
-     ;; "w" 'hydra-window/body
-     "w" 'ace-window
-     "o" 'other-window
-     "0" 'delete-window
+     "w"   'ace-window
+     "o"   'other-window
+     "0"   'delete-window
 
      "h v" 'helpful-variable
      "h f" 'helpful-function
@@ -666,13 +668,7 @@
      "t t" 'treemacs)
 
     (general-define-key
-     :states '(normal visual)
-     :keymaps 'override
-
-     "g s" 'evil-avy-goto-line)
-
-    (general-define-key
-     :prefix ","
+     :prefix "SPC"
      :states '(normal visual)
      :keymaps 'dap-mode-map
 
@@ -681,7 +677,7 @@
      "d h" 'dap-hydra)
 
     (general-define-key
-     :prefix ","
+     :prefix "SPC"
      :states '(normal visual)
      :keymaps 'lsp-mode-map
 
@@ -690,7 +686,7 @@
      "l i"   'lsp-find-implementation
      "l r"   'lsp-find-references
      "l s"   'lsp-ui-find-workspace-symbol
-     "l q q" 'lsp-workspace-shutdown)
+     "l q"   'lsp-workspace-shutdown)
 
     (general-define-key
      :prefix ","
