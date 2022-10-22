@@ -25,6 +25,8 @@
   (load bootstrap-file nil 'nomessage))
 
 (setq straight-use-package-by-default t)
+(setq straight-vc-git-default-protocol 'ssh)
+(setq straight-vc-git-default-clone-depth 1)
 (straight-use-package 'use-package)
 
 (tool-bar-mode -1)
@@ -105,16 +107,16 @@
 ;;   (telephone-line-mode 1)
 ;;   )
 
-(setq-default mode-line-format
-  '("%e" mode-line-front-space (:eval                                
-    (moody-ribbon evil-mode-line-tag 0 'up))
-   (:propertize
-    ("" mode-line-mule-info mode-line-client mode-line-modified mode-line-remote)
-    display
-    (min-width
-     (5.0)))
-   mode-line-frame-identification mode-line-buffer-identification "   " mode-line-position
-   "  " mode-line-modes mode-line-misc-info mode-line-end-spaces))
+;; (setq-default mode-line-format
+;;   '("%e" mode-line-front-space (:eval                                
+;;     (moody-ribbon evil-mode-line-tag 0 'up))
+;;    (:propertize
+;;     (" " mode-line-mule-info mode-line-client mode-line-modified mode-line-remote)
+;;     display
+;;     (min-width
+;;      (5.0)))
+;;    mode-line-frame-identification mode-line-buffer-identification "   " mode-line-position
+;;    "  " mode-line-modes mode-line-misc-info mode-line-end-spaces))
 
 (column-number-mode)
 (setq-default mode-line-percent-position nil)
@@ -125,7 +127,7 @@
   (moody-replace-mode-line-buffer-identification)
   (moody-replace-vc-mode)
   (moody-replace-eldoc-minibuffer-message-function)
-  (setq moody-mode-line-height 20))
+  (setq moody-mode-line-height 22))
 
 (use-package minions
   :config
@@ -280,7 +282,8 @@
   :config
   (set-face-attribute 'aw-leading-char-face nil :height 1.0)
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-  (setq aw-dispatch-always t))
+  (setq aw-dispatch-always t)
+  (setq aw-ignore-on nil))
 
 (use-package avy)
 
@@ -374,10 +377,7 @@
   (setq company-minimum-prefix-length 1)
   (add-hook 'after-init-hook 'global-company-mode))
 
-;; (use-package flycheck
-;;   :init
-;;   (global-flycheck-mode)
-;;   )
+(use-package flycheck)
 
 (use-package tree-sitter
   :config
@@ -441,11 +441,12 @@
   (setq dap-auto-configure-features '(locals controls tooltip))
   (add-hook 'dap-stopped-hook
             (lambda (arg) (call-interactively #'dap-hydra)))
-  (require 'dap-cpptools)
   (require 'dap-codelldb))
 
 (use-package visual-fill-column)
-(use-package mixed-pitch)
+(use-package mixed-pitch
+  :config
+  (setq mixed-pitch-set-height t))
 
 (use-package org
   :config
@@ -460,8 +461,7 @@
 
   (add-hook 'org-mode-hook
             (lambda ()
-              (variable-pitch-mode)
-              ;; (mixed-pitch-mode)
+              (mixed-pitch-mode)
               (visual-line-mode)
               (setq visual-fill-column-center-text t)
               (setq fill-column 140)
@@ -469,10 +469,10 @@
               (visual-fill-column-mode)
               (company-mode 0)
 
-              (set-face-attribute 'org-block nil :inherit 'fixed-pitch)
-              (set-face-attribute 'org-hide nil :inherit 'fixed-pitch)
-              (set-face-attribute 'org-block-begin-line nil :inherit 'fixed-pitch)
-              (set-face-attribute 'org-meta-line nil :inherit 'fixed-pitch)
+              ;; (set-face-attribute 'org-block nil :inherit 'fixed-pitch)
+              ;; (set-face-attribute 'org-hide nil :inherit 'fixed-pitch)
+              ;; (set-face-attribute 'org-block-begin-line nil :inherit 'fixed-pitch)
+              ;; (set-face-attribute 'org-meta-line nil :inherit 'fixed-pitch)
               (setq-local evil-normal-state-cursor '(bar . 1))
               (setq-local evil-insert-state-cursor '(bar . 1)))))
 
@@ -515,8 +515,8 @@
 
    "b"   'consult-buffer
 
-   "k k" 'kill-current-buffer
-   "k K" 'kill-buffer
+   "k" 'kill-current-buffer
+   "K" 'kill-buffer
 
    "s"   'consult-line
    "S r" 'rg
@@ -552,6 +552,7 @@
    "l g"   'lsp-find-definition
    "l i"   'lsp-find-implementation
    "l r"   'lsp-find-references
+   "l R"   'lsp-rename
    "l s"   'lsp-ui-find-workspace-symbol
    "l q"   'lsp-workspace-shutdown)
 
@@ -575,5 +576,4 @@
    :states '(visual)
    :keymaps '(lisp-mode-map lisp-interaction-mode-map emacs-lisp-mode-map)
 
-   "e" 'eval-region)
-  )
+   "e" 'eval-region))

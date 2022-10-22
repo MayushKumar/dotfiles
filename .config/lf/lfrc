@@ -42,6 +42,7 @@ cmd open ${{
     test -L $f && f=$(readlink -f $f)
     case $(file --mime-type $f -b) in
         text/*) $EDITOR $fx;;
+        image/*) nsxiv-rifle $f &;;
         *) for f in $fx; do setsid $OPENER $f > /dev/null 2> /dev/null & done;;
     esac
 }}
@@ -74,14 +75,12 @@ cmd trash %set -f; mv $fx ~/.trash
 # (xkcd link: https://xkcd.com/1168/)
 cmd extract ${{
     set -f
-	mkdir "${f%.*}"
     case $f in
         *.tar.bz|*.tar.bz2|*.tbz|*.tbz2) tar xjvf $f;;
         *.tar.gz|*.tgz) tar xzvf $f;;
         *.tar.xz|*.txz) tar xJvf $f;;
-        *.zip) unzip -d "${f%.*}" $f;;
+        *.zip|*.7z) 7z x $f;;
         *.rar) unrar x $f;;
-        *.7z) 7z x $f;;
     esac
 }}
 

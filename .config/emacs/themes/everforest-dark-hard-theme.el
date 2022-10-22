@@ -1,4 +1,4 @@
-(deftheme everforest-dark-hard "Gruvbox Material Hard Theme.")
+(deftheme everforest-dark-hard "Everforest Dark Hard Theme.")
 
 (let ((efdh-fg0          "#DDC7A1")
 	  (efdh-fg           "#D3C6AA")

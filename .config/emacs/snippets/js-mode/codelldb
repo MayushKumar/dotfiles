@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: CodeLLDB Debug Template 
-# key: <cdlldb
+# key: <daplldb
 # --
 
 {
