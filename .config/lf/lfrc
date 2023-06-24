@@ -79,7 +79,7 @@ cmd extract ${{
         *.tar.bz|*.tar.bz2|*.tbz|*.tbz2) tar xjvf $f;;
         *.tar.gz|*.tgz) tar xzvf $f;;
         *.tar.xz|*.txz) tar xJvf $f;;
-        *.zip|*.7z) 7z x $f;;
+        *.zip|*.7z) 7z x -o${f%%.*} $f;;
         *.rar) unrar x $f;;
     esac
 }}
@@ -103,7 +103,7 @@ cmd zip ${{
 }}
 
 set icons
-set hidden false
+set hidden true
 #set drawbox
 
 map D delete

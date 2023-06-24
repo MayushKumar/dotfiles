@@ -8,7 +8,7 @@ local dpi = xresources.apply_dpi
 
 local theme = {}
 
-theme.font          = "TamsynExt 11"
+theme.font          = "JetBrains Mono Nerd Font 13"
 
 theme.bg_normal     = "#292929"
 theme.bg_focus      = "#484848"
@@ -16,10 +16,10 @@ theme.bg_urgent     = "#ff0000"
 theme.bg_minimize   = "#444444"
 theme.bg_systray    = theme.bg_normal
 
-theme.fg_normal     = "#dddddd"
-theme.fg_focus      = "#dddddd"
-theme.fg_urgent     = "#dddddd"
-theme.fg_minimize   = "#dddddd"
+theme.fg_normal     = "#bbbbbb"
+theme.fg_focus      = "#bbbbbb"
+theme.fg_urgent     = "#bbbbbb"
+theme.fg_minimize   = "#bbbbbb"
 
 theme.useless_gap   = dpi(0)
 theme.border_width  = dpi(1)

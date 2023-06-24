@@ -113,7 +113,8 @@ font:
     #   - (macOS) Menlo
     #   - (Linux/BSD) monospace
     #   - (Windows) Consolas
-    family: TamsynExt
+    family: JetBrains Mono Nerd Font
+    #family: Go Mono Nerd Font
 
     # The `style` can be specified to pick a specific face.
     style: Regular
@@ -152,7 +153,7 @@ font:
     #style: Bold Italic
 
   # Point size
-  size: 10.5
+  size: 8
 
   # Offset is the extra space around each character. `offset.y` can be thought
   # of as modifying the line spacing, and `offset.x` as modifying the letter
@@ -823,5 +824,6 @@ import:
   # - ~/.config/alacritty/themes/farside.yml
   # - ~/.config/alacritty/themes/cai.yml
   # - ~/.config/alacritty/themes/pastelwhite.yml
-  - ~/.config/alacritty/themes/iceberg.yml
+  # - ~/.config/alacritty/themes/iceberg.yml
+  - ~/.config/alacritty/themes/alacritty-theme/themes/citylights.yaml
 

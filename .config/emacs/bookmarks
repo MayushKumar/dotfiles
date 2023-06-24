@@ -3,10 +3,11 @@
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 ((".zshrc"
- (filename . "~/.zshrc")
+ (filename . "~/.config/zsh/.zshrc")
  (front-context-string . "# Lines configur")
  (rear-context-string)
- (position . 1))
+ (position . 1)
+ (last-modified 25687 45886 828743 662000))
 ("picom.conf"
  (filename . "~/.config/picom/picom.conf")
  (front-context-string . "################")

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+SEL=$(echo -e "suspend\nrestart\nshutdown" | dmenu -l 3 -p "Power Menu")
+
+if [[ $SEL == "suspend" ]]; then
+   loginctl suspend
+elif [[ $SEL == "restart" ]]; then
+   loginctl reboot
+elif [[ $SEL == "shutdown" ]]; then
+   loginctl poweroff
+fi

@@ -56,6 +56,8 @@
   (setq-default display-line-numbers-type 'relative)
   (setq-default display-line-numbers-width 3)
 
+  (setq default-directory "~/")
+
   (add-hook 'prog-mode-hook 'electric-pair-local-mode)
   (add-hook 'Man-mode-hook (lambda() (display-line-numbers-mode 0)))
 
@@ -63,21 +65,24 @@
 
   (setq scroll-margin 4)
   (setq scroll-conservatively 101)
+  (setq mouse-wheel-progressive-speed nil)
+  (setq mouse-wheel-scroll-amount '(1 ((shift) . 3) ((control) . 6)))
 
+  (pixel-scroll-precision-mode t)
+
+  (global-hl-line-mode)
   (setq-default truncate-lines t)
-  (show-paren-mode 0)
+  ;; (show-paren-mode 0)
   (blink-cursor-mode 0)
 
   (setq frame-resize-pixelwise t)
-  (setq mouse-wheel-progressive-speed nil)
-  (pixel-scroll-precision-mode t)
 
   (setq dired-kill-when-opening-new-dired-buffer t)
   (setq dired-listing-switches "-alh")
 
-  (set-face-attribute 'default nil :family "TamsynExt" :height 100)
-  (set-face-attribute 'fixed-pitch nil :family "TamsynExt" :height 100)
-  (set-face-attribute 'variable-pitch nil :family "Roboto" :height 130)
+  (set-face-attribute 'default nil :family "JetBrains Mono Nerd Font" :height 140)
+  (set-face-attribute 'fixed-pitch nil :family "JetBrains Mono Nerd Font" :height 140)
+  (set-face-attribute 'variable-pitch nil :family "Roboto" :height 170)
 
   (defun mk/transparency (value)
     "Sets the transparency of the frame window. 0=transparent/100=opaque"
@@ -105,17 +110,17 @@
 #+begin_src emacs-lisp
   (use-package dashboard
     :config
-    (setq dashboard-startup-banner "~/.config/emacs/banner.png")
+    (setq dashboard-startup-banner "~/.config/emacs/cat.png")
     (setq dashboard-set-heading-icons t)
     (setq dashboard-set-file-icons t)
     (setq dashboard-items '((recents  . 5)
-                       (projects . 5)
-                       (registers . 5)))
+                            (projects . 5)
+                            (registers . 5)))
     (setq dashboard-center-content t)
     (setq dashboard-set-footer nil)
     (set-face-attribute 'dashboard-items-face nil :weight 'normal)
 
-    (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+    (setq initial-buffer-choice (lambda () (dashboard-refresh-buffer)(get-buffer "*dashboard*")))
     (dashboard-setup-startup-hook))
 #+end_src
 
@@ -241,20 +246,20 @@
   (use-package orderless
     :config
     (setq completion-styles '(orderless basic)
-          completion-category-overrides '((file (styles basic partial-completion))))
+          completion-category-defaults nil
+          completion-category-overrides '((file (styles . (partial-completion)))))
 
     (set-face-attribute 'orderless-match-face-0 nil :weight 'normal)
     (set-face-attribute 'orderless-match-face-1 nil :weight 'normal)
     (set-face-attribute 'orderless-match-face-2 nil :weight 'normal)
     (set-face-attribute 'orderless-match-face-3 nil :weight 'normal))
-
 #+end_src
 
 *** Marginalia
 #+begin_src emacs-lisp
   (use-package marginalia
-	:init
-	(marginalia-mode))
+    :init
+    (marginalia-mode))
 #+end_src
 
 *** Consult
@@ -294,7 +299,8 @@
      consult-bookmark consult-recent-file consult-xref
      consult--source-bookmark consult--source-recent-file
      consult--source-project-recent-file
-     :preview-key (kbd "M-."))
+     ;; :preview-key (kbd "M-.")
+     :preview-key '(:debounce 0.4 any))
 
     ;; Optionally configure the narrowing key.
     ;; Both < and C-+ work reasonably well.
@@ -307,16 +313,16 @@
     ;; By default `consult-project-function' uses `project-root' from project.el.
     ;; Optionally configure a different project root function.
     ;; There are multiple reasonable alternatives to chose from.
-    ;;;; 1. project.el (the default)
+      ;;;; 1. project.el (the default)
     ;; (setq consult-project-function #'consult--default-project--function)
-    ;;;; 2. projectile.el (projectile-project-root)
+      ;;;; 2. projectile.el (projectile-project-root)
     (autoload 'projectile-project-root "projectile")
     (setq consult-project-function (lambda (_) (projectile-project-root)))
-    ;;;; 3. vc.el (vc-root-dir)
+      ;;;; 3. vc.el (vc-root-dir)
     ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
-    ;;;; 4. locate-dominating-file
+      ;;;; 4. locate-dominating-file
     ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
-  )
+    )
 #+end_src
 
 ** vterm
@@ -353,7 +359,7 @@
 
 ** Magit
 #+begin_src emacs-lisp
- (use-package magit)
+  (use-package magit)
 #+end_src
 
 ** Treemacs
@@ -401,9 +407,9 @@
 
 ** Which key
 #+begin_src emacs-lisp
- (use-package which-key
-	 :config
-	 (which-key-mode))
+  (use-package which-key
+    :config
+    (which-key-mode))
 #+end_src
 
 ** Rainbow mode
@@ -432,6 +438,13 @@
   (global-set-key (kbd "<f11>") 'save-buffers-kill-emacs)
 #+end_src
 
+** Editting
+#+begin_src emacs-lisp
+  (defun mk-indent-buffer ()
+    "Indent the buffer"
+    (interactive)
+    (indent-region (point-min) (point-max)))
+#+end_src
 * Programming
 ** Languages
 *** C++
@@ -475,13 +488,76 @@
   (use-package yaml-mode)
 #+end_src
 
+*** LaTeX
+#+begin_src emacs-lisp
+  (use-package tex :straight auctex
+    :config
+    (setq TeX-auto-save t)
+    (setq TeX-parse-self t)
+    (setq-default TeX-master nil))
+#+end_src
+
 ** Company
 #+begin_src emacs-lisp
-  (use-package company
+  ;; (use-package company
+  ;;   :config
+  ;;   (setq company-idle-delay 0)
+  ;;   (setq company-minimum-prefix-length 1)
+  ;;   ;; (add-hook 'after-init-hook 'global-company-mode)
+  ;;   )
+#+end_src
+
+** Corfu
+#+begin_src emacs-lisp
+  (use-package corfu
+    ;; Optional customizations
+    :custom
+    ;; (corfu-cycle t)
+    (corfu-auto t)
+    (corfu-auto-prefix 0)
+    (corfu-auto-delay 0.0)
+    ;; (corfu-separator ?\s)          ;; Orderless field separator
+    ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+    ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+    (corfu-preview-current nil)
+    ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
+    ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+    ;; (corfu-scroll-margin 5)        ;; Use scroll margin
+
+    ;; Enable Corfu only for certain modes.
+    ;; :hook ((prog-mode . corfu-mode)
+    ;;        (shell-mode . corfu-mode)
+    ;;        (eshell-mode . corfu-mode))
+
+    ;; Recommended: Enable Corfu globally.
+    ;; This is recommended since Dabbrev can be used globally (M-/).
+    ;; See also `corfu-exclude-modes'.
+    :init
+    (global-corfu-mode))
+
+  ;; A few more useful configurations...
+  ;; (use-package emacs
+  ;;   :init
+  ;; TAB cycle if there are only few candidates
+  ;; (setq completion-cycle-threshold 3)
+
+  ;; Emacs 28: Hide commands in M-x which do not apply to the current mode.
+  ;; Corfu commands are hidden, since they are not supposed to be used via M-x.
+  ;; (setq read-extended-command-predicate
+  ;;       #'command-completion-default-include-p)
+
+  ;; Enable indentation+completion using the TAB key.
+  ;; `completion-at-point' is often bound to M-TAB.
+  ;; (setq tab-always-indent 'complete))
+
+  (use-package kind-icon
+    :after corfu
+    :custom
+    (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
+    (kind-icon-blend-background nil)
     :config
-    (setq company-idle-delay 0)
-    (setq company-minimum-prefix-length 1)
-    (add-hook 'after-init-hook 'global-company-mode))
+    (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
+    (plist-put kind-icon-default-style :height 0.7))
 #+end_src
 
 ** Flycheck
@@ -493,7 +569,8 @@
 #+begin_src emacs-lisp
   (use-package tree-sitter
     :config
-    (global-tree-sitter-mode))
+    (global-tree-sitter-mode)
+    )
 
   (use-package tree-sitter-langs
     :config
@@ -515,9 +592,9 @@
 
 ** Yasnippets
 #+begin_src emacs-lisp
- (use-package yasnippet
-   :config
-   (yas-global-mode))
+  (use-package yasnippet
+    :config
+    (yas-global-mode))
 #+end_src
 
 ** LSP
@@ -526,9 +603,15 @@
     :hook
     (c++-mode . lsp-deferred)
     (lsp-mode . lsp-enable-which-key-integration)
+    (lsp-completion-mode . my/lsp-mode-setup-completion)
 
     :init
     (setq lsp-keymap-prefix "C-c l")
+    (defun my/lsp-mode-setup-completion ()
+      (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+            '(orderless))) ;; Configure orderless
+    :custom
+    (lsp-completion-provider :none)
 
     :config
     (lsp-enable-which-key-integration)
@@ -554,6 +637,15 @@
     (lsp-ui-doc-show-with-cursor nil)
     (lsp-ui-doc-show-with-mouse nil)
     (lsp-ui-sideline-enable nil))
+
+  ;; (use-package lsp-bridge
+  ;;   :config
+  ;;   (add-to-list 'load-path "~/.config/emacs/straight/repos/lsp-bridge/")
+  ;;   (global-lsp-bridge-mode))
+
+  ;; (add-to-list 'load-path "~/dev/lsp-bridge/")
+  ;; (require 'lsp-bridge)
+  ;; (global-lsp-bridge-mode)
 #+end_src
 
 *** clangd
@@ -568,12 +660,13 @@
     (setq dap-auto-configure-features '(locals controls tooltip))
     (add-hook 'dap-stopped-hook
               (lambda (arg) (call-interactively #'dap-hydra)))
-    (require 'dap-codelldb))
+    (require 'dap-codelldb)
+    (require 'dap-lldb))
 #+end_src
 
 * Org
 #+begin_src emacs-lisp
-  (use-package visual-fill-column)
+  ;; (use-package visual-fill-column)
   (use-package mixed-pitch
     :config
     (setq mixed-pitch-set-height t))
@@ -589,6 +682,10 @@
                  '("" "chemfig" t))
     (setq org-preview-latex-default-process 'dvisvgm)
 
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((C . t)))
+
     (add-hook 'org-mode-hook
               (lambda ()
                 (mixed-pitch-mode)
@@ -596,7 +693,7 @@
                 (setq visual-fill-column-center-text t)
                 (setq fill-column 140)
                 (display-line-numbers-mode 0)
-                (visual-fill-column-mode)
+                ;; (visual-fill-column-mode)
                 (company-mode 0)
 
                 ;; (set-face-attribute 'org-block nil :inherit 'fixed-pitch)
@@ -690,6 +787,20 @@
      "l q"   'lsp-workspace-shutdown)
 
     (general-define-key
+     :prefix "SPC"
+     :states '(normal visual)
+     :keymaps 'lsp-bridge-mode-map
+
+     ;; "l d"   'lsp-bridge-find
+     "l g"   'lsp-bridge-find-def
+     "l i"   'lsp-bridge-find-impl
+     "l r"   'lsp-bridge-find-references
+     "l R"   'lsp-bridge-rename
+     "l s"   'lsp-bridge-workspace-list-symbols
+     "l q"   'lsp-bridge-kill-process
+     "l Q"   'lsp-bridge-restart-process)
+
+    (general-define-key
      :prefix ","
      :states '(normal visual)
      :keymaps 'org-mode-map
@@ -709,5 +820,10 @@
      :states '(visual)
      :keymaps '(lisp-mode-map lisp-interaction-mode-map emacs-lisp-mode-map)
 
-     "e" 'eval-region))
+     "e" 'eval-region)
+
+    (general-define-key
+     :states '(normal visual)
+
+     "C-=" 'mk-indent-buffer))
 #+end_src

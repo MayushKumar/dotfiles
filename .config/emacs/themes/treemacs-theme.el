@@ -42,6 +42,36 @@
          :fallback 'same-as-icon)
 
         (treemacs-create-icon
+         :icon (format " %s " (all-the-icons-material "folder_open"
+                                               ;; :v-adjust 0.0
+                                               :height 0.9))
+         ;; :face 'font-lock-doc-face))
+         :extensions ("src-open")
+         :fallback 'same-as-icon)
+
+        (treemacs-create-icon
+         :icon (format " %s " (all-the-icons-material "folder"
+                                                   ;; :v-adjust 0.05
+                                                   :height 0.9))
+         :extensions ("src-closed")
+         :fallback 'same-as-icon)
+
+        (treemacs-create-icon
+         :icon (format " %s " (all-the-icons-material "folder_open"
+                                               ;; :v-adjust 0.0
+                                               :height 0.9))
+         ;; :face 'font-lock-doc-face))
+         :extensions ("build-open")
+         :fallback 'same-as-icon)
+
+        (treemacs-create-icon
+         :icon (format " %s " (all-the-icons-material "folder"
+                                                   ;; :v-adjust 0.05
+                                                   :height 0.9))
+         :extensions ("build-closed")
+         :fallback 'same-as-icon)
+
+        (treemacs-create-icon
          :icon (format "%s " (all-the-icons-material "close"
                                              :size 1.0
                                              ;; :v-adjust 0.1

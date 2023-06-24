@@ -86,7 +86,7 @@
                           `(font-lock-variable-name-face ((t (:foreground ,gm-blue))))
                           `(font-lock-constant-face ((t (:foreground ,gm-yellow))))
                           `(font-lock-doc-face ((t (:slant italic :foreground ,gm-fg0))))
-                          `(font-lock-comment-face ((t (:slant italic :foreground ,gm-grey1))))
+                          `(font-lock-comment-face ((t (:foreground ,gm-grey1))))
                           `(shadow ((t (:foreground ,gm-grey1))))
                           `(Info-quoted ((t (:inherit font-lock-constant-face))))
                           `(show-paren-match-face ((t (:inverse-video t :background ,gm-fg :foreground ,gm-red))))

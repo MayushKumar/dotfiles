@@ -42,14 +42,14 @@ alias ls='exa'
 alias la='exa -al'
 alias ec='emacsclient -r -a ""'
 alias lf='lfrun'
+alias valgrind='colour-valgrind'
 
 alias config='/usr/bin/git --git-dir=/home/mayush/.cfg/ --work-tree=/home/mayush'
-alias ch='cd /run/media/Storage/Personal/Dev/C++/Charcoal\ Engine/'
-alias nr='cd /run/media/Storage/Personal/Dev/C++/Noor/'
-alias dw='cd /run/media/Storage/Personal/Downloads/'
+alias nr='cd ~/dev/Noor/'
+alias dw='cd ~/Downloads/'
 alias dc='cd /run/media/Storage/Personal/Documents/'
-alias dv='cd /run/media/Storage/Personal/Dev/'
-alias tr='cd /run/media/Storage/Personal/Downloads/torrents/'
+alias dv='cd ~/dev/'
+alias tr='cd ~/Downloads/torrents/'
 
 #prompt pure
 

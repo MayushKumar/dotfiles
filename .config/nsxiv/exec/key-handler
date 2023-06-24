@@ -1,5 +1,6 @@
 #!/bin/sh
 
 case "$1" in
- "w") read file; feh --bg-fill "$file";;
+ # "w") read file; feh --bg-fill "$file";;
+ "w") read file; echo $file > $HOME/.config/wallpaper; feh --no-fehbg --bg-fill $file;; 
 esac
