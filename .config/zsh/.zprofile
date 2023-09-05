@@ -4,8 +4,6 @@ export PATH=$PATH:~/.scripts:~/.local/bin
 export XINITRC=$XDG_CONFIG_HOME/X11/xinitrc
 export XAUTHORITY=$XDG_RUNTIME_DIR/Xauthority
 
-alias stx=startx ~/.config/X11/xinitrc 
-
 export LESS_TERMCAP_mb=$'\e[1;32m'
 export LESS_TERMCAP_md=$'\e[1;32m'
 export LESS_TERMCAP_me=$'\e[0m'

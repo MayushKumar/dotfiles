@@ -21,23 +21,74 @@
 
 ** straight.el
 #+begin_src emacs-lisp
-  (defvar bootstrap-version)
-  (let ((bootstrap-file
-         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-        (bootstrap-version 5))
-    (unless (file-exists-p bootstrap-file)
-      (with-current-buffer
-          (url-retrieve-synchronously
-           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-           'silent 'inhibit-cookies)
-        (goto-char (point-max))
-        (eval-print-last-sexp)))
-    (load bootstrap-file nil 'nomessage))
+  ;; (defvar bootstrap-version)
+  ;; (let ((bootstrap-file
+  ;;        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+  ;;       (bootstrap-version 5))
+  ;;   (unless (file-exists-p bootstrap-file)
+  ;;     (with-current-buffer
+  ;;         (url-retrieve-synchronously
+  ;;          "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+  ;;          'silent 'inhibit-cookies)
+  ;;       (goto-char (point-max))
+  ;;       (eval-print-last-sexp)))
+  ;;   (load bootstrap-file nil 'nomessage))
 
-  (setq straight-use-package-by-default t)
-  (setq straight-vc-git-default-protocol 'ssh)
-  (setq straight-vc-git-default-clone-depth 1)
-  (straight-use-package 'use-package)
+  ;; (setq straight-use-package-by-default t)
+  ;; (setq straight-vc-git-default-protocol 'ssh)
+  ;; (setq straight-vc-git-default-clone-depth 1)
+  ;; (straight-use-package 'use-package)
+#+end_src
+
+** elpaca
+#+begin_src emacs-lisp
+  (defvar elpaca-installer-version 0.5)
+  (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+  (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+  (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+  (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+                                :ref nil
+                                :files (:defaults (:exclude "extensions"))
+                                :build (:not elpaca--activate-package)))
+  (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+         (build (expand-file-name "elpaca/" elpaca-builds-directory))
+         (order (cdr elpaca-order))
+         (default-directory repo))
+    (add-to-list 'load-path (if (file-exists-p build) build repo))
+    (unless (file-exists-p repo)
+      (make-directory repo t)
+      (when (< emacs-major-version 28) (require 'subr-x))
+      (condition-case-unless-debug err
+          (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                   ((zerop (call-process "git" nil buffer t "clone"
+                                         (plist-get order :repo) repo)))
+                   ((zerop (call-process "git" nil buffer t "checkout"
+                                         (or (plist-get order :ref) "--"))))
+                   (emacs (concat invocation-directory invocation-name))
+                   ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                         "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                   ((require 'elpaca))
+                   ((elpaca-generate-autoloads "elpaca" repo)))
+              (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+            (error "%s" (with-current-buffer buffer (buffer-string))))
+        ((error) (warn "%s" err) (delete-directory repo 'recursive))))
+    (unless (require 'elpaca-autoloads nil t)
+      (require 'elpaca)
+      (elpaca-generate-autoloads "elpaca" repo)
+      (load "./elpaca-autoloads")))
+  (add-hook 'after-init-hook #'elpaca-process-queues)
+  (elpaca `(,@elpaca-order))
+
+
+  ;; Install use-package support
+  (elpaca elpaca-use-package
+    ;; Enable :elpaca use-package keyword.
+    (elpaca-use-package-mode)
+    ;; Assume :elpaca t unless otherwise specified.
+    (setq elpaca-use-package-by-default t))
+
+  ;; Block until current queue processed.
+  (elpaca-wait)
 #+end_src
 
 * UI
@@ -57,6 +108,7 @@
   (setq-default display-line-numbers-width 3)
 
   (setq default-directory "~/")
+  (save-place-mode 1)
 
   (add-hook 'prog-mode-hook 'electric-pair-local-mode)
   (add-hook 'Man-mode-hook (lambda() (display-line-numbers-mode 0)))
@@ -80,9 +132,9 @@
   (setq dired-kill-when-opening-new-dired-buffer t)
   (setq dired-listing-switches "-alh")
 
-  (set-face-attribute 'default nil :family "JetBrains Mono Nerd Font" :height 140)
-  (set-face-attribute 'fixed-pitch nil :family "JetBrains Mono Nerd Font" :height 140)
-  (set-face-attribute 'variable-pitch nil :family "Roboto" :height 170)
+  (set-face-attribute 'default nil :family "Iosevka Nerd Font" :height 130)
+  (set-face-attribute 'fixed-pitch nil :family "Iosevka Nerd Font" :height 130)
+  (set-face-attribute 'variable-pitch nil :family "Inter" :height 170)
 
   (defun mk/transparency (value)
     "Sets the transparency of the frame window. 0=transparent/100=opaque"
@@ -100,10 +152,11 @@
 ** All The Icons
 #+begin_src emacs-lisp
   (use-package all-the-icons)
+  (elpaca-wait)
 
   (use-package all-the-icons-dired
-    :config
-    (add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
+	:config
+	(add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
 #+end_src
 
 ** Dashboard
@@ -184,6 +237,8 @@
   (use-package base16-theme :no-require t
     :custom
     (base16-distinct-fringe-background nil))
+
+  (use-package ef-themes)
 #+end_src
 
 * Evil
@@ -365,25 +420,25 @@
 ** Treemacs
 #+begin_src emacs-lisp
   (use-package treemacs
-    :config
-    (treemacs-resize-icons 16)
-    (treemacs-follow-mode t)
-    (treemacs-filewatch-mode t)
-    (treemacs-fringe-indicator-mode t)
-    ;; (treemacs-git-mode 'deferred)
-    ;; (setq doom-themes-treemacs-theme "doom-atom")
-    ;; (doom-themes-treemacs-config)
-    (setq treemacs-width-is-initially-locked nil))
+  	:config
+  	(treemacs-resize-icons 16)
+  	(treemacs-follow-mode t)
+  	(treemacs-filewatch-mode t)
+  	(treemacs-fringe-indicator-mode t)
+  	;; (treemacs-git-mode 'deferred)
+  	;; (setq doom-themes-treemacs-theme "doom-atom")
+  	;; (doom-themes-treemacs-config)
+  	(setq treemacs-width-is-initially-locked nil)
+  	(load "treemacs-theme.el")
+  	(treemacs-load-theme 'mk/treemacs-theme))
 
   (use-package treemacs-evil
-    :after (treemacs evil)
-    :bind
-    (:map global-map
-          ("C-x t t"   . treemacs)
-          ("C-x t C-t" . treemacs-find-file)))
+  	:after (treemacs evil)
+  	:bind
+  	(:map global-map
+  		  ("C-x t t"   . treemacs)
+  		  ("C-x t C-t" . treemacs-find-file)))
 
-  (load "treemacs-theme.el")
-  (treemacs-load-theme 'mk/treemacs-theme)
 
   (add-hook 'treemacs-mode-hook (lambda() (display-line-numbers-mode 0)))
 #+end_src
@@ -490,11 +545,20 @@
 
 *** LaTeX
 #+begin_src emacs-lisp
-  (use-package tex :straight auctex
+  (use-package latex
+    :elpaca (auctex :pre-build (("./autogen.sh")
+  							  ("./configure"
+  							   "--without-texmf-dir")
+  							  ("make")))
     :config
     (setq TeX-auto-save t)
     (setq TeX-parse-self t)
     (setq-default TeX-master nil))
+#+end_src
+
+*** Verilog
+#+begin_src emacs-lisp
+  (use-package verilog-mode)
 #+end_src
 
 ** Company
@@ -558,6 +622,41 @@
     :config
     (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)
     (plist-put kind-icon-default-style :height 0.7))
+
+  (use-package cape
+    ;; Bind dedicated completion commands
+    ;; Alternative prefix keys: C-c p, M-p, M-+, ...
+    ;; :bind (("C-c p p" . completion-at-point) ;; capf
+    ;;        ("C-c p t" . complete-tag)        ;; etags
+    ;;        ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
+    ;;        ("C-c p h" . cape-history)
+    ;;        ("C-c p f" . cape-file)
+    ;;        ("C-c p k" . cape-keyword)
+    ;;        ("C-c p s" . cape-symbol)
+    ;;        ("C-c p a" . cape-abbrev)
+    ;;        ("C-c p l" . cape-line)
+    ;;        ("C-c p w" . cape-dict)
+    ;;        ("C-c p \\" . cape-tex)
+    ;;        ("C-c p _" . cape-tex)
+    ;;        ("C-c p ^" . cape-tex)
+    ;;        ("C-c p &" . cape-sgml)
+    ;;        ("C-c p r" . cape-rfc1345))
+    :init
+    ;; Add `completion-at-point-functions', used by `completion-at-point'.
+    ;; NOTE: The order matters!
+    (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+    (add-to-list 'completion-at-point-functions #'cape-file)
+    (add-to-list 'completion-at-point-functions #'cape-elisp-block)
+    ;;(add-to-list 'completion-at-point-functions #'cape-history)
+    ;;(add-to-list 'completion-at-point-functions #'cape-keyword)
+    ;;(add-to-list 'completion-at-point-functions #'cape-tex)
+    ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
+    ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
+    ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
+    ;;(add-to-list 'completion-at-point-functions #'cape-dict)
+    ;;(add-to-list 'completion-at-point-functions #'cape-symbol)
+    ;;(add-to-list 'completion-at-point-functions #'cape-line)
+  )
 #+end_src
 
 ** Flycheck
@@ -677,6 +776,7 @@
     (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
     ;; (setq org-hide-emphasis-markers t)
     (setq org-startup-indented t)
+    (setq org-image-actual-width nil)
     (setq org-pretty-entities t)
     (add-to-list 'org-latex-packages-alist
                  '("" "chemfig" t))
@@ -688,14 +788,13 @@
 
     (add-hook 'org-mode-hook
               (lambda ()
-                (mixed-pitch-mode)
+                ;; (mixed-pitch-mode)
                 (visual-line-mode)
                 (setq visual-fill-column-center-text t)
                 (setq fill-column 140)
                 (display-line-numbers-mode 0)
                 ;; (visual-fill-column-mode)
-                (company-mode 0)
-
+                ;; (company-mode 0)
                 ;; (set-face-attribute 'org-block nil :inherit 'fixed-pitch)
                 ;; (set-face-attribute 'org-hide nil :inherit 'fixed-pitch)
                 ;; (set-face-attribute 'org-block-begin-line nil :inherit 'fixed-pitch)
@@ -740,6 +839,7 @@
 
      "f f" 'find-file
      "f s" 'save-buffer
+     "f r" 'rename-visited-file
 
      "c b" 'consult-bookmark
 
@@ -769,9 +869,9 @@
      :states '(normal visual)
      :keymaps 'dap-mode-map
 
-     "d d" 'dap-debug
-     "d b" 'dap-breakpoint-toggle
-     "d h" 'dap-hydra)
+     "l d d" 'dap-debug
+     "l d b" 'dap-breakpoint-toggle
+     "l d h" 'dap-hydra)
 
     (general-define-key
      :prefix "SPC"

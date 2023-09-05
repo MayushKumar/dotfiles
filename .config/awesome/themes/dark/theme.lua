@@ -8,7 +8,7 @@ local dpi = xresources.apply_dpi
 
 local theme = {}
 
-theme.font          = "JetBrains Mono Nerd Font 13"
+theme.font          = "Iosevka Term SS08 12"
 
 theme.bg_normal     = "#292929"
 theme.bg_focus      = "#484848"

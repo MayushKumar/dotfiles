@@ -2,7 +2,13 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-((".zshrc"
+(("sxhkdrc"
+ (filename . "~/.config/awesome/sxhkdrc")
+ (front-context-string . "super + 0\n	  	po")
+ (rear-context-string)
+ (position . 1)
+ (last-modified 25750 61268 500376 985000))
+(".zshrc"
  (filename . "~/.config/zsh/.zshrc")
  (front-context-string . "# Lines configur")
  (rear-context-string)

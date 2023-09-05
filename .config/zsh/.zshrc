@@ -50,6 +50,7 @@ alias dw='cd ~/Downloads/'
 alias dc='cd /run/media/Storage/Personal/Documents/'
 alias dv='cd ~/dev/'
 alias tr='cd ~/Downloads/torrents/'
+alias sx='startx ~/.config/X11/xinitrc'
 
 #prompt pure
 

@@ -20,7 +20,7 @@ XF86Audio{RaiseVolume,LowerVolume,Mute}
 		pamixer {-i 5,-d 5,-t}
 
 XF86MonBrightness{Up,Down}
-		brillo {-A 5,-U 5}
+		brillo -q -u 100000 {-A 5,-U 5}
 
 super + F8
 	  	xset dpms force suspend
@@ -31,7 +31,7 @@ Print
 shift + Print
 		maim ~/Pictures/screenshots/$(date +%F_%T).png
 
-super + F2
+super + ctrl + t
 	  	~/.scripts/addtorrent
 
 super + F12
