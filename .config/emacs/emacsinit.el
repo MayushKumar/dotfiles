@@ -29,7 +29,7 @@
 ;; (setq straight-vc-git-default-clone-depth 1)
 ;; (straight-use-package 'use-package)
 
-(defvar elpaca-installer-version 0.5)
+(defvar elpaca-installer-version 0.6)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
@@ -77,6 +77,9 @@
 ;; Block until current queue processed.
 (elpaca-wait)
 
+(setq custom-file (expand-file-name "customs.el" user-emacs-directory))
+(add-hook 'elpaca-after-init-hook (lambda () (load custom-file 'noerror)))
+
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
@@ -115,9 +118,10 @@
 (setq dired-kill-when-opening-new-dired-buffer t)
 (setq dired-listing-switches "-alh")
 
-(set-face-attribute 'default nil :family "Iosevka Nerd Font" :height 130)
-(set-face-attribute 'fixed-pitch nil :family "Iosevka Nerd Font" :height 130)
-(set-face-attribute 'variable-pitch nil :family "Inter" :height 170)
+  ;; (add-hook 'elpaca-after-init-hook (lambda () 
+(set-face-attribute 'default nil :family "CommitMono" :weight 'medium :height 120)
+(set-face-attribute 'fixed-pitch nil :family "CommitMono" :weight 'medium :height 120)
+(set-face-attribute 'variable-pitch nil :family "Inter" :height 170);;))
 
 (defun mk/transparency (value)
   "Sets the transparency of the frame window. 0=transparent/100=opaque"
@@ -210,6 +214,8 @@
   (base16-distinct-fringe-background nil))
 
 (use-package ef-themes)
+
+;; (elpaca-wait)
 
 (use-package evil
   :init
@@ -445,8 +451,6 @@
   (setq TeX-parse-self t)
   (setq-default TeX-master nil))
 
-(use-package verilog-mode)
-
 ;; (use-package company
 ;;   :config
 ;;   (setq company-idle-delay 0)
@@ -543,8 +547,7 @@
 
 (use-package tree-sitter
   :config
-  (global-tree-sitter-mode)
-  )
+  (global-tree-sitter-mode))
 
 (use-package tree-sitter-langs
   :config

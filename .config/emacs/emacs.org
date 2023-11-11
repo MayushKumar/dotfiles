@@ -42,7 +42,7 @@
 
 ** elpaca
 #+begin_src emacs-lisp
-  (defvar elpaca-installer-version 0.5)
+  (defvar elpaca-installer-version 0.6)
   (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
   (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
   (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
@@ -89,6 +89,9 @@
 
   ;; Block until current queue processed.
   (elpaca-wait)
+
+  (setq custom-file (expand-file-name "customs.el" user-emacs-directory))
+  (add-hook 'elpaca-after-init-hook (lambda () (load custom-file 'noerror)))
 #+end_src
 
 * UI
@@ -132,8 +135,8 @@
   (setq dired-kill-when-opening-new-dired-buffer t)
   (setq dired-listing-switches "-alh")
 
-  (set-face-attribute 'default nil :family "Iosevka Nerd Font" :height 130)
-  (set-face-attribute 'fixed-pitch nil :family "Iosevka Nerd Font" :height 130)
+  (set-face-attribute 'default nil :family "CommitMono" :weight 'medium :height 120)
+  (set-face-attribute 'fixed-pitch nil :family "CommitMono" :weight 'medium :height 120)
   (set-face-attribute 'variable-pitch nil :family "Inter" :height 170)
 
   (defun mk/transparency (value)
@@ -239,6 +242,8 @@
     (base16-distinct-fringe-background nil))
 
   (use-package ef-themes)
+
+  ;; (elpaca-wait)
 #+end_src
 
 * Evil
@@ -556,10 +561,6 @@
     (setq-default TeX-master nil))
 #+end_src
 
-*** Verilog
-#+begin_src emacs-lisp
-  (use-package verilog-mode)
-#+end_src
 
 ** Company
 #+begin_src emacs-lisp
@@ -668,8 +669,7 @@
 #+begin_src emacs-lisp
   (use-package tree-sitter
     :config
-    (global-tree-sitter-mode)
-    )
+    (global-tree-sitter-mode))
 
   (use-package tree-sitter-langs
     :config
@@ -927,3 +927,4 @@
 
      "C-=" 'mk-indent-buffer))
 #+end_src
+
