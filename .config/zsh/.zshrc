@@ -43,6 +43,7 @@ alias la='exa -al'
 alias ec='emacsclient -r -a ""'
 alias lf='lfrun'
 alias valgrind='colour-valgrind'
+alias dlp='aria2c -x 6 -s 6'
 
 alias config='/usr/bin/git --git-dir=/home/mayush/.cfg/ --work-tree=/home/mayush'
 alias nr='cd ~/dev/Noor/'
@@ -63,3 +64,4 @@ bindkey "^[[Z" autosuggest-accept
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+

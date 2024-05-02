@@ -10,6 +10,7 @@
 
 (setq backup-directory-alist '(("." . "~/.cache/emacs-backup")))
 (setq native-comp-async-report-warnings-errors nil)
+(setq load-prefer-newer t)
 
 ;; (defvar bootstrap-version)
 ;; (let ((bootstrap-file
@@ -29,7 +30,7 @@
 ;; (setq straight-vc-git-default-clone-depth 1)
 ;; (straight-use-package 'use-package)
 
-(defvar elpaca-installer-version 0.6)
+(defvar elpaca-installer-version 0.7)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
@@ -118,10 +119,9 @@
 (setq dired-kill-when-opening-new-dired-buffer t)
 (setq dired-listing-switches "-alh")
 
-  ;; (add-hook 'elpaca-after-init-hook (lambda () 
-(set-face-attribute 'default nil :family "CommitMono" :weight 'medium :height 120)
-(set-face-attribute 'fixed-pitch nil :family "CommitMono" :weight 'medium :height 120)
-(set-face-attribute 'variable-pitch nil :family "Inter" :height 170);;))
+(set-face-attribute 'default nil :family "CommitMono" :weight 'medium :height 130)
+(set-face-attribute 'fixed-pitch nil :family "CommitMono" :weight 'medium :height 130)
+(set-face-attribute 'variable-pitch nil :family "Inter" :height 170)
 
 (defun mk/transparency (value)
   "Sets the transparency of the frame window. 0=transparent/100=opaque"
@@ -142,19 +142,38 @@
 	:config
 	(add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
 
+(use-package nerd-icons)
+
+;; (use-package dashboard
+  ;;   :config
+  ;;   (setq dashboard-startup-banner "~/.config/emacs/cat.png")
+  ;;   (setq dashboard-set-heading-icons t)
+  ;;   (setq dashboard-set-file-icons t)
+  ;;   (setq dashboard-items '((recents  . 5)
+  ;;                           (projects . 5)
+  ;;                           (registers . 5)))
+  ;;   (setq dashboard-center-content t)
+  ;;   (setq dashboard-set-footer nil)
+  ;;   (set-face-attribute 'dashboard-items-face nil :weight 'normal)
+
+  ;;   (setq initial-buffer-choice (lambda () (dashboard-refresh-buffer)(get-buffer "*dashboard*")))
+  ;;   (dashboard-setup-startup-hook))
+
+
 (use-package dashboard
-  :config
+  :init
+  (setq dashboard-icon-type 'all-the-icons)  ; use `all-the-icons' package
   (setq dashboard-startup-banner "~/.config/emacs/cat.png")
-  (setq dashboard-set-heading-icons t)
-  (setq dashboard-set-file-icons t)
   (setq dashboard-items '((recents  . 5)
                           (projects . 5)
                           (registers . 5)))
+  (setq dashboard-vertically-center-content t)
   (setq dashboard-center-content t)
-  (setq dashboard-set-footer nil)
-  (set-face-attribute 'dashboard-items-face nil :weight 'normal)
-
-  (setq initial-buffer-choice (lambda () (dashboard-refresh-buffer)(get-buffer "*dashboard*")))
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  :config
+  (add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
+  (add-hook 'elpaca-after-init-hook #'dashboard-initialize)
   (dashboard-setup-startup-hook))
 
 ;; (use-package telephone-line
@@ -442,7 +461,7 @@
 (use-package yaml-mode)
 
 (use-package latex
-  :elpaca (auctex :pre-build (("./autogen.sh")
+  :ensure (auctex :pre-build (("./autogen.sh")
 							  ("./configure"
 							   "--without-texmf-dir")
 							  ("make")))
@@ -529,7 +548,7 @@
   :init
   ;; Add `completion-at-point-functions', used by `completion-at-point'.
   ;; NOTE: The order matters!
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  ;; (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-elisp-block)
   ;;(add-to-list 'completion-at-point-functions #'cape-history)
@@ -570,6 +589,7 @@
 (use-package lsp-mode
   :hook
   (c++-mode . lsp-deferred)
+  (rust-mode . lsp-deferred)
   (lsp-mode . lsp-enable-which-key-integration)
   (lsp-completion-mode . my/lsp-mode-setup-completion)
 
@@ -578,6 +598,7 @@
   (defun my/lsp-mode-setup-completion ()
     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
           '(orderless))) ;; Configure orderless
+
   :custom
   (lsp-completion-provider :none)
 
@@ -592,6 +613,36 @@
         lsp-enable-folding nil
         lsp-enable-imenu nil
         lsp-eldoc-enable-hover nil)
+
+  ;; LSP Booster
+  (defun lsp-booster--advice-json-parse (old-fn &rest args)
+	"Try to parse bytecode instead of json."
+	(or
+	 (when (equal (following-char) ?#)
+       (let ((bytecode (read (current-buffer))))
+		 (when (byte-code-function-p bytecode)
+           (funcall bytecode))))
+	 (apply old-fn args)))
+  (advice-add (if (progn (require 'json)
+						 (fboundp 'json-parse-buffer))
+                  'json-parse-buffer
+				'json-read)
+              :around
+              #'lsp-booster--advice-json-parse)
+
+  (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
+	"Prepend emacs-lsp-booster command to lsp CMD."
+	(let ((orig-result (funcall old-fn cmd test?)))
+      (if (and (not test?)                             ;; for check lsp-server-present?
+               (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
+               lsp-use-plists
+               (not (functionp 'json-rpc-connection))  ;; native json-rpc
+               (executable-find "emacs-lsp-booster"))
+          (progn
+			(message "Using emacs-lsp-booster for %s!" orig-result)
+			(cons "emacs-lsp-booster" orig-result))
+		orig-result)))
+  (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
 
   :commands
   (lsp lsp-deferred))

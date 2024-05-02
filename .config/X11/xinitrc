@@ -42,8 +42,9 @@ session=${1:-awesome}
 
 case $session in
     "bspwm") exec bspwm;;
-	"berry") exec berry;;
+    "berry") exec berry;;
     "awesome") exec awesome;;
+    "leftwm") exec leftwm;;
     # No known session, try to run it as command
     *) exec $1;;
 esac

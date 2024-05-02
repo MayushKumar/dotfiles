@@ -114,5 +114,11 @@
 	  (shell-file-name . "/bin/sh") (shell-command-switch . "-c"))
 	 (tramp-connection-local-default-system-profile
 	  (path-separator . ":") (null-device . "/dev/null"))))
- '(custom-enabled-themes '(ef-trio-dark))
+ '(custom-enabled-themes '(kaolin-dark))
  '(inhibit-startup-screen t))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(dashboard-items-face ((t (:inherit widget-button :weight medium)))))

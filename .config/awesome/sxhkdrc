@@ -2,7 +2,7 @@ super + 0
 	  	powermenu
 
 super + Return
-	  	alacritty
+	  	alacritty msg create-window || alacritty
 
 super + w
 		librewolf
