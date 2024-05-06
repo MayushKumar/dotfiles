@@ -1,0 +1,29 @@
+#!/bin/sh
+
+config="/usr/bin/git --git-dir=/home/mayush/.cfg/ --work-tree=/home/mayush"
+$config add \
+	   ~/.config/X11/ \
+	   ~/.config/alacritty/ \
+	   ~/.config/awesome/ \
+	   ~/.config/bspwm/ \
+	   ~/.config/dunst/ \
+	   ~/.config/emacs/themes/ \
+	   ~/.config/emacs/snippets/ \
+	   ~/.config/helix/ \
+	   ~/.config/fontconfig/fonts.conf \
+	   ~/.config/lf/ \
+	   ~/.config/mpd/ \
+	   ~/.config/mpv/ \
+	   ~/.config/ncmpcpp/{bindings,config} \
+	   ~/.config/nsxiv/exec/key-handler \
+	   ~/.config/picom/picom.conf \
+	   ~/.config/ranger/ \
+	   ~/.config/stig/ \
+	   ~/.config/zathura/ \
+	   ~/.config/zsh/.zshrc \
+	   ~/.config/zsh/.zprofile \
+	   ~/.scripts/
+
+$config add -u .
+$config commit -m "Changes"
+$config push

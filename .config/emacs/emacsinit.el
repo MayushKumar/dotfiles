@@ -119,8 +119,8 @@
 (setq dired-kill-when-opening-new-dired-buffer t)
 (setq dired-listing-switches "-alh")
 
-(set-face-attribute 'default nil :family "CommitMono" :weight 'medium :height 130)
-(set-face-attribute 'fixed-pitch nil :family "CommitMono" :weight 'medium :height 130)
+(set-face-attribute 'default nil :family "CommitMono" :weight 'medium :height 120)
+(set-face-attribute 'fixed-pitch nil :family "CommitMono" :weight 'medium :height 120)
 (set-face-attribute 'variable-pitch nil :family "Inter" :height 170)
 
 (defun mk/transparency (value)
@@ -233,6 +233,8 @@
   (base16-distinct-fringe-background nil))
 
 (use-package ef-themes)
+
+(use-package kanagawa-theme)
 
 ;; (elpaca-wait)
 
@@ -657,6 +659,8 @@
   (lsp-ui-doc-show-with-mouse nil)
   (lsp-ui-sideline-enable nil))
 
+(use-package consult-lsp)
+
 ;; (use-package lsp-bridge
 ;;   :config
 ;;   (add-to-list 'load-path "~/.config/emacs/straight/repos/lsp-bridge/")
@@ -791,7 +795,7 @@
    "l i"   'lsp-find-implementation
    "l r"   'lsp-find-references
    "l R"   'lsp-rename
-   "l s"   'lsp-ui-find-workspace-symbol
+   "l s"   'consult-lsp-symbols
    "l q"   'lsp-workspace-shutdown)
 
   (general-define-key
