@@ -13,7 +13,7 @@ $config add \
 	   ~/.config/fontconfig/fonts.conf \
 	   ~/.config/lf/ \
 	   ~/.config/mpd/ \
-	   ~/.config/mpv/ \
+	   ~/.config/mpv/mpv.conf \
 	   ~/.config/ncmpcpp/{bindings,config} \
 	   ~/.config/nsxiv/exec/key-handler \
 	   ~/.config/picom/picom.conf \
