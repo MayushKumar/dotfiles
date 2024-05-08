@@ -17,7 +17,7 @@ size = 7.5
 style = "Bold"
 
 [font.normal]
-family = "CommitMono"
+family = "0xProto Nerd Font"
 style = "Regular"
 
 [font.offset]
@@ -409,7 +409,7 @@ key = "NumpadSubtract"
 mods = "Control"
 
 [window]
-opacity = 1.0
+opacity = 0.8
 
 [window.dimensions]
 columns = 0
