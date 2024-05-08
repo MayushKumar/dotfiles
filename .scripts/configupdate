@@ -20,8 +20,7 @@ $config add \
 	   ~/.config/ranger/ \
 	   ~/.config/stig/ \
 	   ~/.config/zathura/ \
-	   ~/.config/zsh/.zshrc \
-	   ~/.config/zsh/.zprofile \
+	   ~/.config/zsh/{.zshrc,.zprofile} \
 	   ~/.scripts/
 
 $config add -u .
