@@ -11,13 +11,13 @@ shape = "Block"
 TERM = "xterm-256color"
 
 [font]
-size = 7.5
+size = 7
 
 [font.bold]
 style = "Bold"
 
 [font.normal]
-family = "0xProto Nerd Font"
+family = "CommitMono"
 style = "Regular"
 
 [font.offset]

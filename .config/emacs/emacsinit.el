@@ -119,8 +119,10 @@
 (setq dired-kill-when-opening-new-dired-buffer t)
 (setq dired-listing-switches "-alh")
 
-(set-face-attribute 'default nil :family "0xProto Nerd Font" :weight 'medium :height 110)
-(set-face-attribute 'fixed-pitch nil :family "0xProto Nerd Font" :weight 'medium :height 110)
+;; (set-face-attribute 'default nil :family "0xProto Nerd Font" :weight 'medium :height 110)
+;; (set-face-attribute 'fixed-pitch nil :family "0xProto Nerd Font" :weight 'medium :height 110)
+(set-face-attribute 'default nil :family "CommitMono" :weight 'medium :height 120)
+(set-face-attribute 'fixed-pitch nil :family "CommitMono" :weight 'medium :height 120)
 (set-face-attribute 'variable-pitch nil :family "Inter" :height 170)
 
 (defun mk/transparency (value)
@@ -171,6 +173,7 @@
   (setq dashboard-center-content t)
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
+  (setq dashboard-projects-backend 'projectile)
   :config
   (add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
   (add-hook 'elpaca-after-init-hook #'dashboard-initialize)
@@ -235,6 +238,8 @@
 (use-package ef-themes)
 
 (use-package kanagawa-theme)
+
+(use-package apropospriate-theme)
 
 ;; (elpaca-wait)
 
