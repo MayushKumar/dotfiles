@@ -728,9 +728,12 @@
 
 ** LSP
 #+begin_src emacs-lisp
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;; lsp-mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
   (use-package lsp-mode
     :hook
-    (c++-mode . lsp-deferred)
+    ;;  (c++-mode . lsp-deferred)
     (rust-mode . lsp-deferred)
     (lsp-mode . lsp-enable-which-key-integration)
     (lsp-completion-mode . my/lsp-mode-setup-completion)
@@ -801,6 +804,21 @@
 
   (use-package consult-lsp)
 
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;; eglot ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (use-package eglot-booster :ensure (:host github :repo "jdtsmith/eglot-booster")
+    :after eglot
+    :config
+    (setq eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider :inlayHintProvider))
+    (eglot-booster-mode))
+
+  (use-package consult-eglot)
+
+  ;; (use-package eglot)
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;; lsp-bridge ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
   ;; (use-package lsp-bridge
   ;;   :config
   ;;   (add-to-list 'load-path "~/.config/emacs/straight/repos/lsp-bridge/")
@@ -825,6 +843,48 @@
               (lambda (arg) (call-interactively #'dap-hydra)))
     (require 'dap-codelldb)
     (require 'dap-lldb))
+
+
+  (use-package dape :ensure (:host github :repo "svaante/dape")
+    ;; :preface
+    ;; By default dape shares the same keybinding prefix as `gud'
+    ;; If you do not want to use any prefix, set it to nil.
+    ;; (setq dape-key-prefix "\C-x\C-a")
+
+    ;; :hook
+    ;; Save breakpoints on quit
+    ;; ((kill-emacs . dape-breakpoint-save)
+    ;; Load breakpoints on startup
+    ;;  (after-init . dape-breakpoint-load))
+
+    ;; :init
+    ;; To use window configuration like gud (gdb-mi)
+    ;; (setq dape-buffer-window-arrangement 'gud)
+
+    ;; :config
+    ;; Info buffers to the right
+    ;; (setq dape-buffer-window-arrangement 'right)
+
+    ;; Global bindings for setting breakpoints with mouse
+    ;; (dape-breakpoint-global-mode)
+
+    ;; To not display info and/or buffers on startup
+    ;; (remove-hook 'dape-on-start-hooks 'dape-info)
+    ;; (remove-hook 'dape-on-start-hooks 'dape-repl)
+
+    ;; To display info and/or repl buffers on stopped
+    ;; (add-hook 'dape-on-stopped-hooks 'dape-info)
+    ;; (add-hook 'dape-on-stopped-hooks 'dape-repl)
+
+    ;; Kill compile buffer on build success
+    ;; (add-hook 'dape-compile-compile-hooks 'kill-buffer)
+
+    ;; Save buffers on startup, useful for interpreted languages
+    ;; (add-hook 'dape-on-start-hooks (lambda () (save-some-buffers t t)))
+
+    ;; Projectile users
+    ;; (setq dape-cwd-fn 'projectile-project-root)
+    )
 #+end_src
 
 * Org
@@ -949,6 +1009,19 @@
      "l R"   'lsp-rename
      "l s"   'consult-lsp-symbols
      "l q"   'lsp-workspace-shutdown)
+
+    (general-define-key
+     :prefix "SPC"
+     :states '(normal visual)
+     :keymaps 'eglot-mode-map
+
+     "l d"   'eglot-find-declaration
+     "l g"   'eglot-find-typeDefinition
+     "l i"   'eglot-find-implementation
+     "l r"   'xref-find-references
+     "l R"   'eglot-rename
+     "l s"   'consult-eglot-symbols
+     "l q"   'eglot-shutdown)
 
     (general-define-key
      :prefix "SPC"

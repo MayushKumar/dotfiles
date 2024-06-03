@@ -115,7 +115,9 @@
 	 (tramp-connection-local-default-system-profile
 	  (path-separator . ":") (null-device . "/dev/null"))))
  '(custom-enabled-themes '(ef-duo-dark))
- '(inhibit-startup-screen t))
+ '(eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider :inlayHintProvider))
+ '(inhibit-startup-screen t)
+ '(safe-local-variable-directories '("/home/mayush/dev/Noor/sandbox/")))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
