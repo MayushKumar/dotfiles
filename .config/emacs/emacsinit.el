@@ -365,7 +365,7 @@
   ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
   )
 
-(use-package vterm
+(use-package vterm :commands (vterm)
   :config
   (add-hook 'vterm-mode-hook (lambda () (display-line-numbers-mode 0))))
 
@@ -385,7 +385,7 @@
 ;; 	(add-hook 'window-setup-hook #'(lambda () (persp-mode 1))))
 ;;   )
 
-(use-package magit)
+(use-package magit :commands (magit magit-status))
 
 (use-package treemacs
 	:config
@@ -418,8 +418,7 @@
   (global-set-key (kbd "C-h c") #'helpful-callable)
   (global-set-key (kbd "C-h v") #'helpful-variable)
   (global-set-key (kbd "C-h o") #'helpful-symbol)
-  (global-set-key (kbd "C-h k") #'helpful-key)
-  )
+  (global-set-key (kbd "C-h k") #'helpful-key))
 
 (use-package which-key
   :config
@@ -554,22 +553,21 @@
   ;;        ("C-c p r" . cape-rfc1345))
   :init
   ;; Add `completion-at-point-functions', used by `completion-at-point'.
-  ;; NOTE: The order matters!
-  ;; (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-elisp-block)
-  ;;(add-to-list 'completion-at-point-functions #'cape-history)
-  ;;(add-to-list 'completion-at-point-functions #'cape-keyword)
-  ;;(add-to-list 'completion-at-point-functions #'cape-tex)
-  ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
-  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
-  ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
-  ;;(add-to-list 'completion-at-point-functions #'cape-dict)
-  ;;(add-to-list 'completion-at-point-functions #'cape-symbol)
-  ;;(add-to-list 'completion-at-point-functions #'cape-line)
-)
+  (add-hook 'completion-at-point-functions #'cape-file)
+  ;; (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  ;; (add-hook 'completion-at-point-functions #'cape-elisp-block)
+  ;;(add-hook 'completion-at-point-functions #'cape-history)
+  ;; (add-hook 'completion-at-point-functions #'cape-keyword)
+  ;;(add-hook 'completion-at-point-functions #'cape-tex)
+  ;;(add-hook 'completion-at-point-functions #'cape-sgml)
+  ;;(add-hook 'completion-at-point-functions #'cape-rfc1345)
+  ;;(add-hook 'completion-at-point-functions #'cape-abbrev)
+  ;;(add-hook 'completion-at-point-functions #'cape-dict)
+  ;;(add-hook 'completion-at-point-functions #'cape-elisp-symbol)
+  ;;(add-hook 'completion-at-point-functions #'cape-line) ;; NOTE: The order matters!
+  )
 
-(use-package flycheck)
+;; (use-package flycheck)
 
 (use-package tree-sitter
   :config
@@ -656,9 +654,9 @@
   :commands
   (lsp lsp-deferred))
 
-(use-package lsp-treemacs)
+(use-package lsp-treemacs :after lsp)
 
-(use-package lsp-ui
+(use-package lsp-ui :after lsp
   :hook (lsp-mode . lsp-ui-mode)
   :custom
   (lsp-ui-doc-position 'bottom)
@@ -677,7 +675,7 @@
   (setq eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider :inlayHintProvider))
   (eglot-booster-mode))
 
-(use-package consult-eglot)
+(use-package consult-eglot :after eglot)
 
 ;; (use-package eglot)
 
@@ -703,7 +701,7 @@
   (require 'dap-lldb))
 
 
-(use-package dape :ensure (:host github :repo "svaante/dape")
+(use-package dape :ensure (:host github :repo "svaante/dape") :commands (dape)
   ;; :preface
   ;; By default dape shares the same keybinding prefix as `gud'
   ;; If you do not want to use any prefix, set it to nil.
@@ -719,12 +717,12 @@
   ;; To use window configuration like gud (gdb-mi)
   ;; (setq dape-buffer-window-arrangement 'gud)
 
-  ;; :config
+  :config
   ;; Info buffers to the right
-  ;; (setq dape-buffer-window-arrangement 'right)
+  (setq dape-buffer-window-arrangement 'right)
 
   ;; Global bindings for setting breakpoints with mouse
-  ;; (dape-breakpoint-global-mode)
+  (dape-breakpoint-global-mode)
 
   ;; To not display info and/or buffers on startup
   ;; (remove-hook 'dape-on-start-hooks 'dape-info)
@@ -749,7 +747,7 @@
   :config
   (setq mixed-pitch-set-height t))
 
-(use-package org
+(use-package org :commands (org-mode)
   :config
   (require 'org-tempo)
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
