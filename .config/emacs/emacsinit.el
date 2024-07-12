@@ -12,6 +12,24 @@
 (setq native-comp-async-report-warnings-errors nil)
 (setq load-prefer-newer t)
 
+(defvar after-load-theme-hook nil
+    "Hook run after a color theme is loaded using `load-theme'.")
+(defadvice load-theme (after run-after-load-theme-hook activate)
+    "Run `after-load-theme-hook'."
+    (run-hooks 'after-load-theme-hook))
+
+
+(add-hook 'after-load-theme-hook
+		  (lambda ()
+			(let ((error-underline (face-attribute 'flymake-error :underline nil t))
+				  (warning-underline (face-attribute 'flymake-warning :underline nil t)))
+			  (when (listp error-underline)
+				(setq error-underline (plist-get error-underline :color)))
+			  (when (listp warning-underline)
+				(setq warning-underline (plist-get warning-underline :color)))
+			  (set-face-attribute 'flymake-error nil :underline `(:color ,error-underline :style dashes))
+			  (set-face-attribute 'flymake-warning nil :underline `(:color ,warning-underline :style dashes)))))
+
 ;; (defvar bootstrap-version)
 ;; (let ((bootstrap-file
 ;;        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -81,11 +99,6 @@
 (setq custom-file (expand-file-name "customs.el" user-emacs-directory))
 (add-hook 'elpaca-after-init-hook (lambda () (load custom-file 'noerror)))
 
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
-(setq ring-bell-function 'ignore)
-
 (set-default-coding-systems 'utf-8)
 (prefer-coding-system       'utf-8)
 (set-terminal-coding-system 'utf-8)
@@ -96,8 +109,8 @@
 
 (setq default-directory "~/")
 (save-place-mode 1)
+(electric-pair-mode 1)
 
-(add-hook 'prog-mode-hook 'electric-pair-local-mode)
 (add-hook 'Man-mode-hook (lambda() (display-line-numbers-mode 0)))
 
 (setq-default tab-width 4)
@@ -167,8 +180,7 @@
   (setq dashboard-icon-type 'all-the-icons)  ; use `all-the-icons' package
   (setq dashboard-startup-banner "~/.config/emacs/cat.png")
   (setq dashboard-items '((recents  . 5)
-                          (projects . 5)
-                          (registers . 5)))
+                          (projects . 5)))
   (setq dashboard-vertically-center-content t)
   (setq dashboard-center-content t)
   (setq dashboard-set-heading-icons t)
@@ -236,8 +248,6 @@
   (base16-distinct-fringe-background nil))
 
 (use-package ef-themes)
-
-(use-package kanagawa-theme)
 
 (use-package apropospriate-theme)
 
@@ -446,6 +456,17 @@
   (interactive)
   (indent-region (point-min) (point-max)))
 
+(defun mk-divider (str len)
+  "Insert a divider on the current line"
+  (interactive "sEnter the string for the divider: \nnEnter the length for the divider: ")
+  (dotimes (_ len)
+    (insert str))
+  (insert "  ")
+  (dotimes (_ len)
+    (insert str))
+  (backward-char (1+ (* len (length str))))
+  (evil-insert-state))
+
 (setq-default c-basic-offset 4)
 (setq-default c-default-style "k&r")
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
@@ -569,15 +590,19 @@
 
 ;; (use-package flycheck)
 
-(use-package tree-sitter
-  :config
-  (global-tree-sitter-mode))
+;; (use-package tree-sitter
+;;   :config
+;;   (global-tree-sitter-mode))
 
-(use-package tree-sitter-langs
-  :config
-  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
-  (set-face-attribute 'tree-sitter-hl-face:property 'nil :slant 'normal)
-  (set-face-attribute 'tree-sitter-hl-face:function.call 'nil :inherit '(default)))
+;; (use-package tree-sitter-langs
+;;   :config
+;;   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+;;   (set-face-attribute 'tree-sitter-hl-face:property 'nil :slant 'normal)
+;;   (set-face-attribute 'tree-sitter-hl-face:function.call 'nil :inherit '(default)))
+
+;; (use-package treesit-auto
+;;   :config
+;;   (global-treesit-auto-mode))
 
 (use-package projectile
   :config
@@ -908,6 +933,14 @@
    :keymaps '(lisp-mode-map lisp-interaction-mode-map emacs-lisp-mode-map)
 
    "e" 'eval-region)
+
+
+  (general-define-key
+   :prefix ","
+   :states '(normal)
+   :keymaps '(LaTeX-mode-map)
+
+   "c" 'TeX-command-master)
 
   (general-define-key
    :states '(normal visual)

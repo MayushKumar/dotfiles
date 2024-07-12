@@ -114,7 +114,8 @@
 	  (shell-file-name . "/bin/sh") (shell-command-switch . "-c"))
 	 (tramp-connection-local-default-system-profile
 	  (path-separator . ":") (null-device . "/dev/null"))))
- '(custom-enabled-themes '(doom-pine))
+ '(custom-enabled-themes '(doom-horizon))
+ '(eglot-events-buffer-config '(:size 0 :format full))
  '(eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider :inlayHintProvider))
  '(inhibit-startup-screen t)
  '(safe-local-variable-directories '("/home/mayush/dev/Noor/sandbox/")))

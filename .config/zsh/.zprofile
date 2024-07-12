@@ -168,13 +168,15 @@ export LF_ICONS="\
 *.xspf=:\
 *.pdf=:\
 *.nix=:\
-tw=:\
-st=:\
-ow=:\
-dt=:\
-di=:\
+tw=:\
+st=:\
+ow=:\
+dt=:\
+di=:\
 fi=:\
 ln=:\
 or=:\
 ex=:\
 "
+
+# *.blend=󰂫\

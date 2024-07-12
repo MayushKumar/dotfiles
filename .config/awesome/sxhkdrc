@@ -20,7 +20,7 @@ XF86Audio{RaiseVolume,LowerVolume,Mute}
 		pamixer {-i 5,-d 5,-t}
 
 XF86MonBrightness{Up,Down}
-		brillo -q -u 100000 {-A 3,-U 3}
+		brillo -q -u 100000 {-A 2,-U 2}
 
 super + F8
 	  	xset dpms force suspend
