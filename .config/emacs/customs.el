@@ -8,6 +8,7 @@
 	 ((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi")
 	 (output-pdf "Zathura") (output-html "xdg-open")))
  '(base16-theme-distinct-fringe-background nil)
+ '(c-ts-mode-indent-style 'bsd)
  '(connection-local-criteria-alist
    '(((:application tramp :protocol "kubernetes")
 	  tramp-kubernetes-connection-local-default-profile)
@@ -114,7 +115,7 @@
 	  (shell-file-name . "/bin/sh") (shell-command-switch . "-c"))
 	 (tramp-connection-local-default-system-profile
 	  (path-separator . ":") (null-device . "/dev/null"))))
- '(custom-enabled-themes '(doom-horizon))
+ '(custom-enabled-themes '(doom-vibrant))
  '(eglot-events-buffer-config '(:size 0 :format full))
  '(eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider :inlayHintProvider))
  '(inhibit-startup-screen t)

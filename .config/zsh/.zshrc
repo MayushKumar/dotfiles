@@ -44,6 +44,7 @@ alias ec='emacsclient -r -a ""'
 alias lf='lfrun'
 alias valgrind='colour-valgrind'
 alias dlp='aria2c -x 6 -s 6'
+alias ff='fastfetch'
 
 alias config='/usr/bin/git --git-dir=/home/mayush/.cfg/ --work-tree=/home/mayush'
 alias nr='cd ~/dev/Noor/'
@@ -61,6 +62,9 @@ source ~/.local/share/zsh/powerlevel10k/powerlevel10k.zsh-theme
 
 bindkey "^?" backward-delete-char
 bindkey "^[[Z" autosuggest-accept
+
+eval $(opam env)
+eval "$(zoxide init zsh)"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

@@ -8,7 +8,7 @@ local dpi = xresources.apply_dpi
 
 local theme = {}
 
-theme.font          = "CommitMono 12"
+theme.font          = "CommitMono 13"
 
 theme.bg_normal     = "#292929"
 theme.bg_focus      = "#484848"

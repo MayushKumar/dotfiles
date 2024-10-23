@@ -38,27 +38,6 @@
   			  (set-face-attribute 'flymake-warning nil :underline `(:color ,warning-underline :style dashes)))))
 #+end_src
 
-** straight.el
-#+begin_src emacs-lisp
-  ;; (defvar bootstrap-version)
-  ;; (let ((bootstrap-file
-  ;;        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-  ;;       (bootstrap-version 5))
-  ;;   (unless (file-exists-p bootstrap-file)
-  ;;     (with-current-buffer
-  ;;         (url-retrieve-synchronously
-  ;;          "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-  ;;          'silent 'inhibit-cookies)
-  ;;       (goto-char (point-max))
-  ;;       (eval-print-last-sexp)))
-  ;;   (load bootstrap-file nil 'nomessage))
-
-  ;; (setq straight-use-package-by-default t)
-  ;; (setq straight-vc-git-default-protocol 'ssh)
-  ;; (setq straight-vc-git-default-clone-depth 1)
-  ;; (straight-use-package 'use-package)
-#+end_src
-
 ** elpaca
 #+begin_src emacs-lisp
   (defvar elpaca-installer-version 0.7)
@@ -136,13 +115,12 @@
   (setq scroll-margin 4)
   (setq scroll-conservatively 101)
   (setq mouse-wheel-progressive-speed nil)
-  (setq mouse-wheel-scroll-amount '(1 ((shift) . 3) ((control) . 6)))
+  (setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . 6)))
 
-  (pixel-scroll-precision-mode t)
+  ;; (setq pixel-scroll-precision-mode t)
 
-  (global-hl-line-mode)
+  ;; (global-hl-line-mode)
   (setq-default truncate-lines t)
-  ;; (show-paren-mode 0)
   (blink-cursor-mode 0)
 
   (setq frame-resize-pixelwise t)
@@ -152,14 +130,16 @@
 
   ;; (set-face-attribute 'default nil :family "0xProto Nerd Font" :weight 'medium :height 110)
   ;; (set-face-attribute 'fixed-pitch nil :family "0xProto Nerd Font" :weight 'medium :height 110)
-  (set-face-attribute 'default nil :family "CommitMono" :weight 'medium :height 120)
-  (set-face-attribute 'fixed-pitch nil :family "CommitMono" :weight 'medium :height 120)
+  (set-face-attribute 'default nil :family "CommitMono" :weight 'medium :height 110)
+  (set-face-attribute 'fixed-pitch nil :family "CommitMono" :weight 'medium :height 110)
   (set-face-attribute 'variable-pitch nil :family "Inter" :height 170)
 
   (defun mk/transparency (value)
     "Sets the transparency of the frame window. 0=transparent/100=opaque"
     (interactive "nTransparency Value 0 - 100 opaque: ")
-    (set-frame-parameter (selected-frame) 'alpha value))
+    (set-frame-parameter (selected-frame) 'alpha-background value))
+
+  (mk/transparency 93)
 
   ;; (add-hook 'server-after-make-frame-hook (lambda () (mk/transparency 97)))
 
@@ -205,7 +185,7 @@
   (use-package dashboard
     :init
     (setq dashboard-icon-type 'all-the-icons)  ; use `all-the-icons' package
-    (setq dashboard-startup-banner "~/.config/emacs/cat.png")
+    (setq dashboard-startup-banner "~/.config/emacs/cat.webp")
     (setq dashboard-items '((recents  . 5)
                             (projects . 5)))
     (setq dashboard-vertically-center-content t)
@@ -244,17 +224,17 @@
   (column-number-mode)
   (setq-default mode-line-percent-position nil)
 
-  (use-package moody
-    :config
-    (setq x-underline-at-descent-line t)
-    (moody-replace-mode-line-buffer-identification)
-    (moody-replace-vc-mode)
-    (moody-replace-eldoc-minibuffer-message-function)
-    (setq moody-mode-line-height 22))
+  ;; (use-package moody
+  ;;   :config
+  ;;   (setq x-underline-at-descent-line t)
+  ;;   (moody-replace-mode-line-buffer-identification)
+  ;;   (moody-replace-vc-mode)
+  ;;   (moody-replace-eldoc-minibuffer-message-function)
+  ;;   (setq moody-mode-line-height 22))
 
-  (use-package minions
-    :config
-    (minions-mode))
+  ;; (use-package minions
+  ;;   :config
+  ;;   (minions-mode))
 #+end_src
 
 ** Themes
@@ -479,12 +459,7 @@
   	(treemacs-load-theme 'mk/treemacs-theme))
 
   (use-package treemacs-evil
-  	:after (treemacs evil)
-  	:bind
-  	(:map global-map
-  		  ("C-x t t"   . treemacs)
-  		  ("C-x t C-t" . treemacs-find-file)))
-
+  	:after (treemacs evil))
 
   (add-hook 'treemacs-mode-hook (lambda() (display-line-numbers-mode 0)))
 #+end_src
@@ -561,10 +536,13 @@
 *** C++
 #+begin_src emacs-lisp
   (setq-default c-basic-offset 4)
-  (setq-default c-default-style "k&r")
+  (setq-default c-default-style "bsd")
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
   (add-to-list 'auto-mode-alist '("\\.cpp\\'" . c++-mode))
   (add-to-list 'auto-mode-alist '("\\.inl\\'" . c++-mode))
+
+  (setq c-ts-mode-indent-offset 4)
+  (setq c-ts-mode-indent-style 'bsd)
 #+end_src
 
 *** Lua
@@ -612,6 +590,11 @@
     (setq-default TeX-master nil))
 #+end_src
 
+*** Flex Bison
+#+begin_src emacs-lisp
+  (use-package bison-mode)
+#+end_src
+
 ** Company
 #+begin_src emacs-lisp
   ;; (use-package company
@@ -629,14 +612,14 @@
     :custom
     ;; (corfu-cycle t)
     (corfu-auto t)
-    (corfu-auto-prefix 0)
+    (corfu-auto-prefix 1)
     (corfu-auto-delay 0.0)
     ;; (corfu-separator ?\s)          ;; Orderless field separator
     ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
     ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
     (corfu-preview-current nil)
     ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
-    ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+    (corfu-on-exact-match nil)     ;; Configure handling of exact matches
     ;; (corfu-scroll-margin 5)        ;; Use scroll margin
 
     ;; Enable Corfu only for certain modes.
@@ -648,7 +631,9 @@
     ;; This is recommended since Dabbrev can be used globally (M-/).
     ;; See also `corfu-exclude-modes'.
     :init
-    (global-corfu-mode))
+    (global-corfu-mode)
+    :config
+    (keymap-unset corfu-map "RET"))
 
   ;; A few more useful configurations...
   ;; (use-package emacs
@@ -716,6 +701,10 @@
 
 ** Tree-sitter
 #+begin_src emacs-lisp
+  (use-package treesit-auto
+    :config
+    (global-treesit-auto-mode))
+
   ;; (use-package tree-sitter
   ;;   :config
   ;;   (global-tree-sitter-mode))
@@ -754,78 +743,78 @@
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;; lsp-mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  (use-package lsp-mode
-    :hook
-    ;;  (c++-mode . lsp-deferred)
-    (rust-mode . lsp-deferred)
-    (lsp-mode . lsp-enable-which-key-integration)
-    (lsp-completion-mode . my/lsp-mode-setup-completion)
+  ;; (use-package lsp-mode
+  ;;   :hook
+  ;;   ;;  (c++-mode . lsp-deferred)
+  ;;   (rust-mode . lsp-deferred)
+  ;;   (lsp-mode . lsp-enable-which-key-integration)
+  ;;   (lsp-completion-mode . my/lsp-mode-setup-completion)
 
-    :init
-    (setq lsp-keymap-prefix "C-c l")
-    (defun my/lsp-mode-setup-completion ()
-      (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-            '(orderless))) ;; Configure orderless
+  ;;   :init
+  ;;   (setq lsp-keymap-prefix "C-c l")
+  ;;   (defun my/lsp-mode-setup-completion ()
+  ;;     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+  ;;           '(orderless))) ;; Configure orderless
 
-    :custom
-    (lsp-completion-provider :none)
+  ;;   :custom
+  ;;   (lsp-completion-provider :none)
 
-    :config
-    (lsp-enable-which-key-integration)
+  ;;   :config
+  ;;   (lsp-enable-which-key-integration)
 
-    (setq lsp-headerline-breadcrumb-enable nil
-          lsp-enable-symbol-highlighting nil
-          lsp-enable-links nil
-          lsp-modeline-code-actions-enable nil
-          lsp-log-io nil
-          lsp-enable-folding nil
-          lsp-enable-imenu nil
-          lsp-eldoc-enable-hover nil)
+  ;;   (setq lsp-headerline-breadcrumb-enable nil
+  ;;         lsp-enable-symbol-highlighting nil
+  ;;         lsp-enable-links nil
+  ;;         lsp-modeline-code-actions-enable nil
+  ;;         lsp-log-io nil
+  ;;         lsp-enable-folding nil
+  ;;         lsp-enable-imenu nil
+  ;;         lsp-eldoc-enable-hover nil)
 
-    ;; LSP Booster
-    (defun lsp-booster--advice-json-parse (old-fn &rest args)
-  	"Try to parse bytecode instead of json."
-  	(or
-  	 (when (equal (following-char) ?#)
-         (let ((bytecode (read (current-buffer))))
-  		 (when (byte-code-function-p bytecode)
-             (funcall bytecode))))
-  	 (apply old-fn args)))
-    (advice-add (if (progn (require 'json)
-  						 (fboundp 'json-parse-buffer))
-                    'json-parse-buffer
-  				'json-read)
-                :around
-                #'lsp-booster--advice-json-parse)
+  ;;   ;; LSP Booster
+  ;;   (defun lsp-booster--advice-json-parse (old-fn &rest args)
+  ;; 	"Try to parse bytecode instead of json."
+  ;; 	(or
+  ;; 	 (when (equal (following-char) ?#)
+  ;;        (let ((bytecode (read (current-buffer))))
+  ;; 		 (when (byte-code-function-p bytecode)
+  ;;            (funcall bytecode))))
+  ;; 	 (apply old-fn args)))
+  ;;   (advice-add (if (progn (require 'json)
+  ;; 						 (fboundp 'json-parse-buffer))
+  ;;                   'json-parse-buffer
+  ;; 				'json-read)
+  ;;               :around
+  ;;               #'lsp-booster--advice-json-parse)
 
-    (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
-  	"Prepend emacs-lsp-booster command to lsp CMD."
-  	(let ((orig-result (funcall old-fn cmd test?)))
-        (if (and (not test?)                             ;; for check lsp-server-present?
-                 (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
-                 lsp-use-plists
-                 (not (functionp 'json-rpc-connection))  ;; native json-rpc
-                 (executable-find "emacs-lsp-booster"))
-            (progn
-  			(message "Using emacs-lsp-booster for %s!" orig-result)
-  			(cons "emacs-lsp-booster" orig-result))
-  		orig-result)))
-    (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
+  ;;   (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
+  ;; 	"Prepend emacs-lsp-booster command to lsp CMD."
+  ;; 	(let ((orig-result (funcall old-fn cmd test?)))
+  ;;       (if (and (not test?)                             ;; for check lsp-server-present?
+  ;;                (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
+  ;;                lsp-use-plists
+  ;;                (not (functionp 'json-rpc-connection))  ;; native json-rpc
+  ;;                (executable-find "emacs-lsp-booster"))
+  ;;           (progn
+  ;; 			(message "Using emacs-lsp-booster for %s!" orig-result)
+  ;; 			(cons "emacs-lsp-booster" orig-result))
+  ;; 		orig-result)))
+  ;;   (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
 
-    :commands
-    (lsp lsp-deferred))
+  ;;   :commands
+  ;;   (lsp lsp-deferred))
 
-  (use-package lsp-treemacs :after lsp)
+  ;; (use-package lsp-treemacs :after lsp)
 
-  (use-package lsp-ui :after lsp
-    :hook (lsp-mode . lsp-ui-mode)
-    :custom
-    (lsp-ui-doc-position 'bottom)
-    (lsp-ui-doc-show-with-cursor nil)
-    (lsp-ui-doc-show-with-mouse nil)
-    (lsp-ui-sideline-enable nil))
+  ;; (use-package lsp-ui :after lsp
+  ;;   :hook (lsp-mode . lsp-ui-mode)
+  ;;   :custom
+  ;;   (lsp-ui-doc-position 'bottom)
+  ;;   (lsp-ui-doc-show-with-cursor nil)
+  ;;   (lsp-ui-doc-show-with-mouse nil)
+  ;;   (lsp-ui-sideline-enable nil))
 
-  (use-package consult-lsp)
+  ;; (use-package consult-lsp)
 
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;; eglot ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -833,7 +822,7 @@
   (use-package eglot-booster :ensure (:host github :repo "jdtsmith/eglot-booster")
     :after eglot
     :config
-    (setq eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider :inlayHintProvider))
+    (setq eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider :inlayHintProvider :documentHighlightProvider))
     (eglot-booster-mode))
 
   (use-package consult-eglot :after eglot)
@@ -953,10 +942,15 @@
     :init
     (setq org-roam-v2-ack t))
 
-  (use-package org-bullets
+  ;; (use-package org-bullets
+  ;;   :config
+  ;;   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  ;;   (setq org-bullets-bullet-list '("•")))
+  (use-package org-superstar
     :config
-    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-    (setq org-bullets-bullet-list '("•")))
+    (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1))))
+
+  (use-package ox-gfm)
 #+end_src
 
 * Keybindings
@@ -1045,20 +1039,6 @@
      "l R"   'eglot-rename
      "l s"   'consult-eglot-symbols
      "l q"   'eglot-shutdown)
-
-    (general-define-key
-     :prefix "SPC"
-     :states '(normal visual)
-     :keymaps 'lsp-bridge-mode-map
-
-     ;; "l d"   'lsp-bridge-find
-     "l g"   'lsp-bridge-find-def
-     "l i"   'lsp-bridge-find-impl
-     "l r"   'lsp-bridge-find-references
-     "l R"   'lsp-bridge-rename
-     "l s"   'lsp-bridge-workspace-list-symbols
-     "l q"   'lsp-bridge-kill-process
-     "l Q"   'lsp-bridge-restart-process)
 
     (general-define-key
      :prefix ","

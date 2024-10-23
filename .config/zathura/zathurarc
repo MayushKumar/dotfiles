@@ -1,12 +1,10 @@
 unmap q
 
 set guioptions ""
-
 set recolor true
-
 set page-padding 5
-
 set selection-clipboard clipboard
+set database "sqlite"
 
 set default-bg                  "#202020"
 set default-fg                  "#ddc7a1"
