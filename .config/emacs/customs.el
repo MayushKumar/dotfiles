@@ -117,10 +117,14 @@
 	  (shell-file-name . "/bin/sh") (shell-command-switch . "-c"))
 	 (tramp-connection-local-default-system-profile
 	  (path-separator . ":") (null-device . "/dev/null"))))
- '(custom-enabled-themes '(doom-monokai-machine))
+ '(custom-enabled-themes '(doom-ir-black))
  '(eglot-events-buffer-config '(:size 0 :format full))
  '(eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider :inlayHintProvider))
  '(inhibit-startup-screen t)
+ '(package-selected-packages '(ultra-scroll))
+ '(package-vc-selected-packages
+   '((ultra-scroll :vc-backend Git :url
+				   "https://github.com/jdtsmith/ultra-scroll")))
  '(safe-local-variable-directories '("/tmp/Noor/sandbox/" "/home/mayush/dev/Noor/sandbox/")))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

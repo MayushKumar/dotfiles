@@ -30,7 +30,7 @@
 			  (set-face-attribute 'flymake-error nil :underline `(:color ,error-underline :style dashes))
 			  (set-face-attribute 'flymake-warning nil :underline `(:color ,warning-underline :style dashes)))))
 
-(defvar elpaca-installer-version 0.8)
+(defvar elpaca-installer-version 0.9)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
@@ -98,7 +98,7 @@
 
 (setq-default tab-width 4)
 
-(setq scroll-margin 4)
+;; (setq scroll-margin 4)
 (setq scroll-conservatively 101)
 (setq mouse-wheel-progressive-speed nil)
 (setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . 6)))
@@ -133,6 +133,13 @@
   "Sets the line spacing"
   (interactive "nValue: ")
   (setq-default line-spacing value))
+
+(use-package ultra-scroll
+  :ensure `(ultra-scroll
+			:host github 
+			:repo "jdtsmith/ultra-scroll")
+  :config
+  (ultra-scroll-mode 1))
 
 (use-package all-the-icons)
 (elpaca-wait)
@@ -236,6 +243,10 @@
 (use-package apropospriate-theme)
 
 ;; (elpaca-wait)
+
+;; (use-package mini-ontop
+;;   :ensure t
+;;   :config (mini-ontop-mode 1))
 
 (use-package evil
   :init
@@ -664,6 +675,10 @@
   ;;(add-hook 'completion-at-point-functions #'cape-elisp-symbol)
   ;;(add-hook 'completion-at-point-functions #'cape-line) ;; NOTE: The order matters!
   )
+
+
+(use-package nova
+  :ensure (:host github :repo "thisisran/nova"))
 
 ;; (use-package flycheck)
 
