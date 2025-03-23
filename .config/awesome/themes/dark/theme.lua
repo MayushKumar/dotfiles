@@ -10,10 +10,10 @@ local theme = {}
 
 theme.font          = "CommitMono 13"
 
-theme.bg_normal     = "#29292999"
-theme.bg_focus      = "#48484899"
-theme.bg_urgent     = "#ff000099"
-theme.bg_minimize   = "#44444499"
+theme.bg_normal     = "#292929ff"
+theme.bg_focus      = "#484848ff"
+theme.bg_urgent     = "#ff0000ff"
+theme.bg_minimize   = "#444444ff"
 theme.bg_systray    = theme.bg_normal
 
 theme.fg_normal     = "#bbbbbb"
@@ -22,7 +22,7 @@ theme.fg_urgent     = "#bbbbbb"
 theme.fg_minimize   = "#bbbbbb"
 
 theme.useless_gap   = dpi(0)
-theme.border_width  = dpi(1)
+theme.border_width  = dpi(2)
 theme.border_normal = "#555555"
 theme.border_focus  = "#fbfbfb"
 theme.border_marked = "#91231c"
