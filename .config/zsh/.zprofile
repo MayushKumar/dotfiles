@@ -16,6 +16,8 @@ export GROFF_NO_SGR=1                  # for konsole and gnome-terminal
 export SSH_AUTH_SOCK=~/.ssh/ssh-agent.socket
 export SVDIR=$HOME/.runit/sv
 
+export WINIT_X11_SCALE_FACTOR=1
+
 export LF_ICONS="\
 *.c=:\
 *.cc=:\

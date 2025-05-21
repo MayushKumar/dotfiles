@@ -30,7 +30,7 @@
 			  (set-face-attribute 'flymake-error nil :underline `(:color ,error-underline :style dashes))
 			  (set-face-attribute 'flymake-warning nil :underline `(:color ,warning-underline :style dashes)))))
 
-(defvar elpaca-installer-version 0.10)
+(defvar elpaca-installer-version 0.11)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
@@ -116,8 +116,8 @@
 
 ;; (set-face-attribute 'default nil :family "0xProto Nerd Font" :weight 'medium :height 110)
 ;; (set-face-attribute 'fixed-pitch nil :family "0xProto Nerd Font" :weight 'medium :height 110)
-(set-face-attribute 'default nil :family "CommitMono Nerd Font" :height 120)
-(set-face-attribute 'fixed-pitch nil :family "CommitMono Nerd Font" :height 120)
+(set-face-attribute 'default nil :family "CommitMono Nerd Font" :height 110)
+(set-face-attribute 'fixed-pitch nil :family "CommitMono Nerd Font" :height 110)
 (set-face-attribute 'variable-pitch nil :family "Inter" :height 170)
 
 (defun mk/transparency (value)
@@ -150,25 +150,9 @@
 
 (use-package nerd-icons)
 
-;; (use-package dashboard
-  ;;   :config
-  ;;   (setq dashboard-startup-banner "~/.config/emacs/cat.png")
-  ;;   (setq dashboard-set-heading-icons t)
-  ;;   (setq dashboard-set-file-icons t)
-  ;;   (setq dashboard-items '((recents  . 5)
-  ;;                           (projects . 5)
-  ;;                           (registers . 5)))
-  ;;   (setq dashboard-center-content t)
-  ;;   (setq dashboard-set-footer nil)
-  ;;   (set-face-attribute 'dashboard-items-face nil :weight 'normal)
-
-  ;;   (setq initial-buffer-choice (lambda () (dashboard-refresh-buffer)(get-buffer "*dashboard*")))
-  ;;   (dashboard-setup-startup-hook))
-
-
 (use-package dashboard
   :init
-  (setq dashboard-icon-type 'all-the-icons)  ; use `all-the-icons' package
+  (setq dashboard-icon-type 'all-the-icons)
   (setq dashboard-startup-banner "~/.config/emacs/cat.webp")
   (setq dashboard-items '((recents  . 5)
                           (projects . 5)))
@@ -177,6 +161,7 @@
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
   (setq dashboard-projects-backend 'projectile)
+  (setq initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name)))
   :config
   (add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
   (add-hook 'elpaca-after-init-hook #'dashboard-initialize)
@@ -581,6 +566,8 @@
   (setq TeX-parse-self t)
   (setq-default TeX-master nil))
 
+(use-package typst-ts-mode)
+
 (use-package kotlin-mode)
 
 ;; (use-package company
@@ -709,6 +696,10 @@
   (projectile-track-known-projects-automatically nil))
 
 (use-package yasnippet
+  :bind (:map yas-keymap
+			  ("TAB" . nil)
+			  ("C-S-n" . yas-next-field)
+			  ("C-S-p" . yas-prev-field))
   :config
   (yas-global-mode))
 
@@ -813,13 +804,13 @@
 
 (setq lsp-clients-clangd-args '("--header-insertion=never" "--completion-style=detailed"))
 
-(use-package dap-mode
-  :config
-  (setq dap-auto-configure-features '(locals controls tooltip))
-  (add-hook 'dap-stopped-hook
-            (lambda (arg) (call-interactively #'dap-hydra)))
-  (require 'dap-codelldb)
-  (require 'dap-lldb))
+;; (use-package dap-mode
+;;   :config
+;;   (setq dap-auto-configure-features '(locals controls tooltip))
+;;   (add-hook 'dap-stopped-hook
+;;             (lambda (arg) (call-interactively #'dap-hydra)))
+;;   (require 'dap-codelldb)
+;;   (require 'dap-lldb))
 
 
 (use-package dape :ensure (:host github :repo "svaante/dape") :commands (dape)
@@ -900,6 +891,30 @@
               (setq-local evil-normal-state-cursor '(bar . 1))
               (setq-local evil-insert-state-cursor '(bar . 1)))))
 
+(use-package org-modern
+  :custom
+  (org-modern-block-indent t)  ; to enable org-modern-indent when org-indent is active
+  (org-modern-hide-stars nil)
+  (org-modern-todo-faces
+   '(("STARTED" :foreground "yellow")
+     ("CANCELED" org-special-keyword :inverse-video t :weight bold)))
+  (org-modern-list
+   '((?* . "•")
+     (?+ . "‣")))
+  ;; (org-modern-fold-stars
+  ;;  '(("▶" . "▼")
+  ;;    ("▷" . "▽")
+  ;;    ("▸" . "▾")
+  ;;    ("▹" . "▿")))
+  (org-modern-checkbox
+   '((?X . "✔")
+     (?- . "┅")
+     (?\s . " ")))
+  (org-modern-label-border 1)
+  :hook
+  (org-mode . org-modern-mode)
+  (org-agenda-finalize . org-modern-agenda))
+
 (use-package org-roam
   :init
   (setq org-roam-v2-ack t))
@@ -908,9 +923,9 @@
 ;;   :config
 ;;   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 ;;   (setq org-bullets-bullet-list '("•")))
-(use-package org-superstar
-  :config
-  (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1))))
+;; (use-package org-superstar
+;;   :config
+;;   (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1))))
 
 (use-package ox-gfm)
 

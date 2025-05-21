@@ -8,7 +8,7 @@
 	 ((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi")
 	 (output-pdf "Zathura") (output-html "xdg-open")))
  '(base16-theme-distinct-fringe-background nil)
- '(c-ts-mode-indent-style 'bsd)
+ '(c-ts-mode-indent-style 'bsd t)
  '(connection-local-criteria-alist
    '(((:application vc-git) vc-git-connection-default-profile)
 	 ((:application tramp :protocol "kubernetes")
@@ -117,7 +117,7 @@
 	  (shell-file-name . "/bin/sh") (shell-command-switch . "-c"))
 	 (tramp-connection-local-default-system-profile
 	  (path-separator . ":") (null-device . "/dev/null"))))
- '(custom-enabled-themes '(doom-ir-black))
+ '(custom-enabled-themes '(ef-dream))
  '(eglot-events-buffer-config '(:size 0 :format full))
  '(eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider :inlayHintProvider))
  '(inhibit-startup-screen t)

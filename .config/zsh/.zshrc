@@ -51,7 +51,6 @@ alias nr='cd ~/dev/Noor/'
 alias dw='cd ~/Downloads/'
 alias dc='cd ~/Documents/'
 alias dv='cd ~/dev/'
-alias tr='cd ~/Downloads/torrents/'
 alias sx='startx ~/.config/X11/xinitrc'
 
 #prompt pure

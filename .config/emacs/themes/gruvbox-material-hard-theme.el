@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 (deftheme gruvbox-material-hard "Gruvbox Material Hard Theme.")
 
 ;; (defvar gruvbox-material-hard-colors-alist

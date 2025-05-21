@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 (deftheme everforest-dark-hard "Everforest Dark Hard Theme.")
 
 (let ((efdh-fg0          "#DDC7A1")
