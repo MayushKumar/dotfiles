@@ -57,7 +57,7 @@ alias sx='startx ~/.config/X11/xinitrc'
 
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
 source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-source ~/.local/share/zsh/powerlevel10k/powerlevel10k.zsh-theme
+# source ~/.local/share/zsh/powerlevel10k/powerlevel10k.zsh-theme
 
 bindkey "^?" backward-delete-char
 bindkey "^[[Z" autosuggest-accept
@@ -65,6 +65,7 @@ bindkey "^[[Z" autosuggest-accept
 eval $(opam env)
 eval "$(zoxide init zsh)"
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+eval "$(starship init zsh)"
+# # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+# [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 

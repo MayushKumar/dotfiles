@@ -16,7 +16,19 @@ export GROFF_NO_SGR=1                  # for konsole and gnome-terminal
 export SSH_AUTH_SOCK=~/.ssh/ssh-agent.socket
 export SVDIR=$HOME/.runit/sv
 
+
+# Start DBus session if not already running
+if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
+    eval $(dbus-launch --sh-syntax)
+    export DBUS_SESSION_BUS_ADDRESS
+fi
+
+if [ -z "$(pgrep -u $USER runsvdir)" ]; then
+    runsvdir $HOME/.runit/runsvdir &
+fi
+
 export WINIT_X11_SCALE_FACTOR=1
+export MOZ_USE_XINPUT2=1
 
 export LF_ICONS="\
 *.c=:\

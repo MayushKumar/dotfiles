@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -8,7 +9,7 @@
 	 ((output-dvi style-pstricks) "dvips and gv") (output-dvi "xdvi")
 	 (output-pdf "Zathura") (output-html "xdg-open")))
  '(base16-theme-distinct-fringe-background nil)
- '(c-ts-mode-indent-style 'bsd t)
+ '(c-ts-mode-indent-style 'bsd)
  '(connection-local-criteria-alist
    '(((:application vc-git) vc-git-connection-default-profile)
 	 ((:application tramp :protocol "kubernetes")
@@ -117,7 +118,7 @@
 	  (shell-file-name . "/bin/sh") (shell-command-switch . "-c"))
 	 (tramp-connection-local-default-system-profile
 	  (path-separator . ":") (null-device . "/dev/null"))))
- '(custom-enabled-themes '(ef-dream))
+ '(custom-enabled-themes '(kaolin-ocean))
  '(eglot-events-buffer-config '(:size 0 :format full))
  '(eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider :inlayHintProvider))
  '(inhibit-startup-screen t)

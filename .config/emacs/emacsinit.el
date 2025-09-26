@@ -1,13 +1,5 @@
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
-;; (require 'package)
-;; (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-;; (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
-;; (package-initialize)
-
-;; (require 'use-package)
-;; (setq use-package-always-ensure t)
-
 (setq backup-directory-alist '(("." . "~/.cache/emacs-backup")))
 (setq native-comp-async-report-warnings-errors nil)
 (setq load-prefer-newer t)
@@ -98,14 +90,6 @@
 
 (setq-default tab-width 4)
 
-;; (setq scroll-margin 4)
-(setq scroll-conservatively 101)
-(setq mouse-wheel-progressive-speed nil)
-(setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . 6)))
-
-;; (setq pixel-scroll-precision-mode t)
-
-;; (global-hl-line-mode)
 (setq-default truncate-lines t)
 (blink-cursor-mode 0)
 
@@ -114,10 +98,8 @@
 (setq dired-kill-when-opening-new-dired-buffer t)
 (setq dired-listing-switches "-alh")
 
-;; (set-face-attribute 'default nil :family "0xProto Nerd Font" :weight 'medium :height 110)
-;; (set-face-attribute 'fixed-pitch nil :family "0xProto Nerd Font" :weight 'medium :height 110)
-(set-face-attribute 'default nil :family "CommitMono Nerd Font" :height 110)
-(set-face-attribute 'fixed-pitch nil :family "CommitMono Nerd Font" :height 110)
+(set-face-attribute 'default nil :family "Maple Mono NF" :height 130)
+(set-face-attribute 'fixed-pitch nil :family "Maple Mono NF" :height 130)
 (set-face-attribute 'variable-pitch nil :family "Inter" :height 170)
 
 (defun mk/transparency (value)
@@ -125,7 +107,7 @@
   (interactive "nTransparency Value 0 - 100 opaque: ")
   (set-frame-parameter (selected-frame) 'alpha-background value))
 
-(mk/transparency 80)
+;; (mk/transparency 80)
 
 ;; (add-hook 'server-after-make-frame-hook (lambda () (mk/transparency 97)))
 
@@ -133,6 +115,11 @@
   "Sets the line spacing"
   (interactive "nValue: ")
   (setq-default line-spacing value))
+
+;; (setq scroll-margin 4)
+(setq scroll-conservatively 101)
+(setq mouse-wheel-progressive-speed nil)
+(setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . 6)))
 
 (use-package ultra-scroll
   :ensure `(ultra-scroll

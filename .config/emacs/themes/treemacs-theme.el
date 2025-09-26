@@ -1,4 +1,4 @@
-;; Slight modification of Kaolin Treemacs Theme
+;; Slight modification of Kaolin Treemacs Theme  -*- lexical-binding: t; -*-
 
 (setq treemacs-indentation 1
       treemacs-indentation-string "  "

@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 (setq  gc-cons-threshold most-positive-fixnum
 	   package-enable-at-startup nil)
 
