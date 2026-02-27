@@ -42,7 +42,7 @@ alias ls='exa'
 alias la='exa -al'
 alias ec='emacsclient -r -a ""'
 alias lf='lfrun'
-alias valgrind='colour-valgrind'
+# alias valgrind='colour-valgrind'
 alias dlp='aria2c -x 6 -s 6'
 alias ff='fastfetch'
 
@@ -52,6 +52,7 @@ alias dw='cd ~/Downloads/'
 alias dc='cd ~/Documents/'
 alias dv='cd ~/dev/'
 alias sx='startx ~/.config/X11/xinitrc'
+alias ns='niri --session'
 
 #prompt pure
 
@@ -62,7 +63,6 @@ source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.
 bindkey "^?" backward-delete-char
 bindkey "^[[Z" autosuggest-accept
 
-eval $(opam env)
 eval "$(zoxide init zsh)"
 
 eval "$(starship init zsh)"

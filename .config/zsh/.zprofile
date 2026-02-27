@@ -17,11 +17,11 @@ export SSH_AUTH_SOCK=~/.ssh/ssh-agent.socket
 export SVDIR=$HOME/.runit/sv
 
 
-# Start DBus session if not already running
-if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
-    eval $(dbus-launch --sh-syntax)
-    export DBUS_SESSION_BUS_ADDRESS
-fi
+ Start DBus session if not already running
+ if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
+     eval $(dbus-launch --sh-syntax)
+     export DBUS_SESSION_BUS_ADDRESS
+ fi
 
 if [ -z "$(pgrep -u $USER runsvdir)" ]; then
     runsvdir $HOME/.runit/runsvdir &

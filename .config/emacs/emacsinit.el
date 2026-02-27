@@ -1,26 +1,27 @@
-(setq read-process-output-max (* 1024 1024)) ;; 1mb
+;; -*- lexical-binding: t; -*-
+  (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
-(setq backup-directory-alist '(("." . "~/.cache/emacs-backup")))
-(setq native-comp-async-report-warnings-errors nil)
-(setq load-prefer-newer t)
+  (setq backup-directory-alist '(("." . "~/.cache/emacs-backup")))
+  (setq native-comp-async-report-warnings-errors nil)
+  (setq load-prefer-newer t)
 
-(defvar after-load-theme-hook nil
-    "Hook run after a color theme is loaded using `load-theme'.")
-(defadvice load-theme (after run-after-load-theme-hook activate)
-    "Run `after-load-theme-hook'."
-    (run-hooks 'after-load-theme-hook))
+  (defvar after-load-theme-hook nil
+      "Hook run after a color theme is loaded using `load-theme'.")
+  (defadvice load-theme (after run-after-load-theme-hook activate)
+      "Run `after-load-theme-hook'."
+      (run-hooks 'after-load-theme-hook))
 
 
-(add-hook 'after-load-theme-hook
-		  (lambda ()
-			(let ((error-underline (face-attribute 'flymake-error :underline nil t))
-				  (warning-underline (face-attribute 'flymake-warning :underline nil t)))
-			  (when (listp error-underline)
-				(setq error-underline (plist-get error-underline :color)))
-			  (when (listp warning-underline)
-				(setq warning-underline (plist-get warning-underline :color)))
-			  (set-face-attribute 'flymake-error nil :underline `(:color ,error-underline :style dashes))
-			  (set-face-attribute 'flymake-warning nil :underline `(:color ,warning-underline :style dashes)))))
+  (add-hook 'after-load-theme-hook
+  		  (lambda ()
+  			(let ((error-underline (face-attribute 'flymake-error :underline nil t))
+  				  (warning-underline (face-attribute 'flymake-warning :underline nil t)))
+  			  (when (listp error-underline)
+  				(setq error-underline (plist-get error-underline :color)))
+  			  (when (listp warning-underline)
+  				(setq warning-underline (plist-get warning-underline :color)))
+  			  (set-face-attribute 'flymake-error nil :underline `(:color ,error-underline :style dashes))
+  			  (set-face-attribute 'flymake-warning nil :underline `(:color ,warning-underline :style dashes)))))
 
 (defvar elpaca-installer-version 0.11)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
@@ -66,7 +67,7 @@
   ;; Enable :elpaca use-package keyword.
   (elpaca-use-package-mode)
   ;; Assume :elpaca t unless otherwise specified.
-  (setq elpaca-use-package-by-default t))
+  (setq use-package-always-ensure t))
 
 ;; Block until current queue processed.
 (elpaca-wait)
@@ -98,8 +99,8 @@
 (setq dired-kill-when-opening-new-dired-buffer t)
 (setq dired-listing-switches "-alh")
 
-(set-face-attribute 'default nil :family "Maple Mono NF" :height 130)
-(set-face-attribute 'fixed-pitch nil :family "Maple Mono NF" :height 130)
+(set-face-attribute 'default nil :family "CommitMono Nerd Font" :height 130)
+(set-face-attribute 'fixed-pitch nil :family "CommitMono Nerd Font" :height 130)
 (set-face-attribute 'variable-pitch nil :family "Inter" :height 170)
 
 (defun mk/transparency (value)
@@ -147,7 +148,7 @@
   (setq dashboard-center-content t)
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
-  (setq dashboard-projects-backend 'projectile)
+  (setq dashboard-projects-backend 'project-el)
   (setq initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name)))
   :config
   (add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
@@ -243,12 +244,12 @@
         evil-operator-state-tag (propertize " ⏺ " 'face '((:foreground "RoyalBlue"))))
   :config
   (evil-mode 1)
-  (evil-global-set-key 'normal (kbd "U") 'evil-redo))
+  (evil-global-set-key 'normal (kbd "U") 'evil-redo)
+  (evil-set-initial-state 'minibuffer-mode 'insert))
 
 (use-package evil-collection
   :after evil
   :config
-  (setq evil-collection-company-use-tng nil)
   (evil-collection-init))
 
 (use-package evil-snipe
@@ -350,6 +351,8 @@
 ;;   (meow-setup)
 ;;   (meow-global-mode 1))
 
+(use-package project)
+
 (use-package vertico
   :init
   (vertico-mode)
@@ -401,14 +404,22 @@
   ;; For some commands and buffer sources it is useful to configure the
   ;; :preview-key on a per-command basis using the `consult-customize' macro.
   (consult-customize
-   consult-theme
-   :preview-key '(:debounce 0.2 any)
-   consult-ripgrep consult-git-grep consult-grep
+   consult-theme :preview-key '(:debounce 0.2 any)
+   consult-ripgrep consult-git-grep consult-grep consult-man
    consult-bookmark consult-recent-file consult-xref
-   consult--source-bookmark consult--source-recent-file
-   consult--source-project-recent-file
-   ;; :preview-key (kbd "M-.")
-   :preview-key '(:debounce 0.4 any))
+   consult-source-bookmark consult-source-file-register
+   consult-source-recent-file consult-source-project-recent-file)
+
+
+  ;; (consult-customize
+  ;;  consult-theme
+  ;;  :preview-key '(:debounce 0.2 any)
+  ;;  consult-ripgrep consult-git-grep consult-grep
+  ;;  consult-bookmark consult-recent-file consult-xref
+  ;;  consult--source-bookmark consult--source-recent-file
+  ;;  consult--source-project-recent-file
+  ;;  ;; :preview-key (kbd "M-.")
+  ;;  :preview-key '(:debounce 0.4 any))
 
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
@@ -422,10 +433,10 @@
   ;; Optionally configure a different project root function.
   ;; There are multiple reasonable alternatives to chose from.
     ;;;; 1. project.el (the default)
-  ;; (setq consult-project-function #'consult--default-project--function)
+  (setq consult-project-function #'consult--default-project-function)
     ;;;; 2. projectile.el (projectile-project-root)
-  (autoload 'projectile-project-root "projectile")
-  (setq consult-project-function (lambda (_) (projectile-project-root)))
+  ;; (autoload 'projectile-project-root "projectile")
+  ;; (setq consult-project-function (lambda (_) (projectile-project-root)))
     ;;;; 3. vc.el (vc-root-dir)
   ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
     ;;;; 4. locate-dominating-file
@@ -550,12 +561,23 @@
 							  ("make")))
   :config
   (setq TeX-auto-save t)
+  (setq TeX-engine 'luatex)
   (setq TeX-parse-self t)
   (setq-default TeX-master nil))
 
 (use-package typst-ts-mode)
 
 (use-package kotlin-mode)
+
+(use-package pyvenv)
+
+(use-package kdl-ts-mode
+  :ensure `(kdl-ts-mode
+			:host github 
+			:repo "merrickluo/kdl-ts-mode")
+  :config
+  (setq treesit-language-source-alist
+		'((kdl "https://github.com/tree-sitter-grammars/tree-sitter-kdl" "v1.1.0"))))
 
 ;; (use-package company
 ;;   :config
@@ -674,13 +696,13 @@
   :config
   (global-treesit-auto-mode))
 
-(use-package projectile
-  :config
-  (projectile-mode +1)
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-  :custom
-  (projectile-enable-caching t)
-  (projectile-track-known-projects-automatically nil))
+;; (use-package projectile
+;;   :config
+;;   (projectile-mode +1)
+;;   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+;;   :custom
+;;   (projectile-enable-caching t)
+;;   (projectile-track-known-projects-automatically nil))
 
 (use-package yasnippet
   :bind (:map yas-keymap
@@ -772,7 +794,9 @@
   :after eglot
   :config
   (setq eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider :inlayHintProvider :documentHighlightProvider))
-  (eglot-booster-mode))
+  (setq eglot-booster-io-only t)
+  (eglot-booster-mode)
+  )
 
 (use-package consult-eglot :after eglot)
 
@@ -924,13 +948,27 @@
    :states '(normal visual)
    :prefix "SPC"
 
-   "p p" 'projectile-switch-project
-   "p f" 'projectile-find-file
-   "p s" 'projectile-save-project-buffers
-   "p a" 'projectile-find-other-file
-   "p e" 'projectile-find-other-file-other-window
-   "p i" 'projectile-invalidate-cache
-   "p k" 'projectile-kill-buffers)
+   "p p" 'project-switch-project
+   "p f" 'project-find-file
+   "p s" 'project-save-some-buffers
+   "p b" 'consult-project-buffer
+   "p d" 'project-dired
+   ;; "p a" 'project-
+   ;; "p e" 'project-find-fil
+   ;; "p i" 'projectile-invalidate-cache
+   "p k" 'project-kill-buffers)
+
+  ;; (general-define-key
+  ;;  :states '(normal visual)
+  ;;  :prefix "SPC"
+
+  ;;  "p p" 'projectile-switch-project
+  ;;  "p f" 'projectile-find-file
+  ;;  "p s" 'projectile-save-project-buffers
+  ;;  "p a" 'projectile-find-other-file
+  ;;  "p e" 'projectile-find-other-file-other-window
+  ;;  "p i" 'projectile-invalidate-cache
+  ;;  "p k" 'projectile-kill-buffers)
 
   (general-define-key
    :states '(normal visual)
@@ -975,18 +1013,18 @@
    "l d b" 'dap-breakpoint-toggle
    "l d h" 'dap-hydra)
 
-  (general-define-key
-   :prefix "SPC"
-   :states '(normal visual)
-   :keymaps 'lsp-mode-map
+  ;; (general-define-key
+  ;;  :prefix "SPC"
+  ;;  :states '(normal visual)
+  ;;  :keymaps 'lsp-mode-map
 
-   "l d"   'lsp-find-declaration
-   "l g"   'lsp-find-definition
-   "l i"   'lsp-find-implementation
-   "l r"   'lsp-find-references
-   "l R"   'lsp-rename
-   "l s"   'consult-lsp-symbols
-   "l q"   'lsp-workspace-shutdown)
+  ;;  "l d"   'lsp-find-declaration
+  ;;  "l g"   'lsp-find-definition
+  ;;  "l i"   'lsp-find-implementation
+  ;;  "l r"   'lsp-find-references
+  ;;  "l R"   'lsp-rename
+  ;;  "l s"   'consult-lsp-symbols
+  ;;  "l q"   'lsp-workspace-shutdown)
 
   (general-define-key
    :prefix "SPC"
