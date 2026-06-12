@@ -1,0 +1,13 @@
+#!/bin/sh
+CONF="/etc/resolv.conf"
+DNS_LINE='name_servers="1.1.1.1 1.0.0.1"'
+
+if grep -q "^$DNS_LINE" "$CONF"; then
+    sed -i "s/^$DNS_LINE/#$DNS_LINE/" "$CONF"
+    echo "Default DNS restored."
+else
+    # Remove any existing line and prepends it to the top
+    sed -i "/1.1.1.1/d" "$CONF"
+    printf '%s\n%s\n' "$DNS_LINE" "$(cat "$CONF")" > "$CONF"
+    echo "Cloudflare DNS enabled."
+fi

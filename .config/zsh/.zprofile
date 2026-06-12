@@ -1,27 +1,41 @@
+# if [ -z "$XDG_RUNTIME_DIR" ]; then
+#     export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+#     if [ ! -d "$XDG_RUNTIME_DIR" ]; then
+#         # If using dumb_runtime_dir, PAM handles this. 
+#         # If not, we ensure it exists here:
+#         mkdir -p "$XDG_RUNTIME_DIR" 2>/dev/null
+#     fi
+# fi
+
+export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+
+export LIBSEAT_BACKEND="seatd"
+
 export EDITOR=nvim
 export PATH=$PATH:~/.scripts:~/.local/bin
 
 export XINITRC=$XDG_CONFIG_HOME/X11/xinitrc
 export XAUTHORITY=$XDG_RUNTIME_DIR/Xauthority
 
-export LESS_TERMCAP_mb=$'\e[1;31m'     # begin bold
-export LESS_TERMCAP_md=$'\e[1;33m'     # begin blink
-export LESS_TERMCAP_so=$'\e[01;44;37m' # begin reverse video
-export LESS_TERMCAP_us=$'\e[01;37m'    # begin underline
-export LESS_TERMCAP_me=$'\e[0m'        # reset bold/blink
-export LESS_TERMCAP_se=$'\e[0m'        # reset reverse video
-export LESS_TERMCAP_ue=$'\e[0m'        # reset underline
-export GROFF_NO_SGR=1                  # for konsole and gnome-terminal
+# export LESS_TERMCAP_mb=$'\e[1;31m'     # begin bold
+# export LESS_TERMCAP_md=$'\e[1;33m'     # begin blink
+# export LESS_TERMCAP_so=$'\e[01;44;37m' # begin reverse video
+# export LESS_TERMCAP_us=$'\e[01;37m'    # begin underline
+# export LESS_TERMCAP_me=$'\e[0m'        # reset bold/blink
+# export LESS_TERMCAP_se=$'\e[0m'        # reset reverse video
+# export LESS_TERMCAP_ue=$'\e[0m'        # reset underline
+# export GROFF_NO_SGR=1                  # for konsole and gnome-terminal
+
+export MANPAGER="bat -plman" 
 
 export SSH_AUTH_SOCK=~/.ssh/ssh-agent.socket
 export SVDIR=$HOME/.runit/sv
 
 
- Start DBus session if not already running
- if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
-     eval $(dbus-launch --sh-syntax)
-     export DBUS_SESSION_BUS_ADDRESS
- fi
+if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
+    eval $(dbus-launch --sh-syntax)
+    export DBUS_SESSION_BUS_ADDRESS
+fi
 
 if [ -z "$(pgrep -u $USER runsvdir)" ]; then
     runsvdir $HOME/.runit/runsvdir &

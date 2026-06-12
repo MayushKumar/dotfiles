@@ -33,15 +33,15 @@
 
 ** elpaca
 #+begin_src emacs-lisp
-  (defvar elpaca-installer-version 0.11)
+  (defvar elpaca-installer-version 0.12)
   (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
   (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
-  (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+  (defvar elpaca-sources-directory (expand-file-name "sources/" elpaca-directory))
   (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
                                 :ref nil :depth 1 :inherit ignore
                                 :files (:defaults "elpaca-test.el" (:exclude "extensions"))
-                                :build (:not elpaca--activate-package)))
-  (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+                                :build (:not elpaca-activate)))
+  (let* ((repo  (expand-file-name "elpaca/" elpaca-sources-directory))
          (build (expand-file-name "elpaca/" elpaca-builds-directory))
          (order (cdr elpaca-order))
          (default-directory repo))
@@ -68,7 +68,7 @@
     (unless (require 'elpaca-autoloads nil t)
       (require 'elpaca)
       (elpaca-generate-autoloads "elpaca" repo)
-      (load "./elpaca-autoloads")))
+      (let ((load-source-file-function nil)) (load "./elpaca-autoloads"))))
   (add-hook 'after-init-hook #'elpaca-process-queues)
   (elpaca `(,@elpaca-order))
 
@@ -122,7 +122,7 @@
     (interactive "nTransparency Value 0 - 100 opaque: ")
     (set-frame-parameter (selected-frame) 'alpha-background value))
 
-  ;; (mk/transparency 80)
+  (mk/transparency 95)
 
   ;; (add-hook 'server-after-make-frame-hook (lambda () (mk/transparency 97)))
 
@@ -175,7 +175,7 @@
     (setq dashboard-set-heading-icons t)
     (setq dashboard-set-file-icons t)
     (setq dashboard-projects-backend 'project-el)
-    (setq initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name)))
+    (setq initial-buffer-choice 'dashboard-open)
     :config
     (add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
     (add-hook 'elpaca-after-init-hook #'dashboard-initialize)
@@ -412,16 +412,49 @@
 
 *** Orderless
 #+begin_src emacs-lisp
-  (use-package orderless
-    :config
-    (setq completion-styles '(orderless basic)
-          completion-category-defaults nil
-          completion-category-overrides '((file (styles . (partial-completion)))))
+  ;; (use-package orderless
+  ;;   :config
+  ;;   (setq completion-styles '(orderless basic)
+  ;;         completion-category-defaults nil
+  ;;         completion-category-overrides '((file (styles . (partial-completion)))))
 
-    (set-face-attribute 'orderless-match-face-0 nil :weight 'normal)
-    (set-face-attribute 'orderless-match-face-1 nil :weight 'normal)
-    (set-face-attribute 'orderless-match-face-2 nil :weight 'normal)
-    (set-face-attribute 'orderless-match-face-3 nil :weight 'normal))
+  ;;   (set-face-attribute 'orderless-match-face-0 nil :weight 'normal)
+  ;;   (set-face-attribute 'orderless-match-face-1 nil :weight 'normal)
+  ;;   (set-face-attribute 'orderless-match-face-2 nil :weight 'normal)
+  ;;   (set-face-attribute 'orderless-match-face-3 nil :weight 'normal))
+
+
+  ;; (use-package orderless
+  ;;   :ensure t
+  ;;   :custom
+  ;;   ;; 🔴 IMPORTANT: basic first → fixes CAPF replacement issues
+  ;;   (completion-styles '(basic orderless))
+
+  ;;   ;; Disable default overrides
+  ;;   (completion-category-defaults nil)
+
+  ;;   ;; Per-category behavior
+  ;;   (completion-category-overrides
+  ;;    '((file (styles partial-completion))   ;; better file path completion
+  ;;      (eglot (styles basic orderless))))  ;; 🔴 critical for LSP/CAPF
+
+  ;;   :config
+  ;;   ;; Optional: make matches less visually noisy
+  ;;   (set-face-attribute 'orderless-match-face-0 nil :weight 'normal)
+  ;;   (set-face-attribute 'orderless-match-face-1 nil :weight 'normal)
+  ;;   (set-face-attribute 'orderless-match-face-2 nil :weight 'normal)
+  ;;   (set-face-attribute 'orderless-match-face-3 nil :weight 'normal))
+#+end_src
+
+*** Fussy
+#+begin_src emacs-lisp
+  (use-package fzf-native)
+  (use-package fussy
+    :config
+    (fussy-setup)
+    (fussy-setup-fzf)
+    (fussy-eglot-setup)
+    (fussy-corfu-setup))
 #+end_src
 
 *** Marginalia
@@ -691,6 +724,9 @@
 *** Typst
 #+begin_src emacs-lisp
   (use-package typst-ts-mode)
+  (use-package typst-preview
+    :config
+    (setq typst-preview-invert-colors "never"))
 #+end_src
 
 *** Kotlin
@@ -752,7 +788,9 @@
     :init
     (global-corfu-mode)
     :config
-    (keymap-unset corfu-map "RET"))
+    (keymap-set corfu-map "<tab>" #'corfu-insert)
+    ;; (keymap-unset corfu-map "RET")
+    )
 
   ;; A few more useful configurations...
   ;; (use-package emacs
@@ -797,6 +835,12 @@
     ;;        ("C-c p &" . cape-sgml)
     ;;        ("C-c p r" . cape-rfc1345))
     :init
+    ;; force fresh completion every time
+    (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
+
+    ;; prevent partial/stale async results
+    ;; (advice-add 'eglot-completion-at-point :around #'cape-wrap-noninterruptible)
+    
     ;; Add `completion-at-point-functions', used by `completion-at-point'.
     (add-hook 'completion-at-point-functions #'cape-file)
     ;; (add-hook 'completion-at-point-functions #'cape-dabbrev)
@@ -867,84 +911,22 @@
 
 ** LSP
 #+begin_src emacs-lisp
+  (use-package eglot
+    :ensure nil
+    :defer t
+    :custom
+    ;; Make updates immediate (important for completion freshness)
+    (eglot-send-changes-idle-time 0.0)
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;; lsp-mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    :config
+    ;; Use clangd with consistent arguments across all C-family modes
+    (add-to-list 'eglot-server-programs
+                 '((c-mode c++-mode c-ts-mode c++-ts-mode)
+                   . ("clangd"
+                      "--completion-style=detailed"
+                      "--header-insertion=never"
+  					"--limit-results=1000"))))
 
-  ;; (use-package lsp-mode
-  ;;   :hook
-  ;;   ;;  (c++-mode . lsp-deferred)
-  ;;   (rust-mode . lsp-deferred)
-  ;;   (lsp-mode . lsp-enable-which-key-integration)
-  ;;   (lsp-completion-mode . my/lsp-mode-setup-completion)
-
-  ;;   :init
-  ;;   (setq lsp-keymap-prefix "C-c l")
-  ;;   (defun my/lsp-mode-setup-completion ()
-  ;;     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-  ;;           '(orderless))) ;; Configure orderless
-
-  ;;   :custom
-  ;;   (lsp-completion-provider :none)
-
-  ;;   :config
-  ;;   (lsp-enable-which-key-integration)
-
-  ;;   (setq lsp-headerline-breadcrumb-enable nil
-  ;;         lsp-enable-symbol-highlighting nil
-  ;;         lsp-enable-links nil
-  ;;         lsp-modeline-code-actions-enable nil
-  ;;         lsp-log-io nil
-  ;;         lsp-enable-folding nil
-  ;;         lsp-enable-imenu nil
-  ;;         lsp-eldoc-enable-hover nil)
-
-  ;;   ;; LSP Booster
-  ;;   (defun lsp-booster--advice-json-parse (old-fn &rest args)
-  ;; 	"Try to parse bytecode instead of json."
-  ;; 	(or
-  ;; 	 (when (equal (following-char) ?#)
-  ;;        (let ((bytecode (read (current-buffer))))
-  ;; 		 (when (byte-code-function-p bytecode)
-  ;;            (funcall bytecode))))
-  ;; 	 (apply old-fn args)))
-  ;;   (advice-add (if (progn (require 'json)
-  ;; 						 (fboundp 'json-parse-buffer))
-  ;;                   'json-parse-buffer
-  ;; 				'json-read)
-  ;;               :around
-  ;;               #'lsp-booster--advice-json-parse)
-
-  ;;   (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
-  ;; 	"Prepend emacs-lsp-booster command to lsp CMD."
-  ;; 	(let ((orig-result (funcall old-fn cmd test?)))
-  ;;       (if (and (not test?)                             ;; for check lsp-server-present?
-  ;;                (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
-  ;;                lsp-use-plists
-  ;;                (not (functionp 'json-rpc-connection))  ;; native json-rpc
-  ;;                (executable-find "emacs-lsp-booster"))
-  ;;           (progn
-  ;; 			(message "Using emacs-lsp-booster for %s!" orig-result)
-  ;; 			(cons "emacs-lsp-booster" orig-result))
-  ;; 		orig-result)))
-  ;;   (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
-
-  ;;   :commands
-  ;;   (lsp lsp-deferred))
-
-  ;; (use-package lsp-treemacs :after lsp)
-
-  ;; (use-package lsp-ui :after lsp
-  ;;   :hook (lsp-mode . lsp-ui-mode)
-  ;;   :custom
-  ;;   (lsp-ui-doc-position 'bottom)
-  ;;   (lsp-ui-doc-show-with-cursor nil)
-  ;;   (lsp-ui-doc-show-with-mouse nil)
-  ;;   (lsp-ui-sideline-enable nil))
-
-  ;; (use-package consult-lsp)
-
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;; eglot ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   (use-package eglot-booster :ensure (:host github :repo "jdtsmith/eglot-booster")
     :after eglot
@@ -955,24 +937,6 @@
     )
 
   (use-package consult-eglot :after eglot)
-
-  ;; (use-package eglot)
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;; lsp-bridge ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-  ;; (use-package lsp-bridge
-  ;;   :config
-  ;;   (add-to-list 'load-path "~/.config/emacs/straight/repos/lsp-bridge/")
-  ;;   (global-lsp-bridge-mode))
-
-  ;; (add-to-list 'load-path "~/dev/lsp-bridge/")
-  ;; (require 'lsp-bridge)
-  ;; (global-lsp-bridge-mode)
-#+end_src
-
-*** clangd
-#+begin_src emacs-lisp
-  (setq lsp-clients-clangd-args '("--header-insertion=never" "--completion-style=detailed"))
 #+end_src
 
 ** DAPE
@@ -1199,6 +1163,7 @@
      :states '(normal visual)
      :keymaps 'eglot-mode-map
 
+     "l a"   'eglot-code-actions
      "l d"   'eglot-find-declaration
      "l g"   'eglot-find-typeDefinition
      "l i"   'eglot-find-implementation

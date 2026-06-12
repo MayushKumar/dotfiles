@@ -1,0 +1,46 @@
+super + 0
+	  	powermenu
+
+super + Return
+	  	alacritty msg create-window || alacritty
+
+super + w
+		librewolf
+
+super + e
+		emacsclient -c
+
+super + z
+		zathura
+
+super + p
+		dmenu_run -x 0 -y 0 -z 1920
+
+XF86Audio{RaiseVolume,LowerVolume,Mute}
+		pamixer {-i 5,-d 5,-t}
+
+XF86MonBrightness{Up,Down}
+		brillo -q -u 100000 {-A 2,-U 2}
+
+super + F8
+	  	xset dpms force suspend
+
+Print
+		maim -su ~/Pictures/screenshots/$(date +%F_%T).png
+
+shift + Print
+		maim ~/Pictures/screenshots/$(date +%F_%T).png
+
+super + ctrl + t
+	  	~/.scripts/addtorrent
+
+super + F12
+		loginctl suspend
+
+# lookup words
+super + ctrl + d
+	  ~/.scripts/word-lookup.sh
+
+# make sxhkd reload its configuration files:
+super + ctrl + s
+	  pkill -USR1 -x sxhkd

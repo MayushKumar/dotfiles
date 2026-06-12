@@ -2,26 +2,32 @@
 
 config="/usr/bin/git --git-dir=/home/mayush/.cfg/ --work-tree=/home/mayush"
 $config add \
-	   ~/.config/X11/ \
 	   ~/.config/alacritty/ \
 	   ~/.config/awesome/ \
 	   ~/.config/bspwm/ \
 	   ~/.config/dunst/ \
 	   ~/.config/emacs/themes/ \
 	   ~/.config/emacs/snippets/ \
+     ~/.config/emacs/{early-init.el,init.el,customs.el,emacsinit.el,emacs.org} \
 	   ~/.config/helix/ \
+     ~/.config/kanata/ \
 	   ~/.config/fontconfig/fonts.conf \
+     ~/.config/foot/ \
 	   ~/.config/lf/ \
 	   ~/.config/mpd/ \
 	   ~/.config/mpv/mpv.conf \
 	   ~/.config/ncmpcpp/{bindings,config} \
+     ~/.config/niri/ \
 	   ~/.config/nsxiv/exec/key-handler \
 	   ~/.config/picom/picom.conf \
 	   ~/.config/ranger/ \
+     ~/.config/sioyek/ \
 	   ~/.config/stig/ \
-	   ~/.config/zathura/ \
-	   ~/.config/zsh/{.zshrc,.zprofile} \
+	   ~/.config/X11/ \
 	   ~/.config/yazi/ \
+	   ~/.config/zathura/ \
+     ~/.config/zellij/ \
+	   ~/.config/zsh/{.zshrc,.zprofile} \
 	   ~/.scripts/
 
 $config add -u .

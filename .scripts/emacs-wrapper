@@ -1,0 +1,15 @@
+#!/bin/sh
+# emacs-wrapper.sh – persistent Emacs server
+
+# Try to contact an existing server
+if emacsclient -e 0 >/dev/null 2>&1; then
+    # Server is running → open a new frame with the file(s)
+    emacsclient -c "$@"
+else
+    # No server running → start a headless daemon first
+    emacs --daemon
+    # Give the daemon a moment to fully initialise
+    sleep 0.5
+    # Now open a new frame
+    emacsclient -c "$@"
+fi

@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# Exit if no args
+[ "$#" -eq 0 ] && exit 0
+
+# Build absolute path list (portable)
+files=""
+for f in "$@"; do
+    # resolve to absolute path
+    if command -v realpath >/dev/null 2>&1; then
+        p=$(realpath "$f")
+    else
+        # fallback if realpath is missing
+        p=$(cd "$(dirname "$f")" 2>/dev/null && pwd)/$(basename "$f")
+    fi
+
+    files="$files \"$p\""
+done
+
+# Launch LocalSend detached
+# shellcheck disable=SC2086
+eval "nohup localsend $files >/dev/null 2>&1 &"

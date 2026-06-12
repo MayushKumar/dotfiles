@@ -1,0 +1,42 @@
+#!/bin/sh
+
+# File to store the click count and timestamp
+TMP_FILE="/tmp/iem_click_count"
+TIMEOUT=0.4  # Time in seconds to wait for the next click
+
+# Initialize file if it doesn't exist
+if [ ! -f "$TMP_FILE" ]; then
+    echo "0 0" > "$TMP_FILE"
+fi
+
+# Read current count and last timestamp
+read -r COUNT LAST_TIME < "$TMP_FILE"
+NOW=$(date +%s.%N)
+
+# Calculate difference
+DIFF=$(echo "$NOW - $LAST_TIME" | bc)
+
+if [ "$(echo "$DIFF < $TIMEOUT" | bc)" -eq 1 ]; then
+    COUNT=$((COUNT + 1))
+else
+    COUNT=1
+fi
+
+echo "$COUNT $NOW" > "$TMP_FILE"
+
+# Wait a fraction of a second to see if another click comes in
+(
+    sleep $TIMEOUT
+    read -r LATEST_COUNT LATEST_TIME < "$TMP_FILE"
+    
+    # Only execute if this was the last click in the sequence
+    if [ "$NOW" = "$LATEST_TIME" ]; then
+        case $LATEST_COUNT in
+            1) playerctl play-pause ;;
+            2) playerctl next ;;
+            3) playerctl previous ;;
+        esac
+        # Reset count after action
+        echo "0 0" > "$TMP_FILE"
+    fi
+) &
