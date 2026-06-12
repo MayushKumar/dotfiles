@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Emacs (with server support)
+Comment=GNU Emacs with automatic server handling
+Exec=/home/mayush/.scripts/emacs-wrapper %F
+Icon=emacs
+Terminal=false
+Categories=Development;TextEditor;
+StartupWMClass=Emacs

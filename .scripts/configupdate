@@ -28,7 +28,8 @@ $config add \
 	   ~/.config/zathura/ \
      ~/.config/zellij/ \
 	   ~/.config/zsh/{.zshrc,.zprofile} \
-	   ~/.scripts/
+	   ~/.scripts/ \
+     ~/.local/share/applications/emacs-server-wrapper.desktop \
 
 $config add -u .
 $config commit -m "Changes"
