@@ -8,7 +8,7 @@ $config add \
 	   ~/.config/dunst/ \
 	   ~/.config/emacs/themes/ \
 	   ~/.config/emacs/snippets/ \
-     ~/.config/emacs/{early-init.el,init.el,customs.el,emacs.org,lisp/*.el} \
+     ~/.config/emacs/{early-init.el,init.el,customs.el,emacsinit.el,emacs.org} \
 	   ~/.config/helix/ \
      ~/.config/kanata/ \
 	   ~/.config/fontconfig/fonts.conf \

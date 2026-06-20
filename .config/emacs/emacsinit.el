@@ -108,7 +108,7 @@
   (interactive "nTransparency Value 0 - 100 opaque: ")
   (set-frame-parameter (selected-frame) 'alpha-background value))
 
-(mk/transparency 95)
+;; (mk/transparency 95)
 
 ;; (add-hook 'server-after-make-frame-hook (lambda () (mk/transparency 97)))
 
@@ -128,6 +128,22 @@
 			:repo "jdtsmith/ultra-scroll")
   :config
   (ultra-scroll-mode 1))
+
+(use-package transient
+  :config
+  (transient-define-prefix my-scrolling-zone ()
+	"A modifier-free zone triggered by SPC v using h j k l for viewport scrolling."
+	[:description "Viewport Navigation"
+				  ["Full Page"
+				   ("l" "Page Down" scroll-up-command :transient t)
+				   ("h" "Page Up"   scroll-down-command :transient t)]
+				  ["Half Page"
+				   ("j" "Half Page Down" (lambda () (interactive) (scroll-up (/ (window-body-height) 2))) :transient t)
+				   ("k" "Half Page Up"   (lambda () (interactive) (scroll-down (/ (window-body-height) 2))) :transient t)]
+				  ["Recenter"
+				   ("c" "Center View" recenter-top-bottom :transient t)]
+				  ["Quit"
+				   ("<escape>" "Exit Zone" transient-quit-one)]]))
 
 (use-package all-the-icons)
 (elpaca-wait)
@@ -215,141 +231,180 @@
 
 (use-package apropospriate-theme)
 
-;; (elpaca-wait)
+(use-package kanagawa-themes)
+
+(use-package nordic-night-theme)
+
+(defvar my/saved-bg nil
+  "Stores the original background of the `default' face.")
+(defvar my/bg-is-black nil
+  "Non-nil when the background is currently forced to black.")
+
+(defun my/toggle-black-background ()
+  "Toggle the default face background between pure black and the theme's default."
+  (interactive)
+  (if my/bg-is-black
+      (progn
+        (set-face-attribute 'default nil :background my/saved-bg)
+        (setq my/bg-is-black nil))
+    (progn
+      (setq my/saved-bg (face-attribute 'default :background))
+      (set-face-attribute 'default nil :background "#000000")
+      (setq my/bg-is-black t))))
+
+;; The simple reset hook
+(add-hook 'after-load-theme-hook
+          (lambda ()
+            (setq my/bg-is-black nil)))
+
+;; Optional keybinding
+(global-set-key (kbd "C-c b") #'my/toggle-black-background)
 
 ;; (use-package mini-ontop
 ;;   :ensure t
 ;;   :config (mini-ontop-mode 1))
 
-(use-package evil
-  :init
-  (setq evil-want-keybinding nil
-        evil-want-C-u-scroll t
-        evil-want-Y-yank-to-eol t
-        ;; evil-move-beyond-eol t
-        evil-move-cursor-back nil
-        evil-undo-system 'undo-redo
-        evil-insert-state-cursor 'box
-        evil-visual-state-cursor 'hollow
-        evil-respect-visual-line-mode t
-        evil-want-minibuffer t
-        evil-mode-line-format nil
-
-        evil-normal-state-tag   (propertize " ⏺ " 'face '((:foreground "MediumTurquoise")))
-        evil-emacs-state-tag    (propertize " ⏺ " 'face '((:foreground "BlueViolet")))
-        evil-insert-state-tag   (propertize " ⏺ " 'face '((:foreground "Orchid")))
-        evil-replace-state-tag  (propertize " ⏺ " 'face '((:foreground "Red3")))
-        evil-motion-state-tag   (propertize " ⏺ " 'face '((:foreground "OrangeRed3")))
-        evil-visual-state-tag   (propertize " ⏺ " 'face '((:foreground "Gold2")))
-        evil-operator-state-tag (propertize " ⏺ " 'face '((:foreground "RoyalBlue"))))
+(use-package meow
   :config
-  (evil-mode 1)
-  (evil-global-set-key 'normal (kbd "U") 'evil-redo)
-  (evil-set-initial-state 'minibuffer-mode 'insert))
+  (defun my/meow-toggle-state ()
+  (interactive)
+  (if (meow-normal-mode-p)
+      (meow-motion-mode)
+    (meow-normal-mode)))
+  
+  ;; (setq meow-mode-state-list
+  ;;     '((conf-mode . normal)
+  ;;       (fundamental-mode . normal)
+  ;;       (help-mode . normal)
+  ;;       (prog-mode . normal)
+  ;;       (text-mode . normal)
+  ;; 		(special-mode . normal)))
+  (defun meow-setup ()
+    (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+    (meow-motion-overwrite-define-key
+	 '("h" . meow-left)
+     '("j" . meow-next)
+     '("k" . meow-prev)
+	 '("l" . meow-right)
+     '("<escape>" . ignore))
+    (meow-leader-define-key
+     ;; SPC j/k will run the original command in MOTION state.
+     '("j" . "H-j")
+     '("k" . "H-k")
+     ;; Use SPC (0-9) for digit arguments.
+     '("1" . meow-digit-argument)
+     '("2" . meow-digit-argument)
+     '("3" . meow-digit-argument)
+     '("4" . meow-digit-argument)
+     '("5" . meow-digit-argument)
+     '("6" . meow-digit-argument)
+     '("7" . meow-digit-argument)
+     '("8" . meow-digit-argument)
+     '("9" . meow-digit-argument)
+     '("0" . meow-digit-argument)
+     '("/" . meow-keypad-describe-key)
+     '("?" . meow-cheatsheet)
 
-(use-package evil-collection
-  :after evil
-  :config
-  (evil-collection-init))
+	 '("SPC" . execute-extended-command)
+	 
+	 '("v" . my-scrolling-zone)
 
-(use-package evil-snipe
-  :config
-  (evil-snipe-mode)
-  (evil-snipe-override-mode))
+	 '("f f" . find-file)
+	 '("f s" . save-buffer)
+	 '("f r" . rename-visited-file)
 
-(use-package evil-commentary
-  :config
-  (evil-commentary-mode))
+	 '("b"   . consult-buffer)
+	 '("'"   . consult-bookmark)
+	 '("k"   . kill-current-buffer) 
 
-;; (use-package meow
-;;   :config
-;;   (defun meow-setup ()
-;; 	(setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
-;; 	(meow-motion-overwrite-define-key
-;; 	 '("j" . meow-next)
-;; 	 '("k" . meow-prev)
-;; 	 '("<escape>" . ignore))
-;; 	(meow-leader-define-key
-;; 	 ;; SPC j/k will run the original command in MOTION state.
-;; 	 '("j" . "H-j")
-;; 	 '("k" . "H-k")
-;; 	 ;; Use SPC (0-9) for digit arguments.
-;; 	 '("1" . meow-digit-argument)
-;; 	 '("2" . meow-digit-argument)
-;; 	 '("3" . meow-digit-argument)
-;; 	 '("4" . meow-digit-argument)
-;; 	 '("5" . meow-digit-argument)
-;; 	 '("6" . meow-digit-argument)
-;; 	 '("7" . meow-digit-argument)
-;; 	 '("8" . meow-digit-argument)
-;; 	 '("9" . meow-digit-argument)
-;; 	 '("0" . meow-digit-argument)
-;; 	 '("/" . meow-keypad-describe-key)
-;; 	 '("?" . meow-cheatsheet))
-;; 	(meow-normal-define-key
-;; 	 '("0" . meow-expand-0)
-;; 	 '("9" . meow-expand-9)
-;; 	 '("8" . meow-expand-8)
-;; 	 '("7" . meow-expand-7)
-;; 	 '("6" . meow-expand-6)
-;; 	 '("5" . meow-expand-5)
-;; 	 '("4" . meow-expand-4)
-;; 	 '("3" . meow-expand-3)
-;; 	 '("2" . meow-expand-2)
-;; 	 '("1" . meow-expand-1)
-;; 	 '("-" . negative-argument)
-;; 	 '(";" . meow-reverse)
-;; 	 '("," . meow-inner-of-thing)
-;; 	 '("." . meow-bounds-of-thing)
-;; 	 '("[" . meow-beginning-of-thing)
-;; 	 '("]" . meow-end-of-thing)
-;; 	 '("a" . meow-append)
-;; 	 '("A" . meow-open-below)
-;; 	 '("b" . meow-back-word)
-;; 	 '("B" . meow-back-symbol)
-;; 	 '("c" . meow-change)
-;; 	 '("d" . meow-delete)
-;; 	 '("D" . meow-backward-delete)
-;; 	 '("e" . meow-next-word)
-;; 	 '("E" . meow-next-symbol)
-;; 	 '("f" . meow-find)
-;; 	 '("g" . meow-cancel-selection)
-;; 	 '("G" . meow-grab)
-;; 	 '("h" . meow-left)
-;; 	 '("H" . meow-left-expand)
-;; 	 '("i" . meow-insert)
-;; 	 '("I" . meow-open-above)
-;; 	 '("j" . meow-next)
-;; 	 '("J" . meow-next-expand)
-;; 	 '("k" . meow-prev)
-;; 	 '("K" . meow-prev-expand)
-;; 	 '("l" . meow-right)
-;; 	 '("L" . meow-right-expand)
-;; 	 '("m" . meow-join)
-;; 	 '("n" . meow-search)
-;; 	 '("o" . meow-block)
-;; 	 '("O" . meow-to-block)
-;; 	 '("p" . meow-yank)
-;; 	 '("q" . meow-quit)
-;; 	 '("Q" . meow-goto-line)
-;; 	 '("r" . meow-replace)
-;; 	 '("R" . meow-swap-grab)
-;; 	 '("s" . meow-kill)
-;; 	 '("t" . meow-till)
-;; 	 '("u" . meow-undo)
-;; 	 '("U" . meow-undo-in-selection)
-;; 	 '("v" . meow-visit)
-;; 	 '("w" . meow-mark-word)
-;; 	 '("W" . meow-mark-symbol)
-;; 	 '("x" . meow-line)
-;; 	 '("X" . meow-goto-line)
-;; 	 '("y" . meow-save)
-;; 	 '("Y" . meow-sync-grab)
-;; 	 '("z" . meow-pop-selection)
-;; 	 '("'" . repeat)
-;; 	 '("<escape>" . ignore)))
-;;   (meow-setup)
-;;   (meow-global-mode 1))
+	 '("s"   . consult-line)
+
+	 '("w"   . ace-window)
+	 '("o"   . other-window)
+	 '("0"   . delete-window)
+
+	 ;; '("h v" . helpful-variable)
+	 ;; '("h f" . helpful-function)
+	 ;; '("h k" . helpful-key)
+	 ;; '("h o" . helpful-symbol)
+	 ;; '("h p" . helpful-at-point)
+	 ;; '("h F" . describe-face)
+
+	 '("p p" . project-switch-project)
+	 '("p f" . project-find-file)
+	 '("p b" . consult-project-buffer)
+	 '("t b" . my/toggle-black-background)
+	 '("t m" . my/meow-toggle-state))
+	
+    (meow-normal-define-key
+     '("0" . meow-expand-0)
+     '("9" . meow-expand-9)
+     '("8" . meow-expand-8)
+     '("7" . meow-expand-7)
+     '("6" . meow-expand-6)
+     '("5" . meow-expand-5)
+     '("4" . meow-expand-4)
+     '("3" . meow-expand-3)
+     '("2" . meow-expand-2)
+     '("1" . meow-expand-1)
+     '("-" . negative-argument)
+     '(";" . meow-reverse)
+     '("," . meow-inner-of-thing)
+     '("." . meow-bounds-of-thing)
+     '("[" . meow-beginning-of-thing)
+     '("]" . meow-end-of-thing)
+     '("a" . meow-append)
+     '("A" . meow-open-below)
+     '("b" . meow-back-word)
+     '("B" . meow-back-symbol)
+     '("c" . meow-change)
+     '("d" . meow-delete)
+     '("D" . meow-backward-delete)
+     '("e" . meow-next-word)
+     '("E" . meow-next-symbol)
+     '("f" . meow-find)
+     '("g" . meow-cancel-selection)
+     '("G" . meow-grab)
+     '("h" . meow-left)
+     '("H" . meow-left-expand)
+     '("i" . meow-insert)
+     '("I" . meow-open-above)
+     '("j" . meow-next)
+     '("J" . meow-next-expand)
+     '("k" . meow-prev)
+     '("K" . meow-prev-expand)
+     '("l" . meow-right)
+     '("L" . meow-right-expand)
+     '("m" . meow-join)
+     '("n" . meow-search)
+     '("o" . meow-block)
+     '("O" . meow-to-block)
+     '("p" . meow-yank)
+     '("q" . meow-quit)
+     '("Q" . meow-goto-line)
+     '("r" . meow-replace)
+     '("R" . meow-swap-grab)
+     '("s" . meow-kill)
+     '("t" . meow-till)
+     '("u" . meow-undo)
+     '("U" . meow-undo-in-selection)
+     '("v" . meow-visit)
+     '("w" . meow-mark-word)
+     '("W" . meow-mark-symbol)
+     '("x" . meow-line)
+     '("X" . meow-goto-line)
+     '("y" . meow-save)
+     '("Y" . meow-sync-grab)
+     '("z" . meow-pop-selection)
+     '("'" . repeat)
+     '("<escape>" . ignore)))
+
+  (keymap-set meow-insert-state-keymap
+            "C-SPC"
+            #'my/corfu-refresh)
+  
+  (meow-setup)
+  (meow-global-mode 1))
 
 (use-package project)
 
@@ -399,7 +454,13 @@
   (fussy-setup)
   (fussy-setup-fzf)
   (fussy-eglot-setup)
-  (fussy-corfu-setup))
+  (fussy-corfu-setup)
+  (defun fussy-try-completions (string table pred point)
+	(let ((res (completion-flex-try-completion
+				string table pred point)))
+      (if (consp res)
+          (cons string (length string))
+		res))))
 
 (use-package marginalia
   :init
@@ -493,7 +554,6 @@
 ;; 	(add-hook 'window-setup-hook #'(lambda () (persp-mode 1))))
 ;;   )
 
-(use-package transient)
 (use-package magit :commands (magit magit-status))
 
 (use-package treemacs
@@ -600,7 +660,10 @@
   :config
   (setq typst-preview-invert-colors "never"))
 
-(use-package kotlin-mode)
+(use-package kotlin-ts-mode
+  :config
+  (add-to-list 'auto-mode-alist '("\\.kt\\'" . kotlin-ts-mode))
+  (add-to-list 'treesit-language-source-alist '(kotlin . ("https://github.com/fwcd/tree-sitter-kotlin"))))
 
 (use-package pyvenv)
 
@@ -609,8 +672,8 @@
 			:host github 
 			:repo "merrickluo/kdl-ts-mode")
   :config
-  (setq treesit-language-source-alist
-		'((kdl "https://github.com/tree-sitter-grammars/tree-sitter-kdl" "v1.1.0"))))
+  (add-to-list 'treesit-language-source-alist
+		'(kdl "https://github.com/tree-sitter-grammars/tree-sitter-kdl")))
 
 ;; (use-package company
 ;;   :config
@@ -623,7 +686,7 @@
   ;; Optional customizations
   :custom
   ;; (corfu-cycle t)
-  (corfu-auto t)
+  (corfu-auto nil)
   (corfu-auto-prefix 1)
   (corfu-auto-delay 0.0)
   ;; (corfu-separator ?\s)          ;; Orderless field separator
@@ -647,6 +710,11 @@
   :config
   (keymap-set corfu-map "<tab>" #'corfu-insert)
   ;; (keymap-unset corfu-map "RET")
+  (defun my/corfu-refresh ()
+	(interactive)
+	(when (bound-and-true-p corfu--frame)
+      (corfu-quit))
+	(completion-at-point))
   )
 
 ;; A few more useful configurations...
@@ -699,7 +767,8 @@
   ;; (advice-add 'eglot-completion-at-point :around #'cape-wrap-noninterruptible)
   
   ;; Add `completion-at-point-functions', used by `completion-at-point'.
-  (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'completion-at-point-functions #'cape-file t)
+  
   ;; (add-hook 'completion-at-point-functions #'cape-dabbrev)
   ;; (add-hook 'completion-at-point-functions #'cape-elisp-block)
   ;;(add-hook 'completion-at-point-functions #'cape-history)
@@ -754,29 +823,51 @@
   (yas-global-mode))
 
 (use-package eglot
-  :ensure nil
+  :ensure t
   :defer t
+
   :custom
   ;; Make updates immediate (important for completion freshness)
   (eglot-send-changes-idle-time 0.0)
 
   :config
-  ;; Use clangd with consistent arguments across all C-family modes
-  (add-to-list 'eglot-server-programs
-               '((c-mode c++-mode c-ts-mode c++-ts-mode)
-                 . ("clangd"
-                    "--completion-style=detailed"
-                    "--header-insertion=never"
-					"--limit-results=1000"))))
-
-
-(use-package eglot-booster :ensure (:host github :repo "jdtsmith/eglot-booster")
-  :after eglot
-  :config
   (setq eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider :inlayHintProvider :documentHighlightProvider))
-  (setq eglot-booster-io-only t)
-  (eglot-booster-mode)
-  )
+  ;; --------------------------------------------------------------------------
+  ;; Language servers
+  ;; --------------------------------------------------------------------------
+
+  (add-to-list
+   'eglot-server-programs
+   '((c-mode c++-mode c-ts-mode c++-ts-mode)
+     . ("clangd"
+        "--completion-style=detailed"
+        "--header-insertion=never"
+        "--limit-results=0")))
+
+  (add-to-list
+   'eglot-server-programs
+   '(kotlin-ts-mode . ("kotlin-language-server")))
+
+  ;; --------------------------------------------------------------------------
+  ;; Keybindings (active only in eglot-managed buffers)
+  ;; --------------------------------------------------------------------------
+
+  (define-key eglot-mode-map (kbd "C-c e a") #'eglot-code-actions)
+  (define-key eglot-mode-map (kbd "C-c e r") #'eglot-rename)
+  (define-key eglot-mode-map (kbd "C-c e f") #'eglot-format)
+
+  (define-key eglot-mode-map (kbd "C-c e d") #'xref-find-definitions)
+  (define-key eglot-mode-map (kbd "C-c e i") #'eglot-find-implementation)
+  (define-key eglot-mode-map (kbd "C-c e t") #'eglot-find-typeDefinition)
+  (define-key eglot-mode-map (kbd "C-c e u") #'xref-find-references)
+
+  (define-key eglot-mode-map (kbd "C-c e h") #'eldoc)
+  (define-key eglot-mode-map (kbd "C-c e s") #'consult-eglot-symbols)
+
+  ;; Useful management commands
+  (define-key eglot-mode-map (kbd "C-c e l") #'eglot-list-connections)
+  (define-key eglot-mode-map (kbd "C-c e q") #'eglot-shutdown)
+  (define-key eglot-mode-map (kbd "C-c e R") #'eglot-reconnect))
 
 (use-package consult-eglot :after eglot)
 
@@ -904,138 +995,3 @@
 ;;   (add-hook 'org-mode-hook (lambda () (org-superstar-mode 1))))
 
 (use-package ox-gfm)
-
-(use-package general
-  :config
-  ;; (general-evil-setup)
-
-  (general-define-key
-   :states '(normal visual)
-   :prefix "SPC"
-
-   "p p" 'project-switch-project
-   "p f" 'project-find-file
-   "p s" 'project-save-some-buffers
-   "p b" 'consult-project-buffer
-   "p d" 'project-dired
-   ;; "p a" 'project-
-   ;; "p e" 'project-find-fil
-   ;; "p i" 'projectile-invalidate-cache
-   "p k" 'project-kill-buffers)
-
-  ;; (general-define-key
-  ;;  :states '(normal visual)
-  ;;  :prefix "SPC"
-
-  ;;  "p p" 'projectile-switch-project
-  ;;  "p f" 'projectile-find-file
-  ;;  "p s" 'projectile-save-project-buffers
-  ;;  "p a" 'projectile-find-other-file
-  ;;  "p e" 'projectile-find-other-file-other-window
-  ;;  "p i" 'projectile-invalidate-cache
-  ;;  "p k" 'projectile-kill-buffers)
-
-  (general-define-key
-   :states '(normal visual)
-   :keymaps 'override
-   :prefix "SPC"
-
-   "x"   'execute-extended-command
-
-   "f f" 'find-file
-   "f s" 'save-buffer
-   "f r" 'rename-visited-file
-
-   "c b" 'consult-bookmark
-
-   "b"   'consult-buffer
-
-   "k" 'kill-current-buffer
-   "K" 'kill-buffer
-
-   "s"   'consult-line
-   "S r" 'rg
-
-   "w"   'ace-window
-   "o"   'other-window
-   "0"   'delete-window
-
-   "h v" 'helpful-variable
-   "h f" 'helpful-function
-   "h k" 'helpful-key
-   "h o" 'helpful-symbol
-   "h p" 'helpful-at-point
-   "h F" 'describe-face
-
-   "t t" 'treemacs)
-
-  (general-define-key
-   :prefix "SPC"
-   :states '(normal visual)
-   :keymaps 'dap-mode-map
-
-   "l d d" 'dap-debug
-   "l d b" 'dap-breakpoint-toggle
-   "l d h" 'dap-hydra)
-
-  ;; (general-define-key
-  ;;  :prefix "SPC"
-  ;;  :states '(normal visual)
-  ;;  :keymaps 'lsp-mode-map
-
-  ;;  "l d"   'lsp-find-declaration
-  ;;  "l g"   'lsp-find-definition
-  ;;  "l i"   'lsp-find-implementation
-  ;;  "l r"   'lsp-find-references
-  ;;  "l R"   'lsp-rename
-  ;;  "l s"   'consult-lsp-symbols
-  ;;  "l q"   'lsp-workspace-shutdown)
-
-  (general-define-key
-   :prefix "SPC"
-   :states '(normal visual)
-   :keymaps 'eglot-mode-map
-
-   "l a"   'eglot-code-actions
-   "l d"   'eglot-find-declaration
-   "l g"   'eglot-find-typeDefinition
-   "l i"   'eglot-find-implementation
-   "l r"   'xref-find-references
-   "l R"   'eglot-rename
-   "l s"   'consult-eglot-symbols
-   "l q"   'eglot-shutdown)
-
-  (general-define-key
-   :prefix ","
-   :states '(normal visual)
-   :keymaps 'org-mode-map
-
-   "t" 'org-babel-tangle)
-
-  (general-define-key
-   :prefix ","
-   :states '(normal)
-   :keymaps '(lisp-mode-map lisp-interaction-mode-map emacs-lisp-mode-map)
-
-   "e e" 'eval-last-sexp
-   "e b" 'eval-buffer)
-
-  (general-define-key
-   :prefix ","
-   :states '(visual)
-   :keymaps '(lisp-mode-map lisp-interaction-mode-map emacs-lisp-mode-map)
-
-   "e" 'eval-region)
-
-
-  (general-define-key
-   :prefix ","
-   :states '(normal)
-   :keymaps '(LaTeX-mode-map)
-
-   "c" 'TeX-command-master)
-
-  (general-define-key
-   :states '(normal visual)
-
-   "C-=" 'mk-indent-buffer))

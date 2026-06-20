@@ -2,12 +2,18 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("dhcpcd.conf"
-  (filename . "/sudo:root@mayushartix:/etc/dhcpcd.conf")
-  (front-context-string . "# A sample confi")
+(("emacs.org"
+  (filename . "~/.config/emacs/emacs.org")
+  (front-context-string . "#+TITLE: Emacs C")
   (rear-context-string)
   (position . 1)
-  (last-modified 27162 8307 703797 849000))
+  (last-modified 27189 7015 590667 389000))
+("dhcpcd.conf"
+ (filename . "/sudo:root@mayushartix:/etc/dhcpcd.conf")
+ (front-context-string . "# A sample confi")
+ (rear-context-string)
+ (position . 1)
+ (last-modified 27162 8307 703797 849000))
 ("dnsmasq.conf"
  (filename .
 		   #("/sudo:root@mayushartix:/etc/dnsmasq.conf" 6 10
@@ -57,9 +63,4 @@
  (rear-context-string)
  (position . 1)
  (last-modified 26421 4264 833316 32000))
-("emacs.org"
- (filename . "~/.config/emacs/emacs.org")
- (front-context-string . "#+title:  Emacs ")
- (rear-context-string)
- (position . 1))
 )
