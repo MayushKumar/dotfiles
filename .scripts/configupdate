@@ -1,36 +1,64 @@
-#!/bin/sh
+#!/bin/zsh
 
-config="/usr/bin/git --git-dir=/home/mayush/.cfg/ --work-tree=/home/mayush"
-$config add \
-	   ~/.config/alacritty/ \
-	   ~/.config/awesome/ \
-	   ~/.config/bspwm/ \
-	   ~/.config/dunst/ \
-	   ~/.config/emacs/themes/ \
-	   ~/.config/emacs/snippets/ \
-     ~/.config/emacs/{early-init.el,init.el,customs.el,emacs.org,lisp/*.el} \
-	   ~/.config/helix/ \
-     ~/.config/kanata/ \
-	   ~/.config/fontconfig/fonts.conf \
-     ~/.config/foot/ \
-	   ~/.config/lf/ \
-	   ~/.config/mpd/ \
-	   ~/.config/mpv/mpv.conf \
-	   ~/.config/ncmpcpp/{bindings,config} \
-     ~/.config/niri/ \
-	   ~/.config/nsxiv/exec/key-handler \
-	   ~/.config/picom/picom.conf \
-	   ~/.config/ranger/ \
-     ~/.config/sioyek/ \
-	   ~/.config/stig/ \
-	   ~/.config/X11/ \
-	   ~/.config/yazi/ \
-	   ~/.config/zathura/ \
-     ~/.config/zellij/ \
-	   ~/.config/zsh/{.zshrc,.zprofile} \
-	   ~/.scripts/ \
-     ~/.local/share/applications/emacs-server-wrapper.desktop \
+set -e
 
-$config add -u .
-$config commit -m "Changes"
-$config push
+if [[ -z "$1" ]]; then
+    echo "Error: Please provide a commit message."
+    echo "Usage: $0 \"your commit message here\""
+    exit 1
+fi
+
+COMMIT_MSG="$1"
+shift 
+
+config() {
+    /usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME "$@"
+}
+
+dotfiles=(
+    $HOME/.config/alacritty/
+    $HOME/.config/awesome/
+    $HOME/.config/bspwm/
+    $HOME/.config/dunst/
+    $HOME/.config/emacs/themes/
+    $HOME/.config/emacs/snippets/
+    $HOME/.config/emacs/{early-init.el,init.el,customs.el,emacs.org}
+    $HOME/.config/emacs/lisp/*.el
+    $HOME/.config/helix/
+    $HOME/.config/kanata/
+    $HOME/.config/fontconfig/fonts.conf
+    $HOME/.config/foot/
+    $HOME/.config/lf/
+    $HOME/.config/mpd/
+    $HOME/.config/mpv/mpv.conf
+    $HOME/.config/ncmpcpp/{bindings,config}
+    $HOME/.config/niri/
+    $HOME/.config/nsxiv/exec/key-handler
+    $HOME/.config/picom/picom.conf
+    $HOME/.config/ranger/
+    $HOME/.config/sioyek/
+    $HOME/.config/stig/
+    $HOME/.config/X11/
+    $HOME/.config/yazi/
+    $HOME/.config/zathura/
+    $HOME/.config/zellij/
+    $HOME/.config/zsh/{.zshrc,.zprofile}
+    $HOME/.scripts/
+    $HOME/.local/share/applications/emacs-server-wrapper.desktop
+)
+
+echo "Adding updated dotfiles..."
+config add $dotfiles
+
+config add -u .
+
+if ! config diff-index --quiet HEAD --; then
+    echo "Committing changes..."
+    config commit -m "$COMMIT_MSG"
+    
+    echo "Pushing to remote..."
+    config push
+    echo "Done! Dotfiles backup updated successfully."
+else
+    echo "No changes detected. Nothing to commit."
+fi
